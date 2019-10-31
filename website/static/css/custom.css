@@ -15,6 +15,10 @@
 @media only screen and (min-width: 1500px) {
 }
 
+.logo {
+    height: 20px !important;
+}
+
 .nav-footer {
     background-color: #092363;
 }

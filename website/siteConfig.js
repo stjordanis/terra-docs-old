@@ -23,7 +23,9 @@ const users = [
 const siteConfig = {
   title: 'Terra Documentation', // Title for your website.
   tagline: 'Columbus 3',
-  url: 'https://ouiliame.github.io', // Your website URL
+
+  website: 'https://terra.money', // Your website URL
+  url: 'https://ouiliame.github.io', // Your docs website URL
   baseUrl: '/terra-docs/', // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
@@ -52,13 +54,16 @@ const siteConfig = {
   users,
 
   /* path to images for header/footer */
-  headerIcon: 'img/inverted_logo.svg',
+  headerIcon: 'img/docs_logoc.svg',
   footerIcon: 'img/inverted_logo.svg',
   favicon: 'img/favicon.ico',
 
+  // header
+  disableHeaderTitle: true,
+
   /* Colors for website */
   colors: {
-    primaryColor: '#2845ae',
+    primaryColor: '#0c3694',
     secondaryColor: '#2845ae',
   },
 
