@@ -54,7 +54,7 @@ const siteConfig = {
   users,
 
   /* path to images for header/footer */
-  headerIcon: 'img/docs_logoc.svg',
+  headerIcon: 'img/docs_logo.svg',
   footerIcon: 'img/inverted_logo.svg',
   favicon: 'img/favicon.ico',
 
