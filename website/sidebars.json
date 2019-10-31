@@ -1,0 +1,49 @@
+{
+  "docs": {
+    "Overview": [
+      "dev-intro"
+    ],
+    "Get Started": [
+      "dev-installation",
+      "dev-production",
+      "dev-join-network",
+      "dev-deploy-testnet",
+      "dev-terracli",
+      "dev-users",
+      "dev-light-client",
+      "dev-ledger-nano-support"
+    ],
+    "Terra Protocol": [
+      "dev-architecture",
+      "dev-consensus",
+      "dev-validators",
+      "dev-stabilization",
+      "dev-seigniorage",
+      "dev-exchange",
+      {
+        "type": "subcategory",
+        "label": "CORE MODULES",
+        "ids": [
+          "dev-spec-pay",
+          "dev-spec-mint",
+          "dev-spec-oracle",
+          "dev-spec-market",
+          "dev-spec-treasury",
+          "dev-spec-budget"
+        ]
+      }
+    ],
+    "Contribute": [
+      "dev-contributing",
+      "dev-help-translate"
+    ]
+  },
+  "validator": {
+    "Overview": [
+      "validator-intro",
+      "validator-getting-started",
+      "validator-security",
+      "validator-faq"
+    ]
+  }
+}

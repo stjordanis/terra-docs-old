@@ -1,0 +1,28 @@
+/* your custom css */
+
+@media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
+}
+
+@media only screen and (min-width: 1024px) {
+}
+
+@media only screen and (max-width: 1023px) {
+}
+
+@media only screen and (min-width: 1400px) {
+}
+
+@media only screen and (min-width: 1500px) {
+}
+
+.nav-footer {
+    background-color: #092363;
+}
+
+.navigationSlider .slidingNav ul li.siteNavGroupActive a {
+    font-weight: 500 !important;
+}
+
+.toc .toggleNav .navGroup .navGroupCategoryTitle {
+    font-weight: 700 !important;
+}
