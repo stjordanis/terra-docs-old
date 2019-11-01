@@ -58,13 +58,13 @@ salt
 
 The funds stored in an account are controlled by the private key. This private key is generated using a one-way function from the mnemonic. If you lose the private key, you can retrieve it using the mnemonic. However, if you lose the mnemonic, you will lose access to all the derived private keys. Likewise, if someone gains access to your mnemonic, they gain access to all the associated accounts.
 
-{% hint style="danger" %}
-Do not lose or share your 24 words with anyone.
+<blockquote class="danger">
+Do not lose or share your 24 words with anyone.<br/><br/>
 
 To prevent theft or loss of funds, it is best to ensure that you keep multiple copies of your mnemonic, and store it in a safe, secure place and that only you know how to access.
 
 If someone is able to gain access to your mnemonic, they will be able to gain access to your private keys and control the accounts associated with them.
-{% endhint %}
+</blockquote>
 
 The address is a public string with a human-readable prefix \(e.g. `terra10snjt8dmpr5my0h76xj48ty80uzwhraqalu4eg`\) that identifies your account. When someone wants to send you funds, they send it to your address. It is computationally infeasible to find the private key associated with a given address.
 
