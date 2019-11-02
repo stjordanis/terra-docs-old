@@ -38,21 +38,23 @@
 /* different blockquotes */
 blockquote {
     border-radius: 5px;
+    background-color: #fff8e1;
+    border-left: 8px solid #f8d45e;
 }
 
 blockquote.info {
-    background-color: #eef5ff;
-    border-left: 8px solid #2566af;
+    background-color: #f0f7ff;
+    border-left: 8px solid #297deb;
 }
 
 blockquote.danger {
-    background-color: #fff4f4;
+    background-color: #fcf4f4;
     border-left: 8px solid #df1212;
 }
 
 blockquote.warning {
     background-color: #fff7f2;
-    border-left: 8px solid #e26015;
+    border-left: 8px solid #f8823e;
 }
 
 .button {
@@ -74,4 +76,47 @@ h1,h2,h3,h4,h5,h6 {
 .onPageNav .toc-headings > li > a.active {
     font-weight: 600;
     color: #2845ae;
+}
+
+h1 {
+    font-size: 38px;
+}
+
+/* hide that > */
+.toggleNav h2 i {
+    display: none;
+}
+
+.post a {
+    color: #5493f0;
+    text-decoration: underline !important;
+}
+
+sup {
+    vertical-align: super;
+    font-size: smaller;
+}
+
+.button > span {
+    font-weight: 600 !important;
+}
+
+.docs-prev.button > span:first-child {
+    padding-left: 15px;
+}
+.docs-prev.button > span:last-child {
+    padding-right: 15px;
+}
+
+.docs-next.button > span:first-child {
+    padding-left: 15px;
+}
+.docs-next.button > span:last-child {
+    padding-right: 15px;
+}
+
+.button:hover {
+    background-color: transparent !important;
+    border: solid 1px #5493f0;
+    color: #5493f0;
 }
