@@ -20,7 +20,7 @@
 }
 
 .nav-footer {
-    background-color: #092363;
+    background-color: #18181a;
 }
 
 /* make navbar link bold if active */
@@ -32,7 +32,7 @@
 /* make sidebar titles bold */
 
 .toc .toggleNav .navGroup .navGroupCategoryTitle {
-    font-weight: 100 !important;
+    font-weight: 500 !important;
 }
 
 /* different blockquotes */
@@ -70,12 +70,12 @@ body, button, input, textarea
 }
 
 h1,h2,h3,h4,h5,h6 {
-    font-weight: 100;
-    color: #5493f7;
+    font-weight: 500 !important;
+    color: #2845ae;
 }
 
 .onPageNav .toc-headings > li > a.active {
-    font-weight: 600;
+    font-weight: 500;
     color: #2845ae;
 }
 
@@ -90,7 +90,8 @@ h1 {
 
 .post a {
     color: #5493f0;
-    text-decoration: underline !important;
+    /*text-decoration: underline !important;*/
+    font-weight: 500;
 }
 
 sup {
@@ -126,3 +127,19 @@ code {
     font-family: "Fira Code", monospace !important;
     font-variant-ligatures: none;
 }
+
+/* algolia search */
+
+/*
+input#search_input_react {
+    background-color: transparent;
+    border-radius: 0;
+    border: 0;
+    border-bottom: 1px solid hsla(0,0%,100%,.9);
+}
+
+input#search_input_react::placeholder {
+    color: hsla(0,0%,100%,.3);
+}
+
+/*
