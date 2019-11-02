@@ -36,26 +36,73 @@
 }
 
 /* different blockquotes */
+
+/* plain - grey */
 blockquote {
     border-radius: 5px;
-    background-color: #fff8e1;
-    border-left: 8px solid #f8d45e;
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,.05);
+    background-color: #f5f5f5;
+    border-left: 8px solid #c2c2c2;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.065);
+    color: #4e4e4e;
 }
 
+/* note -- says NOTE and is yellow */
+blockquote.note {
+    background-color: #fff8e1;
+    border-left: 8px solid #f8d45e;
+    color: #cfa518;
+}
+
+blockquote.note::before {
+    content: "note";
+    font-variant: small-caps;
+    position: relative;
+    padding-bottom: 15px;
+    top: -10px;
+    font-weight: 700;
+    font-size: 22px;
+}
+
+/* info, just blue, doesn't say info */
 blockquote.info {
     background-color: #f5f9ff;
     border-left: 8px solid #297deb;
+    color: #1659b1;
 }
 
-blockquote.danger {
+/* warning/danger, is red, says "warning" */
+blockquote.warning {
     background-color: #fcf4f4;
     border-left: 8px solid #df1212;
+    color: #b30f0f;
 }
 
-blockquote.warning {
+
+blockquote.warning::before {
+    content: "warning";
+    font-variant: small-caps;
+    position: relative;
+    padding-bottom: 15px;
+    top: -10px;
+    font-weight: 700;
+    font-size: 22px;
+}
+
+/* important, orange */
+blockquote.important {
     background-color: #fff7f2;
     border-left: 8px solid #f8823e;
+    color: #b85013;
+}
+
+blockquote.important::before {
+    content: "important";
+    font-variant: small-caps;
+    position: relative;
+    padding-bottom: 15px;
+    top: -10px;
+    font-weight: 700;
+    font-size: 22px;
 }
 
 .button {
@@ -79,8 +126,22 @@ h1,h2,h3,h4,h5,h6 {
     color: #2845ae;
 }
 
-h1 {
+/* headers need to be a bit bigger */
+
+h1 { /* 32 -> 40 */
     font-size: 40px;
+}
+
+h2 { /* 24 -> 30 */
+    font-size: 32px;
+}
+
+h3 { /* 20 -> 24 */
+    font-size: 26px;
+}
+
+h4 { /* 16 -> 20 */
+    font-size: 20px;
 }
 
 /* hide that > */
@@ -99,7 +160,7 @@ sup {
 }
 
 .button > span {
-    font-weight: 600 !important;
+    font-weight: 500 !important;
 }
 
 .docs-prev.button > span:first-child {
