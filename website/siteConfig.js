@@ -58,7 +58,8 @@ const siteConfig = {
   ],
 
   stylesheets: [
-    '/css/code-block-buttons.css'
+    '/css/code-block-buttons.css',
+    "https://fonts.googleapis.com/css?family=Fira+Code&display=swap"
   ],
 
   // On page navigation for the current documentation page.
@@ -71,6 +72,14 @@ const siteConfig = {
   // social media
   repoUrl: 'https://github.com/terra-project/core', // github
   twitterUsername: 'terra_money',
+
+  // search via algolia
+  algolia: {
+    placeholder: 'Search',
+    apiKey: 'my-api-key',
+    indexName: 'my-index-name',
+    algoliaOptions: {} // Optional, if provided by Algolia
+  },
 
   markdownPlugins,
   docsSideNavCollapsible: true,

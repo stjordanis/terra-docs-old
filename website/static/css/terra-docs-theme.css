@@ -40,10 +40,11 @@ blockquote {
     border-radius: 5px;
     background-color: #fff8e1;
     border-left: 8px solid #f8d45e;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.05);
 }
 
 blockquote.info {
-    background-color: #f0f7ff;
+    background-color: #f5f9ff;
     border-left: 8px solid #297deb;
 }
 
@@ -79,7 +80,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 h1 {
-    font-size: 38px;
+    font-size: 40px;
 }
 
 /* hide that > */
@@ -119,4 +120,9 @@ sup {
     background-color: transparent !important;
     border: solid 1px #5493f0;
     color: #5493f0;
+}
+
+code {
+    font-family: "Fira Code", monospace !important;
+    font-variant-ligatures: none;
 }
