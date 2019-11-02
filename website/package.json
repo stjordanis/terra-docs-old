@@ -9,5 +9,9 @@
   },
   "devDependencies": {
     "docusaurus": "^1.14.0"
+  },
+  "dependencies": {
+    "remarkable-classy": "^0.0.1",
+    "remarkable-plantuml": "^1.1.0"
   }
 }

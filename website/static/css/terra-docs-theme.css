@@ -1,4 +1,4 @@
-/* your custom css */
+/* Terra Documentation Theme */
 
 @media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
 }
@@ -32,18 +32,46 @@
 /* make sidebar titles bold */
 
 .toc .toggleNav .navGroup .navGroupCategoryTitle {
-    font-weight: 700 !important;
+    font-weight: 100 !important;
 }
 
 /* different blockquotes */
+blockquote {
+    border-radius: 5px;
+}
+
 blockquote.info {
-    background-color: rgba(113, 180, 255, 0.3);
-    border-left: 8px solid #46a6ff;
-    padding: 15px 30px 15px 15px;
+    background-color: #eef5ff;
+    border-left: 8px solid #2566af;
 }
 
 blockquote.danger {
-    background-color: rgba(255, 101, 62, 0.3);
-    border-left: 8px solid #e91e1e;
-    padding: 15px 30px 15px 15px;
+    background-color: #fff4f4;
+    border-left: 8px solid #df1212;
+}
+
+blockquote.warning {
+    background-color: #fff7f2;
+    border-left: 8px solid #e26015;
+}
+
+.button {
+    border-radius: 25px;
+    padding: 15px;
+}
+
+body, button, input, textarea
+{
+    font-family:"G1" !important;
+    color: #2845ae;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    font-weight: 100;
+    color: #5493f7;
+}
+
+.onPageNav .toc-headings > li > a.active {
+    font-weight: 600;
+    color: #2845ae;
 }

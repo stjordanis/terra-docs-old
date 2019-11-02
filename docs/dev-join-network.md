@@ -3,19 +3,18 @@ id: dev-join-network
 title: Join a network
 ---
 
-{% hint style="info" %}
-See the [testnet repo](https://github.com/terra-project/networks) for information on the latest testnet, including the correct version of the Terra Core to use and details about the genesis file.
-{% endhint %}
+> See the [testnet repo](https://github.com/terra-project/networks) for information on the latest testnet, including the correct version of the Terra Core to use and details about the genesis file.
+{info}
 
-{% hint style="warning" %}
-You need to [install terra](installation.md) before going further.
-{% endhint %}
+
+> You need to [install terra](installation.md) before going further.
+{warning}
 
 ## Setting Up a New Node
 
-{% hint style="info" %}
-If you ran a full node on a previous testnet, please skip to [Upgrading From Previous Testnet](join-network.md#upgrading-from-previous-testnet).
-{% endhint %}
+
+> If you ran a full node on a previous testnet, please skip to [Upgrading From Previous Testnet](join-network.md#upgrading-from-previous-testnet).
+{info}
 
 These instructions are for setting up a brand new full node from scratch.
 
@@ -25,10 +24,9 @@ First, initialize the node and create the necessary config files:
 terrad init <your_custom_moniker>
 ```
 
-{% hint style="warning" %}
-Monikers can only contain  ASCII characters.
-Using Unicode characters will render your node unreachable.
-{% endhint %}
+> Monikers can only contain  ASCII characters.
+> Using Unicode characters will render your node unreachable.
+{warning}
 
 You can edit this `moniker` later, in the `~/.terrad/config/config.toml` file:
 
@@ -66,12 +64,12 @@ terrad unsafe-reset-all
 
 Your node is now in a pristine state while keeping the original `priv_validator.json` and `config.toml`. If you had any sentry nodes or full nodes setup before, your node will still try to connect to them, but may fail if they haven't also been upgraded.
 
-{% hint style="danger" %}
-Make sure that every node has a unique `priv_validator.json`.
-
-Do not copy the `priv_validator.json` from an old node to multiple new nodes.
-Running two nodes with the same `priv_validator.json` will cause you to double sign.
-{% endhint %}
+> Make sure that every node has a unique `priv_validator.json`.
+>
+> Do not copy the `priv_validator.json` from an old node to multiple new nodes.
+>
+> Running two nodes with the same `priv_validator.json` will cause you to double sign.
+{danger}
 
 ### Software Upgrade
 
@@ -82,9 +80,8 @@ git checkout master && git pull
 make
 ```
 
-{% hint style="info" %}
-If you have issues at this step, please check that you have the latest stable version of GO installed.
-{% endhint %}
+> If you have issues at this step, please check that you have the latest stable version of GO installed.
+{info}
 
 Note we use `master` here since it contains the latest stable release. See the [testnet repo](https://github.com/terra-project/networks) for details on which version is needed for which testnet, and the [SDK release page](https://github.com/terra-project/core//releases) for details on each release.
 

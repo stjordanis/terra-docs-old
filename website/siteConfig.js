@@ -5,20 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+const headerLinks = require('./headerLinks.js');
+const markdownPlugins = require('./markdownPlugins.js');
+
 // See https://docusaurus.io/docs/site-config for all the possible
 // site configuration options.
-
-// List of projects/orgs using your project for the users page.
-const users = [
-  {
-    caption: 'User1',
-    // You will need to prepend the image path with your baseUrl
-    // if it is not '/', like: '/test-site/img/image.jpg'.
-    image: '/img/undraw_open_source.svg',
-    infoLink: 'https://www.facebook.com',
-    pinned: true,
-  },
-];
 
 const siteConfig = {
   title: 'Terra Documentation', // Title for your website.
@@ -34,41 +25,25 @@ const siteConfig = {
   // Used for publishing and more
   projectName: 'terra-docs',
   organizationName: 'ouiliame',
-  // For top-level user or org sites, the organization is still the same.
-  // e.g., for the https://JoelMarcey.github.io site, it would be set like...
-  //   organizationName: 'JoelMarcey'
 
-  // For no header links in the top nav bar -> headerLinks: [],
-  headerLinks: [
-    {doc: 'dev-intro', label: 'Docs'},
-    {doc: 'validator-intro', label: 'Validator Guide'},
-    {href: 'https://s3.ap-northeast-2.amazonaws.com/terra.money.home/static/Terra_White_paper.pdf', label: 'Whitepaper'},
-    {href: 'https://agora.terra.money/', label: 'Agora'},
-    {href: 'https://agora.terra.money/', label: 'Github'},
-    // {page: 'help', label: 'Help'},
-    { search: true },
-    { languages: true },
-  ],
-
-  // If you have users set above, you add it here:
-  users,
+  headerLinks,
 
   /* path to images for header/footer */
   headerIcon: 'img/docs_logo.svg',
   footerIcon: 'img/inverted_logo.svg',
   favicon: 'img/favicon.ico',
 
-  // header
+  // header -- don't show title text
   disableHeaderTitle: true,
 
   /* Colors for website */
   colors: {
     primaryColor: '#0c3694',
-    secondaryColor: '#2845ae',
+    secondaryColor: '#0c3694',
   },
 
   // This copyright info is used in /core/Footer.js and blog RSS/Atom feeds.
-  copyright: `Copyright © ${new Date().getFullYear()} Terraform Labs PTE.`,
+  copyright: `© ${new Date().getFullYear()}`,
 
   highlight: {
     // Highlight.js theme to use for syntax highlighting in code blocks.
@@ -89,36 +64,17 @@ const siteConfig = {
   // On page navigation for the current documentation page.
   onPageNav: 'separate',
   scrollToTop: true,
+
   // No .html extensions for paths.
   cleanUrl: true,
-
-  // Open Graph and Twitter card images.
-  ogImage: 'img/undraw_online.svg',
-  twitterImage: 'img/undraw_tweetstorm.svg',
   
   // social media
   repoUrl: 'https://github.com/terra-project/core', // github
   twitterUsername: 'terra_money',
 
-  markdownPlugins: [
-    (md) => {
-      require('remarkable-plantuml')(md, {base_path: './static'});
-    }
-  ],
-
-  // For sites with a sizable amount of content, set collapsible to true.
-  // Expand/collapse the links and subcategories under categories.
+  markdownPlugins,
   docsSideNavCollapsible: true,
-
-  // Show documentation's last contributor's name.
-  // enableUpdateBy: true,
-
-  // Show documentation's last update time.
-  // enableUpdateTime: true,
-
-  // You may provide arbitrary config keys to be used as needed by your
-  // template. For example, if you need your repo's URL...
-  //   repoUrl: 'https://github.com/facebook/test-site',
+  enableUpdateTime: true
 };
 
 module.exports = siteConfig;

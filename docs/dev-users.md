@@ -59,7 +59,7 @@ salt
 The funds stored in an account are controlled by the private key. This private key is generated using a one-way function from the mnemonic. If you lose the private key, you can retrieve it using the mnemonic. However, if you lose the mnemonic, you will lose access to all the derived private keys. Likewise, if someone gains access to your mnemonic, they gain access to all the associated accounts.
 
 <blockquote class="danger">
-Do not lose or share your 24 words with anyone.<br/><br/>
+Do not lose or share your 24 words with anyone.
 
 To prevent theft or loss of funds, it is best to ensure that you keep multiple copies of your mnemonic, and store it in a safe, secure place and that only you know how to access.
 
@@ -73,7 +73,7 @@ The address is a public string with a human-readable prefix \(e.g. `terra10snjt8
 If you participated in the fundraiser, you should be in possession of a 24-word mnemonic created through the Registrar tool. If you have not yet generated your wallet, please contact the Terra team right away.
 
 #### On a ledger device
-
+`
 At the core of a ledger device, there is a mnemonic used to generate accounts on multiple blockchains \(including Terra\). Usually, you will create a new mnemonic when you initialize your ledger device. However, it is possible to tell the ledger device to use a mnemonic provided by the user instead. Let us go ahead and see how you can input the mnemonic you obtained during the fundraiser as the seed of your ledger device.
 
 {% hint style="warning" %}
