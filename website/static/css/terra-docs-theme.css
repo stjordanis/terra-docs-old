@@ -70,8 +70,8 @@ body, button, input, textarea
 }
 
 h1,h2,h3,h4,h5,h6 {
-    font-weight: 500 !important;
-    color: #2845ae;
+    font-weight: 400 !important;
+    color: #5493f0;
 }
 
 .onPageNav .toc-headings > li > a.active {
@@ -90,7 +90,6 @@ h1 {
 
 .post a {
     color: #5493f0;
-    /*text-decoration: underline !important;*/
     font-weight: 500;
 }
 
@@ -142,4 +141,4 @@ input#search_input_react::placeholder {
     color: hsla(0,0%,100%,.3);
 }
 
-/*
+*/
