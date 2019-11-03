@@ -15,6 +15,78 @@
 @media only screen and (min-width: 1500px) {
 }
 
+:root {
+    /* page colors */
+    --bg-color: #ffffff;
+    --tone-color: #f8f9fe;
+    
+    /* page typography */
+    --base-font-color: #2043B5;
+    --base-header-color: #2043b5;
+    --link-color: #5493f7;
+    --base-font-size: 15px;
+    --h1-size: 34px;
+    --h2-size: 24px;
+    --h3-size: 18px;
+    --h4-size: 14px;
+
+    /* blockquotes */
+    --bq-font-size: 13px;
+    --bq-header-size: 18px;
+
+    /* white note - default */
+    --bq-default-bg-color: #ffffff;
+    --bq-default-border-color: #e7ebf6;
+
+    /* yellow note */
+    --bq-note-header-text: "note";
+    --bq-note-edge-color: #facb32;
+    --bq-note-bg-color: #fcf2d4;
+    --bq-note-text-color: #ca9d08;
+
+    /* orange note */
+    --bq-important-header-text: "important";
+    --bq-important-edge-color: #f8823e;
+    --bq-important-bg-color: #fff7f2;
+    --bq-important-text-color: #b85013;
+
+    /* blue note */
+    --bq-tip-header-text: "tip";
+    --bq-tip-edge-color: #1a8bd6;
+    --bq-tip-bg-color: #f8fdff;
+    --bq-tip-text-color: #0e59a0;
+
+    /* red note */
+    --bq-warning-header-text: "warning";
+    --bq-warning-edge-color: #df1212;
+    --bq-warning-bg-color: #fcf4f4;
+    --bq-warning-text-color: #b30f0f;
+
+}
+
+/* typography */
+
+h1 { /* 32 -> 40 */
+    font-size: var(--h1-size);
+}
+
+h2 { /* 24 -> 30 */
+    font-size: var(--h2-size);
+}
+
+h3 { /* 20 -> 24 */
+    font-size: var(--h3-size);
+}
+
+h4 { /* 16 -> 20 */
+    font-size: var(--h4-size);
+}
+
+
+body {
+    background-color: var(--bg-color);
+}
+
 .logo {
     height: 20px !important;
 }
@@ -23,11 +95,16 @@
     background-color: #18181a;
 }
 
-/* make navbar link bold if active */
 
-.navigationSlider .slidingNav ul li.siteNavGroupActive a {
+.navigationSlider .slidingNav ul li a {
+    font-weight: 400 !important;
+}
+
+
+.navigationSlider .slidingNav ul li.siteNavGroupActive > a {
     font-weight: 500 !important;
 }
+
 
 /* make sidebar titles bold */
 
@@ -37,72 +114,78 @@
 
 /* different blockquotes */
 
-/* plain - grey */
+/* plain - white */
 blockquote {
+    border: 1px solid var(--bq-default-border-color);
+    background-color: var(--bq-default-bg-color);
     border-radius: 5px;
-    background-color: #f5f5f5;
-    border-left: 8px solid #c2c2c2;
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,.065);
-    color: #4e4e4e;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.05);
+    font-size: var(--bq-font-size);
+    color: var(--base-font-color);
 }
 
-/* note -- says NOTE and is yellow */
+/* yellow note */
 blockquote.note {
-    background-color: #fff8e1;
-    border-left: 8px solid #f8d45e;
-    color: #cfa518;
+    background-color: var(--bq-note-bg-color);
+    border-left: 8px solid var(--bq-note-edge-color);
+    color: var(--bq-note-text-color);
 }
 
 blockquote.note::before {
-    content: "note";
+    content: var(--bq-note-header-text);
     font-variant: small-caps;
     position: relative;
-    padding-bottom: 15px;
-    top: -10px;
+    top: -8px;
     font-weight: 700;
-    font-size: 22px;
+    font-size: var(--bq-header-size);
 }
 
 /* info, just blue, doesn't say info */
-blockquote.info {
-    background-color: #f5f9ff;
-    border-left: 8px solid #297deb;
-    color: #1659b1;
+blockquote.tip {
+    background-color: var(--bq-tip-bg-color);
+    border-left: 8px solid var(--bq-tip-edge-color);
+    color: var(--bq-tip-text-color);
+}
+
+blockquote.tip::before {
+    content: var(--bq-tip-header-text);
+    font-variant: small-caps;
+    position: relative;
+    top: -8px;
+    font-weight: 700;
+    font-size: var(--bq-header-size);
 }
 
 /* warning/danger, is red, says "warning" */
 blockquote.warning {
-    background-color: #fcf4f4;
-    border-left: 8px solid #df1212;
-    color: #b30f0f;
+    background-color: var(--bq-warning-bg-color);
+    border-left: 8px solid var(--bq-warning-edge-color);
+    color: var(--bq-warning-text-color);
 }
 
-
 blockquote.warning::before {
-    content: "warning";
+    content: var(--bq-warning-header-text);
     font-variant: small-caps;
     position: relative;
-    padding-bottom: 15px;
-    top: -10px;
+    top: -8px;
     font-weight: 700;
-    font-size: 22px;
+    font-size: var(--bq-header-size);
 }
 
 /* important, orange */
 blockquote.important {
-    background-color: #fff7f2;
-    border-left: 8px solid #f8823e;
-    color: #b85013;
+    background-color: var(--bq-important-bg-color);
+    border-left: 8px solid var(--bq-important-edge-color);
+    color: var(--bq-important-text-color);
 }
 
 blockquote.important::before {
     content: "important";
     font-variant: small-caps;
     position: relative;
-    padding-bottom: 15px;
     top: -10px;
     font-weight: 700;
-    font-size: 22px;
+    font-size: var(--bq-header-size);
 }
 
 .button {
@@ -113,35 +196,18 @@ blockquote.important::before {
 body, button, input, textarea
 {
     font-family:"G1" !important;
-    color: #2845ae;
+    color: var(--base-font-color);
 }
 
 h1,h2,h3,h4,h5,h6 {
-    font-weight: 400 !important;
-    color: #5493f0;
+    font-weight: 500 !important;
+    color: var(--base-header-color);
 }
 
+/* page sidebar */
 .onPageNav .toc-headings > li > a.active {
     font-weight: 500;
-    color: #2845ae;
-}
-
-/* headers need to be a bit bigger */
-
-h1 { /* 32 -> 40 */
-    font-size: 40px;
-}
-
-h2 { /* 24 -> 30 */
-    font-size: 32px;
-}
-
-h3 { /* 20 -> 24 */
-    font-size: 26px;
-}
-
-h4 { /* 16 -> 20 */
-    font-size: 20px;
+    color: var(--base-font-color);
 }
 
 /* hide that > */
@@ -150,8 +216,12 @@ h4 { /* 16 -> 20 */
 }
 
 .post a {
-    color: #5493f0;
-    font-weight: 500;
+    color: var(--link-color);
+}
+
+.post {
+    line-height: 1.5 !important;
+    font-size: var(--base-font-size);
 }
 
 sup {
@@ -183,11 +253,76 @@ sup {
     color: #5493f0;
 }
 
+/* code blocks */
+
 code {
     font-family: "Fira Code", monospace !important;
     font-variant-ligatures: none;
+    border-radius: 3px;
+    background-color: rgba(27, 27, 27, 0.05);
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.05);
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-left: 3px;
+    margin-right: 3px;
+    border: 1px solid var(--bq-default-border-color);
 }
 
+pre code {
+    font-family: "Fira Code", monospace !important;
+    font-variant-ligatures: none;
+    background-color: rgba(27, 27, 27, 0.05);
+    padding: 0px;
+    border: 1px solid var(--bq-default-border-color);
+    box-shadow: 0px 0px 43px -31px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+}
+
+/* table */
+table {
+    font-size: 12px;
+    margin-bottom: 25px;
+    width: initial;
+    display: inline-block;
+    box-shadow: 0px 0px 43px -31px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--bq-default-border-color);
+    border-radius: 5px;
+    padding: 15px;
+}
+
+table thead {
+    font-size: 13px;
+    font-weight: 500;
+    border-bottom: 1px solid var(--bq-default-border-color);
+}
+
+table thead th {
+    padding: 15px;
+}
+
+table tr {
+    border: none;
+    border-bottom: 1px solid var(--bq-default-border-color);
+}
+
+table tr:last-of-type {
+    border: none;
+}
+
+table tr:nth-child(2n) {
+    background-color: transparent !important;
+}
+
+table th, table td {
+    border: none;
+}
+
+table td {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
 /* algolia search */
 
 /*
