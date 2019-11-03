@@ -57,7 +57,7 @@ const siteConfig = {
   ],
 
   stylesheets: [
-    "https://fonts.googleapis.com/css?family=Fira+Code:400,500,600,700&display=swap"
+    "https://fonts.googleapis.com/css?family=Oxygen+Mono&display=swap"
   ],
 
   // On page navigation for the current documentation page.
