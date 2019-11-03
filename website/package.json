@@ -11,6 +11,7 @@
     "docusaurus": "^1.14.0"
   },
   "dependencies": {
+    "ejs": "^2.7.1",
     "remarkable-classy": "^0.0.1",
     "remarkable-plantuml": "^1.1.0"
   }

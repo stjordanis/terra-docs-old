@@ -95,15 +95,24 @@
     
     .toc .toggleNav .navGroup .navGroupSubcategoryTitle {
         color: hsla(0,0%,100%,.87);
+        font-size: 12px;
+        margin-top: 5px;
+        margin-bottom: -2px;
+        position: relative;
+        left: -2px;
+    }
+
+    .toc .toggleNav ul {
+        padding-left: 13px;
     }
     
     .toc .toggleNav ul li.navListItemActive a {
-        color: #ffffff;
+        color: hsla(0,0%,100%,.87);
         font-weight: 500;
     }
     
     .toc .toggleNav .navGroup .navGroupCategoryTitle {
-        color: #ffffff;
+        color: hsla(0,0%,100%,.87);
         font-weight: 400 !important;
     }
 

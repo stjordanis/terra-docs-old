@@ -1,28 +1,85 @@
 {
   "docs": {
     "Overview": [
-      "dev-intro"
-    ],
-    "Get Started": [
-      "dev-installation",
-      "dev-production",
-      "dev-join-network",
-      "dev-deploy-testnet",
-      "dev-terracli",
-      "dev-users",
-      "dev-light-client",
-      "dev-ledger-nano-support"
+      "dev-intro",
+      "dev-faq"
     ],
     "Terra Protocol": [
-      "dev-architecture",
-      "dev-consensus",
-      "dev-validators",
-      "dev-stabilization",
-      "dev-seigniorage",
-      "dev-exchange",
+      "dev-what-is-terra",
+      "dev-how-terra-works",
       {
         "type": "subcategory",
-        "label": "CORE MODULES",
+        "label": "BASICS",
+        "ids": [
+          "dev-accounts-wallets",
+          "dev-transaction"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "MINING & CONSENSUS",
+        "ids": [
+          "dev-tendermint-bft",
+          "dev-luna-staking",
+          "dev-validators",
+          "dev-price-oracle"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "STABILITY",
+        "ids": [
+          "dev-monetary-policy",
+          "dev-subcurrencies",
+          "dev-stabilization",
+          "dev-miner-incentives"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "ADOPTION",
+        "ids": [
+          "dev-fiscal-policy",
+          "dev-treasury",
+          "dev-governance",
+          "dev-dapp-platform"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "TERRA VS. ...",
+        "ids": [
+          "dev-comparison"
+        ]
+      }
+    ],
+    "Node Software": [
+      "dev-installation",
+      "dev-users",
+      "dev-light-client",
+      {
+        "type": "subcategory",
+        "label": "GUIDES",
+        "ids": [
+          "dev-terracli",
+          "dev-ledger-nano-support",
+          "dev-production",
+          "dev-join-network",
+          "dev-deploy-testnet"
+        ]
+      }
+    ],
+    "Validator Guide": [
+      "validator-intro",
+      "validator-getting-started",
+      "validator-security",
+      "validator-faq"
+    ],
+    "Developer Guide": [
+      "dev-getting-started",
+      {
+        "type": "subcategory",
+        "label": "TERRA CORE",
         "ids": [
           "dev-spec-pay",
           "dev-spec-mint",
@@ -31,19 +88,19 @@
           "dev-spec-treasury",
           "dev-spec-budget"
         ]
+      },
+      {
+        "type": "subcategory",
+        "label": "CLIENT LIBRARIES",
+        "ids": [
+          "dev-terrajs",
+          "dev-terrapy"
+        ]
       }
     ],
     "Contribute": [
       "dev-contributing",
       "dev-help-translate"
-    ]
-  },
-  "validator": {
-    "Overview": [
-      "validator-intro",
-      "validator-getting-started",
-      "validator-security",
-      "validator-faq"
     ]
   }
 }
