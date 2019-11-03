@@ -97,6 +97,7 @@
     
     .toc .toggleNav ul li.navListItemActive a {
         color: #ffffff;
+        font-weight: 500;
     }
     
     .toc .toggleNav .navGroup .navGroupCategoryTitle {
