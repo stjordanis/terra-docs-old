@@ -4,15 +4,53 @@
 }
 
 @media only screen and (min-width: 1024px) {
+    .docMainWrapper.wrapper {
+        padding-left: 0;
+    }
+    
+    #docsNav {
+        padding-left: 20px;
+        padding-right: 20px;
+        background-color: #0c3694;
+        flex: 0 0 240px;
+    }
+    
+    .arrow path:first-of-type {
+        fill: #ffffff !important;
+    }
+    
+    
+    /* make sidebar titles bold */
+    
+    .toc .toggleNav ul li a {
+       color: hsla(0,0%,100%,.75);
+    }
+    
+    .toc .toggleNav .navGroup .navGroupSubcategoryTitle {
+        color: hsla(0,0%,100%,.87);
+    }
+    
+    .toc .toggleNav ul li.navListItemActive a {
+        color: #ffffff;
+    }
+    
+    .toc .toggleNav .navGroup .navGroupCategoryTitle {
+        color: #ffffff;
+        font-weight: 400 !important;
+    }
+
+    .toc .toggleNav ul li a:hover {
+        color: #ffffff;
+    }
 }
 
 @media only screen and (max-width: 1023px) {
 }
 
 @media only screen and (min-width: 1400px) {
-}
-
-@media only screen and (min-width: 1500px) {
+    .wrapper {
+        margin: 0;
+    }
 }
 
 :root {
@@ -106,11 +144,6 @@ body {
 }
 
 
-/* make sidebar titles bold */
-
-.toc .toggleNav .navGroup .navGroupCategoryTitle {
-    font-weight: 500 !important;
-}
 
 /* different blockquotes */
 
