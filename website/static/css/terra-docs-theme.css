@@ -365,13 +365,18 @@ table tr {
     border-bottom: 1px solid var(--bq-default-border-color);
 }
 
+table tr:nth-child(2n) {
+    background-color: initial;
+}
+
+table tbody tr:hover {
+    background-color: rgba(32,67,181,.02);
+}
+
 table tr:last-of-type {
     border: none;
 }
 
-table tr:nth-child(2n) {
-    background-color: transparent !important;
-}
 
 table th, table td {
     border: none;
