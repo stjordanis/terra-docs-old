@@ -3,7 +3,7 @@
 
 :root {
     /* page colors */
-    --bg-color: #ffffff;
+    --bg-color: #f8f9fe;
     --tone-color: #f8f9fe;
     
     /* page typography */
@@ -27,25 +27,25 @@
     /* yellow note */
     --bq-note-header-text: "note";
     --bq-note-edge-color: #facb32;
-    --bq-note-bg-color: #fcf2d4;
+    --bq-note-bg-color: #ffffff;
     --bq-note-text-color: #ca9d08;
 
     /* orange note */
     --bq-important-header-text: "important";
     --bq-important-edge-color: #f8823e;
-    --bq-important-bg-color: #fff7f2;
+    --bq-important-bg-color: #ffffff;
     --bq-important-text-color: #b85013;
 
     /* blue note */
     --bq-tip-header-text: "tip";
     --bq-tip-edge-color: #1a8bd6;
-    --bq-tip-bg-color: #f8fdff;
+    --bq-tip-bg-color: #ffffff;
     --bq-tip-text-color: #0e59a0;
 
     /* red note */
     --bq-warning-header-text: "warning";
     --bq-warning-edge-color: #df1212;
-    --bq-warning-bg-color: #fcf4f4;
+    --bq-warning-bg-color: #ffffff;
     --bq-warning-text-color: #b30f0f;
 
 }
@@ -61,15 +61,24 @@
 }
 
 @media only screen and (min-width: 1024px) {
+    .wrapper {
+        max-width: 1600px !important;
+    }
     .docMainWrapper.wrapper {
         padding-left: 0;
+        padding-right: 20px;
     }
     
     #docsNav {
         padding-left: 20px;
         padding-right: 20px;
         background-color: #0c3694;
-        flex: 0 0 240px;
+        flex: 0 0 245px;
+    }
+
+    .onPageNav {
+        padding-right: 30px;
+        flex: 0 0 250px;
     }
     
     .arrow path:first-of-type {
@@ -95,7 +104,7 @@
         font-weight: 400 !important;
     }
 
-    .toc .toggleNav ul li a:hover {
+    .toc .toggleNav ul li a:hover, .toc .toggleNav ul li a:focus {
         color: #ffffff;
     }
 }
@@ -270,6 +279,13 @@ sup {
     font-size: smaller;
 }
 
+.docs-prev.button {
+    margin-top: 15px;
+}
+.docs-next.button {
+    margin-top: 15px;
+}
+
 .button > span {
     font-weight: 500 !important;
 }
@@ -323,6 +339,7 @@ pre code {
 
 /* table */
 table {
+    background-color: #ffffff;
     font-size: 12px;
     margin-bottom: 25px;
     width: initial;
