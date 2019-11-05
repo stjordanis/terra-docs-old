@@ -1,6 +1,6 @@
 ---
 id: validator-faq
-title: FAQ
+title: Validator FAQ
 ---
 
 {% hint style="warning" %}

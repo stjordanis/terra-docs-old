@@ -12,12 +12,19 @@ The objective of the oracle module is to get accurate exchange rates of Luna wit
 In order to get fair exchange rates, the oracle operates in the following way:
 
 * Let P = {P1, P2, ...} be a time series split up by `params.VotePeriod`, currently 1 minute. In each P, validators must submit two votes: 
+
   * A `MsgPricePrevote`, containing the SHA256 hash of the exchange rate of Luna is with respect to a Terra peg. For example, in order to support swaps for Terra currencies pegged to KRW, USD, SDR, three prevotes must be submitted each containing the uluna&lt;&gt;ukrw, uluna&lt;&gt;uusd, and uluna&lt;&gt;usdr exchange rates. 
+
   * A `MsgPriceVote`, containing the salt used to create the hash for the prevote submitted in P-1.  
+
 * At the end of each P, votes submitted are tallied. 
+
   * The submitted salt of each vote is used to verify consistency with the prevote submitted by the validator in P-1. If the validator has not submitted a prevote, or the SHA256 resulting from the salt does not match the hash from the prevote, the vote is dropped.
+
   * For each currency, if the total voting power of submitted votes exceeds 50%, a weighted median price of the vote is taken and is record on-chain as the effective exchange rate for Luna w.r.t. said currency for P+1.
+
   * Winners of the ballot for P-1, i.e. voters that have managed to vote within a small band around the weighted median, get rewarded by spread fees collected by swap operations during P. For spread rewards, see [this](market.md#spread-rewards).
+  
 * If an insufficient amount of votes have been received for a currency, below `VoteThreshold`, its exchange rate is deleted from the store, and no swaps can be made with it during P. 
 
 ```text

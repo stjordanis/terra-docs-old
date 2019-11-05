@@ -8,7 +8,7 @@ title: Join a network
 
 
 > You need to [install terra](installation.md) before going further.
-{warning}
+{note}
 
 ## Setting Up a New Node
 
@@ -26,7 +26,7 @@ terrad init <your_custom_moniker>
 
 > Monikers can only contain  ASCII characters.
 > Using Unicode characters will render your node unreachable.
-{warning}
+{note}
 
 You can edit this `moniker` later, in the `~/.terrad/config/config.toml` file:
 

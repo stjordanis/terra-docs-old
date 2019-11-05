@@ -3,15 +3,13 @@ id: dev-terracli
 title: "Interacting with the network: CLI"
 ---
 
-## Terra CLI
-
 For more information on the command usage, refer to its help screen: `terracli config --help`.
 
 Here is a list of useful `terracli` commands, including usage examples.
 
-### Keys
+## Keys
 
-#### Key Types
+### Key Types
 
 There are three types of key representations that are used:
 
@@ -31,7 +29,7 @@ There are three types of key representations that are used:
   * Get this value with `terrad tendermint show-validator`
   * e.g. `terravalconspub1zcjduepq0ms2738680y72v44tfyqm3c9ppduku8fs6sr73fx7m666sjztznqzp2emf`
 
-#### Generate Keys
+### Generate Keys
 
 You'll need an account private and public key pair \(a.k.a. `sk, pk` respectively\) to be able to receive funds, send txs, bond tx, etc.
 
@@ -73,12 +71,11 @@ terrad tendermint show-validator
 
 Note that this is the Tendermint signing key, _not_ the operator key you will use in delegation transactions.
 
-{% hint style="danger" %}
-We strongly recommend **NOT** using the same passphrase for multiple keys.
-The Terra team will not be responsible for the loss of funds.
-{% endhint %}
+> We strongly recommend **NOT** using the same passphrase for multiple keys.
+> The Terra team will not be responsible for the loss of funds.
+{warning}
 
-#### Generate multisig public keys
+### Generate multisig public keys
 
 You can generate and print a multisig public key by typing:
 
@@ -103,7 +100,8 @@ terracli keys show --multisig-threshold K name1 name2 name3 [...]
 
 For more information regarding how to generate, sign and broadcast transactions with a multi signature account see [Multisig Transactions](terracli.md#multisig-transactions).
 
-### Fees & Gas
+
+## Fees and Gas
 
 Each transaction may either supply fees or gas prices, but not both. Most users will typically provide fees as this is the cost you will end up incurring for the transaction being included in the ledger.
 
@@ -123,13 +121,13 @@ or
 terracli tx send ... --gas-prices=0.000001usdr
 ```
 
-### Account
+## Account
 
-#### Get Tokens
+### Get Tokens
 
 The best way to get tokens is from the [Terra Testnet Faucet](https://faucet.terra.money).
 
-#### Query Account balance
+### Query Account balance
 
 After receiving tokens to your address, you can view your account's balance by typing:
 
@@ -137,16 +135,15 @@ After receiving tokens to your address, you can view your account's balance by t
 terracli query account <account_terra>
 ```
 
-{% hint style="warning" %}
-When you query an account balance with zero tokens, you will get this error:
+>When you query an account balance with zero tokens, you will get this error:
+>
+>`No account with address <account_terra> was found in the state`.
+>
+>This can also happen if you fund the account before your node has fully synced with the chain.
+>
+>These are both normal.
 
-`No account with address <account_terra> was found in the state`.
-
-This can also happen if you fund the account before your node has fully synced with the chain.
-These are both normal.
-{% endhint %}
-
-### Send Tokens
+## Send Tokens
 
 The following command could be used to send coins from one account to another:
 
@@ -228,9 +225,9 @@ You can broadcast the signed transaction to a node by providing the JSON file to
 terracli tx broadcast --node=<node> signedSendTx.json
 ```
 
-### Query Transactions
+## Query Transactions
 
-#### Matching a set of tags
+### Matching a set of tags
 
 You can use the transaction search command to query for transactions that match a specific set of `tags`, which are added on every transaction.
 
@@ -258,7 +255,7 @@ The action tag always equals the message type returned by the `Type()` function 
 You can find a list of available `tags` on each module by looking at the /tags directory of each module.
 {% endhint %}
 
-#### Matching a transaction's hash
+### Matching a transaction's hash
 
 You can also query a single transaction by its hash using the following command:
 
@@ -266,9 +263,9 @@ You can also query a single transaction by its hash using the following command:
 terracli query tx [hash]
 ```
 
-### Slashing
+## Slashing
 
-#### Unjailing
+### Unjailing
 
 To unjail your jailed validator
 
@@ -276,7 +273,7 @@ To unjail your jailed validator
 terracli tx slashing unjail --from <validator-operator-addr>
 ```
 
-#### Signing Info
+### Signing Info
 
 To retrieve a validator's signing info:
 
@@ -284,7 +281,7 @@ To retrieve a validator's signing info:
 terracli query slashing signing-info <validator-pubkey>
 ```
 
-#### Query Parameters
+### Query Parameters
 
 You can get the current slashing parameters via:
 
@@ -292,13 +289,13 @@ You can get the current slashing parameters via:
 terracli query slashing params
 ```
 
-### Staking
+## Staking
 
-#### Set up a Validator
+### Set up a Validator
 
 Please refer to the [Validator Setup](validators.md) section for a more complete guide on how to set up a validator-candidate.
 
-#### Delegate to a Validator
+### Delegate to a Validator
 
 On the upcoming mainnet, you can delegate `luna` to a validator. These [delegators](../features/overview/validator-faq.md) can receive part of the validator's fee revenue.
 
@@ -316,7 +313,7 @@ If you want to get the information of a single validator you can check it with:
 terracli query staking validator <account_terraval>
 ```
 
-#### Bond Tokens
+### Bond Tokens
 
 On the testnet, we delegate `luna`. Here's how you can bond tokens to a testnet validator \(_i.e._ delegate\):
 
@@ -358,7 +355,7 @@ terracli query staking delegations <delegator_addr>
 
 You can also get previous delegation\(s\) status by adding the `--height` flag.
 
-#### Unbond Tokens
+### Unbond Tokens
 
 If for any reason the validator misbehaves, or you just want to unbond a certain amount of tokens, use this following command. You can unbond a specific `shares-amount` \(eg:`12.1`\) or a `shares-fraction` \(eg:`0.25`\) with the corresponding flags.
 
@@ -394,7 +391,7 @@ terracli query staking unbonding-delegations-from <account_terraval>
 
 To get previous unbonding-delegation\(s\) status on past blocks, try adding the `--height` flag.
 
-#### Redelegate Tokens
+### Redelegate Tokens
 
 A redelegation is a type delegation that allows you to bond illiquid tokens from one validator to another:
 
@@ -433,7 +430,7 @@ Additionally, as you can get all the outgoing redelegations from a particular va
 
 To get previous redelegation\(s\) status on past blocks, try adding the `--height` flag.
 
-#### Query Parameters
+### Query Parameters
 
 Parameters define high level settings for staking. You can get the current values by using:
 
@@ -447,7 +444,7 @@ With the above command you will get the values for:
 * Maximum numbers of validators
 * Coin denomination for staking
 
-#### Query Pool
+### Query Pool
 
 A staking `Pool` defines the dynamic parameters of the current state. You can query them with the following command:
 
@@ -470,9 +467,9 @@ You can also query all of the delegations to a particular validator:
   terracli query delegations-to <account_terraval>
 ```
 
-### Fee Distribution
+## Fee Distribution
 
-#### Query distribution parameters
+### Query distribution parameters
 
 To check the current distribution parameters, run:
 
@@ -480,7 +477,7 @@ To check the current distribution parameters, run:
 terracli query distr params
 ```
 
-#### Query outstanding rewards
+### Query outstanding rewards
 
 To check the current outstanding \(un-withdrawn\) rewards, run:
 
@@ -488,7 +485,7 @@ To check the current outstanding \(un-withdrawn\) rewards, run:
 terracli query distr outstanding-rewards
 ```
 
-#### Query validator commission
+### Query validator commission
 
 To check the current outstanding commission for a validator, run:
 
@@ -496,7 +493,7 @@ To check the current outstanding commission for a validator, run:
 terracli query distr commission <validator_address>
 ```
 
-#### Query validator slashes
+### Query validator slashes
 
 To check historical slashes for a validator, run:
 
@@ -504,7 +501,7 @@ To check historical slashes for a validator, run:
 terracli query distr slashes <validator_address> <start_height> <end_height>
 ```
 
-#### Query delegator rewards
+### Query delegator rewards
 
 To check current rewards for a delegation \(were they to be withdrawn\), run:
 
@@ -512,7 +509,7 @@ To check current rewards for a delegation \(were they to be withdrawn\), run:
 terracli query distr rewards <delegator_address> <validator_address>
 ```
 
-#### Query all delegator rewards
+### Query all delegator rewards
 
 To check all current rewards for a delegation \(were they to be withdrawn\), run:
 
@@ -520,7 +517,7 @@ To check all current rewards for a delegation \(were they to be withdrawn\), run
 terracli query distr rewards <delegator_address>
 ```
 
-### Multisig transactions
+## Multisig transactions
 
 Multisig transactions require signatures of multiple private keys. Thus, generating and signing a transaction from a multisig account involve cooperation among the parties involved. A multisig transaction can be initiated by any of the key holders, and at least one of them would need to import other parties' public keys into their Keybase and generate a multisig public key in order to finalize and broadcast the transaction.
 
@@ -603,7 +600,7 @@ terracli tx broadcast signedTx.json \
   --chain-id=<chain_id>
 ```
 
-### Shells completion scripts
+## Shells completion scripts
 
 Completion scripts for popular UNIX shell interpreters such as `Bash` and `Zsh` can be generated through the `completion` command, which is available for both `terrad` and `terracli`.
 
@@ -632,9 +629,9 @@ On most UNIX systems, such scripts may be loaded in `.bashrc` or `.bash_profile`
 Refer to the user's manual of your interpreter provided by your operating system for information on how to enable shell autocompletion.
 {% endhint %}
 
-### Oracle
+## Oracle
 
-#### Submit a price vote
+### Submit a price vote
 
 Validators must submit two price vote transactions to participate in the oracle; a `prevote` containing the hash of the actual vote in the first vote period, and a `vote` containing the salt of the hash submitted in the prevote phase to prove honestly.
 
@@ -671,7 +668,7 @@ terracli tx oracle vote \
 
 Given that oracle votes have to be submitted in a feed over short time intervals, prevotes / votes will need to be submitted via some persistent server daemon, and not manually. For more information on how to do this, read [the oracle specs](../specifications/oracle.md).
 
-#### Delegate price voting rights
+### Delegate price voting rights
 
 A voter may also elect to delegate price voting to another signing key.
 
@@ -681,7 +678,7 @@ terracli tx oracle set-feeder --feeder <feeder-address> --from mykey
 
 where `feeder-address` is the address you want to delegate your voting rights to. Note that the feeder will still need to submit votes on behalf of your validator in order for you to get credit.
 
-### Market
+## Market
 
 #### Swap currencies
 
@@ -695,9 +692,9 @@ Where `offercoin` is the coin looking to be traded and `ask-denom` the denominat
 
 For Terra &lt;&gt; Luna swaps, a daily cap and a spread is enforced to limit consensus related attack vectors. Terra &lt;&gt; Terra swaps have no limits and no spread.
 
-### Budget
+## Budget
 
-#### Submit a budget program application
+### Submit a budget program application
 
 To submit a budget program application, run:
 
@@ -723,7 +720,7 @@ terracli tx budget submit-program --title="Test program" --description="My aweso
 
 Upon successful completion, a small deposit will be withdrawn from the sender's wallet to prevent spamming. The deposit is returned on application withdrawal.
 
-#### Withdraw a budget program application
+### Withdraw a budget program application
 
 A budget program that has not been accepted yet \(is still in the candidate set\) can be withdrawn for the deposit to be reclaimed. To do so, run:
 
@@ -733,7 +730,7 @@ terracli tx budget withdraw --program-id <program-id>
 
 Where `program-id` is the id of the program that had been generated when the application had been submitted. Only the original submitter of the program can withdraw the application.
 
-#### Vote on a budget program \(application and active\)
+### Vote on a budget program \(application and active\)
 
 The same command can be used to vote for both active and candidate programs. To do so, run:
 
@@ -743,7 +740,7 @@ terracli tx budget vote --program-id <program-id>  --option yes --from mykey
 
 Where `program-id` is the id of the program that had been generated when the application had been submitted. `option` is one of `yes` or `no`.
 
-#### Query a program
+### Query a program
 
 To query the details of a program by its id, run:
 
@@ -753,7 +750,7 @@ terracli query budget program --program-id <program-id>
 
 Where `program-id` is the id of the program that had been generated when the application had been submitted.
 
-#### Query the active program list
+### Query the active program list
 
 To query the list of active programs:
 
@@ -761,7 +758,7 @@ To query the list of active programs:
 terracli query budget candidate-list
 ```
 
-#### Query the candidate program list
+### Query the candidate program list
 
 To query the list of candidate programs:
 
@@ -769,7 +766,7 @@ To query the list of candidate programs:
 terracli query budget candidate-list
 ```
 
-#### Query outstanding votes
+### Query outstanding votes
 
 To query the list of outstanding program votes, both candidate and active:
 
@@ -777,7 +774,7 @@ To query the list of outstanding program votes, both candidate and active:
 terracli query budget votes
 ```
 
-#### Query parameters
+### Query parameters
 
 Parameters define high level settings for the budget module. You can get the current values by using:
 
@@ -792,9 +789,9 @@ With the above command you will get the values for:
 * Budget vote period
 * Deposit required to submit program applications
 
-### Treasury
+## Treasury
 
-#### Query Current Epoch
+### Query Current Epoch
 
 Treasury macroeconomic parameters are updated on a periodic basis each Epoch \(currently around 1 week\). To check the current epoch number \(starting from 0\):
 
@@ -802,7 +799,7 @@ Treasury macroeconomic parameters are updated on a periodic basis each Epoch \(c
 terracli query treasury current-epoch
 ```
 
-#### Query Tax Rate
+### Query Tax Rate
 
 Terra transactions charge a % fee on each outbound transaction from the sender's wallet. To get the effective stability fee rate for a given epoch, run:
 
@@ -810,7 +807,7 @@ Terra transactions charge a % fee on each outbound transaction from the sender's
 terracli query treasury tax-rate <epoch-number>
 ```
 
-#### Query Tax Cap
+### Query Tax Cap
 
 Stability fees are capped at some fixed amount of SDT to avoid penalizing large transactions. To get the current tax cap denominated in a given denom \(micro units\), run:
 
@@ -818,7 +815,7 @@ Stability fees are capped at some fixed amount of SDT to avoid penalizing large 
 terracli query treasury tax-cap <denom>
 ```
 
-#### Query Tax Proceeds
+### Query Tax Proceeds
 
 To query the cumulative tax proceeds of a given epoch, run:
 
@@ -826,7 +823,7 @@ To query the cumulative tax proceeds of a given epoch, run:
 terracli query treasury tax-proceeds <epoch-number>
 ```
 
-#### Query Mining Reward Weight
+### Query Mining Reward Weight
 
 The mining reward weight is the portion of seigniorage that is burned to reward miners. To query the weight of a given epoch, run:
 
@@ -834,7 +831,7 @@ The mining reward weight is the portion of seigniorage that is burned to reward 
 terracli query treasury reward-weight <epoch-number>
 ```
 
-#### Query Seigniorage Proceeds
+### Query Seigniorage Proceeds
 
 The treasury measures the amount of Terra seigniorage accumulated over epochs, denominated in units of `uluna`. To query the seigniorage proceeds of a given epoch, run:
 
@@ -842,7 +839,7 @@ The treasury measures the amount of Terra seigniorage accumulated over epochs, d
 terracli query treasury seigniorage-proceeds <epoch-number>
 ```
 
-#### Query Parameters
+### Query Parameters
 
 Parameters define high level settings for the treasury. You can get the current values by using:
 

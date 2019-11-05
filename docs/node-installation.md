@@ -20,7 +20,8 @@ Install `go` by following the [official docs](https://golang.org/doc/install).
 > **Go 1.12+** is required for Terra Core.
 {info}
 
-> _NOTE_: Before installing `terrad` and `terracli` binaries, let's add the golang binaries to your `PATH` variable. Open your `.bash_profile` or `.zshrc` and append `$HOME/go/bin` to your PATH variable \(i.e. `export PATH=$HOME/bin:$HOME/go/bin`\).
+> Before installing `terrad` and `terracli` binaries, let's add the golang binaries to your `PATH` variable. Open your `.bash_profile` or `.zshrc` and append `$HOME/go/bin` to your PATH variable \(i.e. `export PATH=$HOME/bin:$HOME/go/bin`\).
+{note}
 
 ### Install the binaries
 
@@ -32,7 +33,8 @@ git checkout master
 make
 ```
 
-> _NOTE_: If you have issues at this step, please check that you have the latest stable version of GO installed.
+> If you have issues at this step, please check that you have the latest stable version of GO installed.
+{note}
 
 That will install the `terrad` and `terracli` binaries. Verify that everything is OK:
 

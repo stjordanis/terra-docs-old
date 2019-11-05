@@ -1,6 +1,6 @@
 ---
 id: dev-stabilization
-title: Stabilization
+title: Price Stabilization
 ---
 
 Welcome to the Terra Core documentation.
