@@ -15,9 +15,10 @@ const siteConfig = {
   title: 'Terra Documentation', // Title for your website.
   tagline: 'Columbus 3',
 
-  website: 'https://terra.money', // Your website URL
+  website: 'https://terra.money',
+
   url: 'https://ouiliame.github.io', // Your docs website URL
-  baseUrl: '/terra-docs/', // Base URL for your project */
+  baseUrl: '/terra-docs/', // Base URL for your poject */
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
   //   baseUrl: '/test-site/',
