@@ -8,7 +8,7 @@
     "rename-version": "docusaurus-rename-version"
   },
   "devDependencies": {
-    "docusaurus": "^1.14.0"
+    "terra-docusaurus": "file:./terra-docusaurus"
   },
   "dependencies": {
     "ejs": "^2.7.1",
