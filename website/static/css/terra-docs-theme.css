@@ -22,31 +22,37 @@
 
     /* white note - default */
     --bq-default-bg-color: #ffffff;
-    --bq-default-border-color: #e7ebf6;
+    /*--bq-default-border-color: #e7ebf6;*/
 
     /* yellow note */
     --bq-note-header-text: "note";
-    --bq-note-edge-color: #facb32;
-    --bq-note-bg-color: #ffffff;
-    --bq-note-text-color: #ca9d08;
+    --bq-note-edge-color: #ffc400;
+    --bq-note-bg-color: #fffdf9;
+    --bq-note-text-color: #d1a617;
 
     /* orange note */
     --bq-important-header-text: "important";
     --bq-important-edge-color: #f8823e;
-    --bq-important-bg-color: #ffffff;
+    --bq-important-bg-color: #fffcfa;
     --bq-important-text-color: #b85013;
 
     /* blue note */
     --bq-tip-header-text: "tip";
     --bq-tip-edge-color: #1a8bd6;
-    --bq-tip-bg-color: #ffffff;
+    --bq-tip-bg-color: #f7fcff;
     --bq-tip-text-color: #0e59a0;
 
     /* red note */
     --bq-warning-header-text: "warning";
     --bq-warning-edge-color: #df1212;
-    --bq-warning-bg-color: #ffffff;
+    --bq-warning-bg-color: #fffbfb;
     --bq-warning-text-color: #b30f0f;
+
+    /* grey note */
+    --bq-disclaimer-header-text: "disclaimer";
+    --bq-disclaimer-edge-color: #b4b4b4;
+    --bq-disclaimer-bg-color: #fcfcfc;
+    --bq-disclaimer-text-color: #696969;
 
 }
 
@@ -90,7 +96,7 @@
     /* make sidebar titles bold */
     
     .toc .toggleNav ul li a {
-       color: hsla(0,0%,100%,.75);
+       color: hsla(0,0%,100%,.87);
     }
     
     .toc .toggleNav .navGroup .navGroupSubcategoryTitle {
@@ -107,7 +113,7 @@
     }
     
     .toc .toggleNav ul li.navListItemActive a {
-        color: hsla(0,0%,100%,.87);
+        color: #ffffff;
         font-weight: 500;
     }
     
@@ -174,21 +180,32 @@ body {
 
 
 
-/* different blockquotes */
+/* different s */
 
 /* plain - white */
 blockquote {
     border: 1px solid var(--bq-default-border-color);
     background-color: var(--bq-default-bg-color);
     border-radius: 5px;
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.05);
+    box-shadow: 0px 0px 15px 1px rgba(0, 0, 0, 0.00);
     font-size: var(--bq-font-size);
+    line-height: 1.5;
     color: var(--base-font-color);
+    margin-top: 10px;
+    margin-bottom: 25px;
+}
+
+blockquote code {
+    background-color: transparent;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
 }
 
 /* yellow note */
 blockquote.note {
     background-color: var(--bq-note-bg-color);
+    border: 1px solid var(--bq-note-edge-color);
     border-left: 8px solid var(--bq-note-edge-color);
     color: var(--bq-note-text-color);
 }
@@ -205,6 +222,7 @@ blockquote.note::before {
 /* info, just blue, doesn't say info */
 blockquote.tip {
     background-color: var(--bq-tip-bg-color);
+    border: 1px solid var(--bq-tip-edge-color);
     border-left: 8px solid var(--bq-tip-edge-color);
     color: var(--bq-tip-text-color);
 }
@@ -221,7 +239,11 @@ blockquote.tip::before {
 /* warning/danger, is red, says "warning" */
 blockquote.warning {
     background-color: var(--bq-warning-bg-color);
+    border: 1px solid var(--bq-warning-edge-color);
     border-left: 8px solid var(--bq-warning-edge-color);
+
+    /* make it glow! */
+    box-shadow: 0px 0px 25px 1px rgba(187, 12, 12, 0.03);
     color: var(--bq-warning-text-color);
 }
 
@@ -237,12 +259,30 @@ blockquote.warning::before {
 /* important, orange */
 blockquote.important {
     background-color: var(--bq-important-bg-color);
+    border: 1px solid var(--bq-important-edge-color);
     border-left: 8px solid var(--bq-important-edge-color);
     color: var(--bq-important-text-color);
 }
 
 blockquote.important::before {
     content: "important";
+    font-variant: small-caps;
+    position: relative;
+    top: -10px;
+    font-weight: 700;
+    font-size: var(--bq-header-size);
+}
+
+/* disclaimer, grey */
+blockquote.disclaimer {
+    background-color: var(--bq-disclaimer-bg-color);
+    border: 1px solid var(--bq-disclaimer-edge-color);
+    border-left: 8px solid var(--bq-disclaimer-edge-color);
+    color: var(--bq-disclaimer-text-color);
+}
+
+blockquote.disclaimer::before {
+    content: "disclaimer";
     font-variant: small-caps;
     position: relative;
     top: -10px;
@@ -282,7 +322,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .post {
-    line-height: 1.5 !important;
+    line-height: 1.53 !important;
     font-size: var(--base-font-size);
 }
 
@@ -322,14 +362,14 @@ sup {
     color: #5493f0;
 }
 
-/* code blocks */
+/* blocks */
 
 code {
     font-family: "Oxygen Mono", monospace !important;
     font-variant-ligatures: none;
-    border-radius: 4px;
-    background-color: rgba(27, 27, 27, 0.034);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.05);
+    border-radius: 3px;
+    background-color: initial;
+   /* box-shadow: 0 1px 1px 0 rgba(0,0,0,.03); */
     padding-left: 4px;
     padding-right: 4px;
     padding-top: 0px;
@@ -337,7 +377,7 @@ code {
     margin-left: 3px;
     margin-right: 3px;
     font-weight: 500;
-    border: 1px solid var(--bq-default-border-color);
+    /* border: 1px solid var(--bq-default-border-color); */
 }
 
 pre code {
@@ -346,8 +386,10 @@ pre code {
     background-color: rgba(27, 27, 27, 0.05);
     padding: 0px;
     border: 1px solid var(--bq-default-border-color);
-    box-shadow: 0px 0px 43px -31px rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 0px 25px 1px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
+    margin-top: 15px;
+    margin-bottom: 25px;
 }
 
 /* table */
@@ -357,8 +399,8 @@ table {
     margin-bottom: 25px;
     width: initial;
     display: inline-block;
-    box-shadow: 0px 0px 43px -31px rgba(0, 0, 0, 0.15);
     border: 1px solid var(--bq-default-border-color);
+    box-shadow: 0px 0px 25px 1px rgba(0, 0, 0, 0.03);
     border-radius: 5px;
     padding: 15px;
 }
@@ -370,7 +412,7 @@ table thead {
 }
 
 table thead th {
-    padding: 15px;
+    padding: 20px;
 }
 
 table tr {
@@ -389,7 +431,6 @@ table tbody tr:hover {
 table tr:last-of-type {
     border: none;
 }
-
 
 table th, table td {
     border: none;

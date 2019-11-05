@@ -19,7 +19,7 @@
         "type": "subcategory",
         "label": "MINING & CONSENSUS",
         "ids": [
-          "dev-tendermint-bft",
+          "dev-dpos",
           "dev-luna-staking",
           "dev-validators",
           "dev-price-oracle"
@@ -76,7 +76,6 @@
       "validator-faq"
     ],
     "Developer Guide": [
-      "dev-getting-started",
       {
         "type": "subcategory",
         "label": "TERRA CORE",

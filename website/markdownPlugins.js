@@ -1,11 +1,10 @@
 // Customize Markdown
 
-
 const ejs = require("ejs");
 
 // Template engine
 const template = (md) => {
-   md.core.ruler.before("block", "template", (state) => {
+    md.core.ruler.before("block", "template", (state) => {
         state.src = ejs.render(state.src, {
             user: true
         });
@@ -21,12 +20,6 @@ const plantuml = (md) => {
 const classy = require("remarkable-classy");
 
 module.exports = [
-    function init(md) {
-        md.set({
-            breaks: true, // \n -> <br/>
-            typographer: true
-        })
-    },
     template,
     plantuml,
     classy
