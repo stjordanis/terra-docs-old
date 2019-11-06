@@ -22,7 +22,7 @@
 
     /* white note - default */
     --bq-default-bg-color: #ffffff;
-    /*--bq-default-border-color: #e7ebf6;*/
+    --bq-default-border-color: #e3e6f0;
 
     /* yellow note */
     --bq-note-header-text: "note";
