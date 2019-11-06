@@ -4,7 +4,7 @@ title: Terra Documentation
 sidebar_label: Introduction
 ---
 
-Welcome to the Terra Documentation.
+Welcome to the official Terra Documentation. Since Terra is a large project and can be intimidating to approach, we've organized articles into the following sections:
 
 * [**Terra Protocol**](proto-what-is-terra.md) explains how Terra works. Start here if you want to understand fundamentals about its blockchain architecture such as consensus and staking, and the mechanisms behind achieving stability and ensuring long-term growth.
 
