@@ -1,4 +1,7 @@
 {
+  "name": "terra-docs",
+  "description": "New documentation site hosted on docs.terra.money.",
+  "version": "0.1.0",
   "scripts": {
     "examples": "docusaurus-examples",
     "start": "docusaurus-start",
