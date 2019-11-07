@@ -298,7 +298,7 @@ class HeaderNav extends React.Component {
         ? `${this.props.language}/versions${extension}`
         : `versions${extension}`);
     return (
-      <div className="fixedHeaderContainer">
+      <div className="fixedHeaderContainer no-print">
         <div className="headerWrapper wrapper">
           <header>
             <a

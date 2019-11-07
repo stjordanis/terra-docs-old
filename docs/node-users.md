@@ -102,9 +102,8 @@ To create an account, you just need to have `terracli` installed. Before creatin
 
 #### Using a ledger device
 
-::: blockquote warning
-Only use Ledger devices that you bought factory new or trust fully.
-:::
+> Only use Ledger devices that you bought factory new or trust fully.
+{warning}
 
 When you initialize your ledger, a 24-word mnemonic is generated and stored in the device. This mnemonic is compatible with Terra and Terra accounts can be derived from it. Therefore, all you have to do is make your ledger compatible with `terracli`. To do so, you need to go through the following steps:
 

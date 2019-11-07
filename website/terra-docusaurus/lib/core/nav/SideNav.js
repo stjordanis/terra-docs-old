@@ -129,7 +129,7 @@ class SideNav extends React.Component {
 
   render() {
     return (
-      <nav className="toc">
+      <nav className="toc no-print">
         <div className="toggleNav">
           <section className="navWrapper wrapper">
             <div className="navBreadcrumb wrapper">
