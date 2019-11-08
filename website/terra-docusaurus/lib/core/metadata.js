@@ -43,24 +43,6 @@ module.exports = {
     "localized_id": "dev-getting-started",
     "language": "en"
   },
-  "dev-how-terra-works": {
-    "id": "dev-how-terra-works",
-    "title": "How Terra Works",
-    "source": "dev-how-terra-works.md",
-    "permalink": "docs/dev-how-terra-works.html",
-    "localized_id": "dev-how-terra-works",
-    "language": "en",
-    "sidebar": "docs",
-    "category": "Terra Protocol",
-    "subcategory": null,
-    "order": 4,
-    "next_id": "dev-accounts-wallets",
-    "next": "dev-accounts-wallets",
-    "previous_id": "dev-what-is-terra",
-    "previous": "dev-what-is-terra",
-    "previous_title": "What is Terra?",
-    "next_title": "Accounts & Wallets"
-  },
   "dev-spec-budget": {
     "id": "dev-spec-budget",
     "title": "Budget",
@@ -475,6 +457,24 @@ module.exports = {
     "previous": "dev-treasury",
     "previous_title": "Treasury",
     "next_title": "Powering the Innovation of Money"
+  },
+  "dev-how-terra-works": {
+    "id": "dev-how-terra-works",
+    "title": "How Terra Works",
+    "source": "proto-how-terra-works.md",
+    "permalink": "docs/dev-how-terra-works.html",
+    "localized_id": "dev-how-terra-works",
+    "language": "en",
+    "sidebar": "docs",
+    "category": "Terra Protocol",
+    "subcategory": null,
+    "order": 4,
+    "next_id": "dev-accounts-wallets",
+    "next": "dev-accounts-wallets",
+    "previous_id": "dev-what-is-terra",
+    "previous": "dev-what-is-terra",
+    "previous_title": "What is Terra?",
+    "next_title": "Accounts & Wallets"
   },
   "dev-luna-staking": {
     "id": "dev-luna-staking",

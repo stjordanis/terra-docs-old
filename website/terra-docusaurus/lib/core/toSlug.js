@@ -1,10 +1,3 @@
-/**
- * Copyright (c) 2017-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
 // ES2015 does not support regexp with unicode categories,
 // so we need to list all the unicode ranges manually
 // to get analog of [\P{L}\P{N}] from ES2018

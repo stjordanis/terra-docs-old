@@ -39,9 +39,8 @@ function getTOC(content, headingTags = 'h2', subHeadingTags = 'h3') {
     const safeContent = striptags(rawContent);
     const rendered = md.renderInline(safeContent);
 
-    // We striptags again here as to not end up with html tags
-    // from markdown or markdown in our links
-    const hashLink = toSlug(striptags(rendered), context);
+    // TERRA-DOCS EDIT: Edited from rendered to safeContent, this fixes the error with "&" in header
+    const hashLink = toSlug(safeContent, context);
     if (!allowedHeadingLevels.includes(heading.lvl)) {
       return;
     }

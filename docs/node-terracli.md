@@ -101,7 +101,7 @@ terracli keys show --multisig-threshold K name1 name2 name3 [...]
 For more information regarding how to generate, sign and broadcast transactions with a multi signature account see [Multisig Transactions](terracli.md#multisig-transactions).
 
 
-## Fees and Gas
+## Fees & Gas
 
 Each transaction may either supply fees or gas prices, but not both. Most users will typically provide fees as this is the cost you will end up incurring for the transaction being included in the ledger.
 
