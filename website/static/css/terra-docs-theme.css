@@ -60,7 +60,7 @@
     /* blue note */
     --bq-tip-header-text: "tip";
     --bq-tip-edge-color: #1a8bd6;
-    --bq-tip-bg-color: #f7fcff;
+    --bq-tip-bg-color: #f8fcff;
     --bq-tip-text-color: #0e59a0;
 
     /* red note */
@@ -390,23 +390,24 @@ sup {
 /* blocks */
 
 code {
-    font-family: "Oxygen Mono", monospace !important;
+    font-family: "Fira Code", monospace !important;
     font-variant-ligatures: none;
     border-radius: 3px;
-    background-color: initial;
-   /* box-shadow: 0 1px 1px 0 rgba(0,0,0,.03); */
+    background-color: transparent;
+    /* box-shadow: 0 1px 1px 0 rgba(0,0,0,.02); */
     padding-left: 4px;
     padding-right: 4px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-    margin-left: 3px;
-    margin-right: 3px;
-    font-weight: 500;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    margin-left: 2px;
+    margin-right: 2px;
+    font-weight: 400; 
     /* border: 1px solid var(--bq-default-border-color); */
+    font-style: normal !important;
 }
 
 pre code {
-    font-family: "Oxygen Mono", monospace !important;
+    font-family: "Fira Code", monospace !important;
     font-variant-ligatures: none;
     background-color: rgba(27, 27, 27, 0.05);
     padding: 0px;
@@ -480,3 +481,9 @@ input#search_input_react::placeholder {
 }
 
 */
+
+/* graphviz */
+
+div[data-graphviz] {
+    display: none;
+}

@@ -221,7 +221,7 @@ module.exports = {
     "previous_id": "dev-comparison",
     "previous": "dev-comparison",
     "previous_title": "Terra vs. Other Stablecoins",
-    "next_title": "For non-validating users"
+    "next_title": "User Guide"
   },
   "dev-join-network": {
     "id": "dev-join-network",
@@ -276,7 +276,7 @@ module.exports = {
     "next": "dev-terracli",
     "previous_id": "dev-users",
     "previous": "dev-users",
-    "previous_title": "For non-validating users",
+    "previous_title": "User Guide",
     "next_title": "Interacting with the network: CLI"
   },
   "dev-production": {
@@ -317,7 +317,7 @@ module.exports = {
   },
   "dev-users": {
     "id": "dev-users",
-    "title": "For non-validating users",
+    "title": "User Guide",
     "source": "node-users.md",
     "permalink": "docs/dev-users.html",
     "localized_id": "dev-users",

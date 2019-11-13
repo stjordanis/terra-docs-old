@@ -84,3 +84,4 @@ To further customize docusaurus, I pulled out the npm package and made it availa
 - uses an altered version of docusaurus v1.14.0 called terra-docusaurus
     - using remark instead of remarkable
 - support for ReactJS pages for better explanatory components
+- has support for graphviz rendering to SVG via viz.js

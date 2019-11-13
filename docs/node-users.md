@@ -1,6 +1,6 @@
 ---
 id: dev-users
-title: For non-validating users
+title: User Guide
 ---
 ## Terra Accounts
 

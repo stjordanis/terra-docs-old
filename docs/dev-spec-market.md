@@ -3,7 +3,124 @@ id: dev-spec-market
 title: Market
 ---
 
-The Market module facilitates the atomic swaps among terra currencies and luna.
+The Market module contains the logic for atomic swaps between Terra currencies (e.g. UST<>KRT), as well as between Terra and Luna (e.g. SDT<>LUNA).
+
+## Architecture
+
+```uml
+@startuml
+Interface Keeper {
+    +GetTerraPoolDelta()
+    +SetTerraPoolDelta()
+    +ReplenishPools()
+    +BasePool() sdk.Dec
+    +MinSpread() sdk.Dec
+    +PoolRecoveryPeriod() int64
+    +TobinTax() sdk.Dec
+    +GetParams() Params
+    +SetParams(params) Params
+    +ApplySwapToPool(offerCoin, askCoin)
+    +ComputeSwap(offerCoin, askDenom) (sdk.DecCoin, sdk.Dec, sdk.Error)
+    +ComputeInternalSwap(offerCoin, askDenom)
+}
+@enduml
+```
+
+
+## Keeper
+
+```go
+// Keeper of the oracle store
+type Keeper struct {
+	cdc        *codec.Codec
+	storeKey   sdk.StoreKey
+	paramSpace params.Subspace
+
+	oracleKeeper types.OracleKeeper
+	SupplyKeeper types.SupplyKeeper
+
+	// codespace
+	codespace sdk.CodespaceType
+}
+```
+
+```graphviz
+digraph D {
+
+  label = <The <font color='red'><b>foo</b></font>,<br/> the <font point-size='20'>bar</font> and<br/> the <i>baz</i>>;
+  labelloc = "t"; // place the label at the top (b seems to be default)
+
+  node [shape=plaintext]
+
+  FOO -> {BAR, BAZ};
+
+}
+```
+
+### `GetTerraPoolDelta`
+
+### `SetTerraPoolDelta`
+
+### `ReplenishPools`
+
+### `BasePool`
+
+### `MinSpread`
+
+### `PoolRecoveryPeriod`
+
+### `TobinTax`
+
+### `GetParams`
+
+### `SetParams`
+
+### `ApplySwapToPool`
+
+### `ComputeSwap`
+
+### `ComputeInternalSwap`
+
+
+## Errors
+
+### `ErrNoEffectivePrice`
+
+### `ErrInsufficientSwapCoins`
+
+### `ErrRecursiveSwap`
+
+```uml
+@startuml
+Trader -> Module: MsgSwap
+note over Module: Calculate exchange rate
+Module -> Pool: Update pool delta
+Trader -> Module: Send offer coins
+note over Module: Charge a spread
+Module -> Oracle: Distribute spread fee to vote winners
+note over Module: Burn offer coins
+note over Module: Mint asked coins
+Module -> Trader: credit with newly minted coins
+@enduml
+```
+
+
+
+## Message Types
+
+### `MsgSwap` - Swap Request
+
+```go
+// MsgSwap contains a swap request
+type MsgSwap struct {
+	Trader    sdk.AccAddress `json:"trader" yaml:"trader"`         // Address of the trader
+	OfferCoin sdk.Coin       `json:"offer_coin" yaml:"offer_coin"` // Coin being offered
+	AskDenom  string         `json:"ask_denom" yaml:"ask_denom"`   // Denom of the coin to swap to
+}
+```
+
+A `MsgSwap` transaction denotes the `Trader`'s intent to swap their balance of `OfferCoin` for new denomination `AskDenom`.
+
 
 ## Overview
 
@@ -15,6 +132,7 @@ The market module facilitates swaps between all terra currencies that have an ac
 ## Safety mechanisms for Luna swaps
 
 * A daily Luna supply change cap is enforced, such that Luna supply can inflate or deflate only up to the cap in any given 24 hour period. Swap transactions after the cap has been hit fails. This is to prevent excessive volatility in Luna supply which can lead to divesting attacks \(a large increase in Terra supply putting the peg at risk\) or consensus attacks \(a large increase in Luna supply being staked can lead to a consensus attack on the blockchain\).
+
 * A spread is enforced on swaps involving Luna, currently between 2-10%.
 
   ```text
@@ -42,6 +160,7 @@ If the trader's `Account` has insufficient balance to execute the swap, the swap
 ## Spread rewards
 
 The spread fee charged in swaps involving Luna is distributed to the `SwapFeePool` in the oracle to be distributed to the oracle voters that voted close to the elected price at the end of every oracle `VotePeriod`.
+
 
 ## Parameters
 

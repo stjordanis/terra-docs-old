@@ -53,12 +53,16 @@ const siteConfig = {
 
   // Add custom scripts here that would be placed in <script> tags.
   scripts: [
+    'https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js',
     'https://buttons.github.io/buttons.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js'
+    'https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js',
+    '/terra-docs/js/code-block-buttons.js',
+    '/terra-docs/js/viz.js',
+    '/terra-docs/js/render-graphs.js'
   ],
 
   stylesheets: [
-    "https://fonts.googleapis.com/css?family=Oxygen+Mono&display=swap"
+    "https://fonts.googleapis.com/css?family=Fira+Code:400,500,700&display=swap"
   ],
 
   // On page navigation for the current documentation page.
