@@ -91,11 +91,17 @@
 h1 {
     /* 32 -> 40 */
     font-size: var(--h1-size);
+    padding-bottom: 30px !important;
+    margin-bottom: 40px !important;
+    border-bottom: solid 1px #e7ebf6;
 }
+
 
 h2 {
     /* 24 -> 30 */
     font-size: var(--h2-size);
+    padding-top: 1.5em;
+    border-top: solid 1px #e7ebf6;
 }
 
 h3 {
