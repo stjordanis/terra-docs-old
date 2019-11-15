@@ -32,11 +32,11 @@
     --base-font-color: #2043B5;
     --base-header-color: #2043b5;
     --link-color: #5493f7;
-    --base-font-size: 15px;
+    --base-font-size: 16px;
     --h1-size: 34px;
     --h2-size: 24px;
     --h3-size: 18px;
-    --h4-size: 14px;
+    --h4-size: 16px;
 
     /* blockquotes */
     --bq-font-size: 13px;
@@ -117,11 +117,6 @@ h4 {
 strong,
 b {
     font-weight: 500;
-}
-
-.button {
-    font-size: 13px;
-    padding: 15px 10px !important;
 }
 
 
@@ -558,11 +553,6 @@ blockquote.disclaimer::before {
     font-size: var(--bq-header-size);
 }
 
-.button {
-    border-radius: 25px;
-    padding: 15px;
-}
-
 body,
 button,
 input,
@@ -610,12 +600,91 @@ sup {
     font-size: smaller;
 }
 
+.docs-prevnext {
+    width: auto;
+    display: flex;
+    justify-content: space-between;
+    margin-left: -12px;
+    margin-right: -12px;
+}
+
+@media only screen and (max-width: 768px) {
+    .docs-prevnext {
+        flex-direction: column-reverse;
+    }
+}
+
+.button {
+    font-size: 16px;
+    border-radius: 35px;
+    padding: 34px 15px 15px;
+    flex: 1;
+    margin: 0 12px;
+    position: relative;
+    text-transform: unset !important;
+    transition: 0.2s;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.button .arrow-prev,
+.button .arrow-next {
+    display: none !important;
+}
+
 .docs-prev.button {
     margin-top: 15px;
+    text-align: right;
+    padding-left: 40px;
 }
 
 .docs-next.button {
     margin-top: 15px;
+    text-align: left;
+    padding-right: 40px;
+}
+
+.docs-prev.button:before,
+.docs-next.button:before {
+    content: 'PREVIOUS';
+    position: absolute;
+    top: 15px;
+    right: 30px;
+    color: $primaryColor;
+    opacity: 0.5;
+    font-size: 10px;
+    font-weight: 500;
+}
+
+.docs-next.button:before {
+    content: 'NEXT';
+    right: unset;
+    left: 30px;
+}
+
+.docs-prev.button:after,
+.docs-next.button:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 30px;
+    left: 25px;
+    padding: 5px;
+    box-shadow: 1px -1px 0 1px $primaryColor inset;
+    -webkit-box-shadow: 2px -2px $primaryColor inset;
+    border: solid transparent;
+    border-width: 0;
+    transition: 0.2s;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+.docs-next.button:after {
+    left: unset;
+    right: 25px;
+    transform: rotate(225deg);
+    -webkit-transform: rotate(225deg);
 }
 
 .button>span {
@@ -642,6 +711,11 @@ sup {
     background-color: transparent !important;
     border: solid 1px #5493f0;
     color: #5493f0;
+}
+
+.button:hover:after {
+    box-shadow: 1px -1px 0 1px #5493f0 inset;
+    -webkit-box-shadow: 2px -2px #5493f0 inset;
 }
 
 /* blocks */
