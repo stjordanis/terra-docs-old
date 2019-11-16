@@ -5,11 +5,11 @@ title: Market
 
 The Market module contains the logic for atomic swaps between Terra currencies (e.g. UST<>KRT), as well as between Terra and Luna (e.g. SDT<>LUNA).
 
-A user can swap SDT \(TerraSDR\) and UST \(TerraUSD\) at the exchange rate registered with the oracle, with an additional minimum spread of 2%. 
+A user can swap SDT \(TerraSDR\), UST \(TerraUSD\) for Luna at the exchange rate registered with the oracle, and the network will charge a minimum spread of 2% taken as the network's swap fee against front-running.
 
-For example, assume that oracle reports that the Luna<>SDT exchange rate is 10, and for Luna<>KRT was 10,000. Factoring in the spread, swapping 1 SDT will return 980 KRT worth of Luna (2% of 1000 is 20, taken as the swap fee).
+For example, assume that oracle reports that the Luna<>SDT exchange rate is 10, and for Luna<>KRT, 10,000. Factoring in the spread, swapping 1 SDT will return 980 KRT worth of Luna (2% of 1000 is 20, taken as the swap fee).
 
-A user can swap any Terra currency for Luna at the oracle exchange rate. Using the same exchange rates in the above example, a user can swap 1 SDT for 0.1 Luna, or 0.1 Luna for 1 SDT (before spread).
+Using the same exchange rates in the above example, a user can swap 1 SDT for 0.1 Luna, or 0.1 Luna for 1 SDT (before spread).
 
 ## Constant Product Market-Maker
 
@@ -23,12 +23,12 @@ Now, with constant-product, the following invariant CP is maintained throughout 
 CP = (Total units of TerraSDR Pool) * (Total SDR value of Luna Pool)
 ```
 
-For instance, if we start with equal pools of Terra and Luna, both worth 1000 SDR total, a swap of 100 UST for Luna gives you 111.111... Luna.
+For instance, if we start with equal pools of Terra and Luna, both worth 1000 SDR total, a swap of 100 SDT for Luna gives you around 90.91 Luna. The offer of 100 SDT is added to the Terra pool, and the 90.91 SDT worth of Luna are taken out of the Luna pool. 
 
 ```text
 CP = 1000000 SDR
-(1000 UST) * (1000 SDR of Luna) = 1000000 SDR
-(900 UST) * (1111.111 SDR of Luna) = 1000000 SDR
+(1000 SDT) * (1000 SDR of Luna) = 1000000 SDR
+(1100 SDT) * (909.0909... SDR of Luna) = 1000000 SDR
 ```
 
 ### Auto-Replenishing Liquidity Pools
