@@ -15,13 +15,27 @@ A user can swap any Terra currency for Luna at the oracle exchange rate. Using t
 
 Starting with Columbus-3 (Vodka testnet), Terra now uses a constant-product automated market making algorithm to ensure liquidity for Terra<>Luna swaps.
 
-Before, Terra had enforced a daily Luna supply change cap such that Luna could inflate or deflate only up to the cap in any given 24 hour period, after which swap transactions would fail. This was to prevent excessive volatility in Luna supply which could lead to divesting attacks \(a large increase in Terra supply putting the peg at risk\) or consensus attacks \(a large increase suin Luna supply being staked can lead to a consensus attack on the blockchain\).
+The following invariant CP is maintained throughout any swaps:
 
-### Terra/Luna Liquidity Pools
+```text
+CP = (Total units of TerraSDR Pool) * (Total SDR value of Luna Pool)
+```
+
+For instance, if we start with equal pools of Terra and Luna, both worth 1000 SDR total, a swap of 100 UST for Luna gives you 111.111... Luna.
+
+```text
+CP = 1000000 SDR
+(1000 UST) * (1000 SDR of Luna) = 1000000 SDR
+(900 UST) * (1111.111 SDR of Luna) = 1000000 SDR
+```
+
+Before, Terra had enforced a daily Luna supply change cap such that Luna could inflate or deflate only up to the cap in any given 24 hour period, after which swap transactions would fail. This was to prevent excessive volatility in Luna supply which could lead to divesting attacks \(a large increase in Terra supply putting the peg at risk\) or consensus attacks \(a large increase in Luna supply being staked can lead to a consensus attack on the blockchain\).
+
+### Replenishing Liquidity Pools
 
 The market starts out with two liquidity pools of equal sizes, one representing Terra (all denominations) and another representing Luna, initialiazed by the parameter `BasePool`.
 
-At the end of each block, the market module will "replenish" the pool and close the delta between the two pools. The rate at which the pools will be replenished toward equilibrium is set by the parameter `PoolRecoveryPeriod`, with lower periods faster market sensitivity.
+At the end of each block, the market module will "replenish" the pool and close the delta between the two pools. The rate at which the pools will be replenished toward equilibrium is set by the parameter `PoolRecoveryPeriod`, with lower periods faster recovery times, denoting more sensitivity to changing prices.
 
 This mechanism ensures liquidity and acts as a sort of low-pass filter, allowing for the spread fee (which is calculated by the delta) to drop back down when changes in price are interpreted by the network as a rising trend in the true price of the peg rather than spikes from large, temporary positions. 
 
@@ -33,8 +47,8 @@ This difference is on the order of about 15 minutes, which is negligible for nea
 
 To defend against this, Terra has implemented the following mechanisms:
 
-- a Tobin Tax (set to 0.3%) Tax for spot-trading Terra<>Terra swaps
-- a minimum spread (currently set to 2%) for Terra<>Luna swaps
+- a Tobin Tax (set at 0.3%) Tax for spot-trading Terra<>Terra swaps
+- a minimum spread (currently set at 2%) for Terra<>Luna swaps
 
 ## Message Types
 
@@ -84,7 +98,7 @@ type Keeper struct {
 
 The Market module makes use of some global params, can be accessed and altered with `k.GetParams()` and `k.SetParams()`. See [Parameters](#parameters) for more.
 
-Market also tracks the the difference between the liquidity pools of Terra (all denominations) and Luna in the store, which can be accessed and altered with `k.GetTerraDeltaPool()` and `k.SetTerraDeltaPool()`. 
+Market also tracks the the difference between the liquidity pools of Terra (all denominations) and Luna in the store, which can be accessed and altered with `k.GetTerraPoolDelta()` and `k.SetTerraPoolDelta()`. 
 
 The Market module accesses the [Oracle]() module for information regarding price and the [Supply]() module to update account balances after swapping.
 
@@ -93,7 +107,7 @@ The Market module accesses the [Oracle]() module for information regarding price
     - `BasePool : sdk.Dec`
     - `MinSpread : sdk.Dec`
     - `TobinTax : sdk.Dec`
-- `TerraDeltaPool : sdk.Dec`
+- `TerraPoolDelta : sdk.Dec` - represents the difference between the pools, valued in USDR.
 
 ## Functions
 
@@ -104,11 +118,10 @@ func (k Keeper) ComputeSwap(ctx sdk.Context, offerCoin sdk.Coin, askDenom string
     (retDecCoin sdk.DecCoin, spread sdk.Dec, err sdk.Error)
 ```
 
-`ComputeSwap()` returns the amount of asked coins that should be returned for a given `offerCoin` at the effective exchange rate registered with the oracle. 
+`ComputeSwap()` returns the amount of asked coins that should be returned for a given `offerCoin` at the effective exchange rate registered with the oracle, alongside the spread that should be taken.
 
 > A different version `ComputeInternalSwap()` is used internally, which performs the calculations without the constant-product spread.
 {note}
-
 
 
 ### `ApplySwapToPool()`
@@ -117,9 +130,9 @@ func (k Keeper) ComputeSwap(ctx sdk.Context, offerCoin sdk.Coin, askDenom string
 func (k Keeper) ApplySwapToPool(ctx sdk.Context, offerCoin sdk.Coin, askCoin sdk.DecCoin) sdk.Error
 ```
 
-`k.ApplySwapToPools()` is called during the swap to update each of the Terra and Luna pools reflecting their new total balances. `offerPool` increases by the amount of `offer` tokens, and `ask` pool decreases by `ask` tokens provided by the market.
+`ApplySwapToPools()` is called during the swap to update each of the Terra and Luna pools reflecting their new total balances. `offerPool` increases by the amount of `offer` tokens, and `ask` pool decreases by `ask` tokens provided by the market.
 
-For instance, if I am swapping 2 TerraUSD for 3 LUNA, the offer pool (Terra) will increase by 2 USD and the ask pool (Luna) will decrease by 3 tokens.
+For instance, if I am swapping 2 TerraUSD for 3 LUNA, the offer pool (Terra) will increase by 2 USD and the ask pool (Luna) will decrease by 3 tokens. In practice, rather than keeping track of the sizes of the two pools, it is encoded in a positive/negative number `TerraPoolDelta`, with negative numbers representing a larger Luna pool.
 
 ## End-Block
 
