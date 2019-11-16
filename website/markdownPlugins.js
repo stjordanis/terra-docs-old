@@ -2,6 +2,8 @@
 
 const ejs = require("ejs");
 
+const katex = require("remarkable-katex");
+
 // Template engine
 const template = (md) => {
     md.core.ruler.before("block", "template", (state) => {
@@ -40,5 +42,6 @@ module.exports = [
     template,
     plantuml,
     graphviz,
+    katex,
     classy
 ];

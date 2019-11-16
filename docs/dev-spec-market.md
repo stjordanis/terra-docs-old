@@ -31,11 +31,11 @@ CP = 1000000 SDR
 
 Before, Terra had enforced a daily Luna supply change cap such that Luna could inflate or deflate only up to the cap in any given 24 hour period, after which swap transactions would fail. This was to prevent excessive volatility in Luna supply which could lead to divesting attacks \(a large increase in Terra supply putting the peg at risk\) or consensus attacks \(a large increase in Luna supply being staked can lead to a consensus attack on the blockchain\).
 
-### Replenishing Liquidity Pools
+### Auto-Replenishing Liquidity Pools
 
-The market starts out with two liquidity pools of equal sizes, one representing Terra (all denominations) and another representing Luna, initialiazed by the parameter `BasePool`.
+The market starts out with two liquidity pools of equal sizes, one representing Terra (all denominations) and another representing Luna, initialiazed by the parameter `BasePool`. The blockchain maintains in its state `TerraPoolDelta`, which is a number that represents the deviation between Terra/Luna pools from their initial base values -- one number that  provides a descriptive snapshot of the demand difference.
 
-At the end of each block, the market module will "replenish" the pool and close the delta between the two pools. The rate at which the pools will be replenished toward equilibrium is set by the parameter `PoolRecoveryPeriod`, with lower periods faster recovery times, denoting more sensitivity to changing prices.
+At the end of each block, the market module will "replenish" the pools by decreasing the delta between the Terra and Luna pools. The rate at which the pools will be replenished toward equilibrium is set by the parameter `PoolRecoveryPeriod`, with lower periods meaning faster recovery times, denoting more sensitivity to changing prices.
 
 This mechanism ensures liquidity and acts as a sort of low-pass filter, allowing for the spread fee (which is calculated by the delta) to drop back down when changes in price are interpreted by the network as a rising trend in the true price of the peg rather than spikes from large, temporary positions. 
 
@@ -136,7 +136,7 @@ For instance, if I am swapping 2 TerraUSD for 3 LUNA, the offer pool (Terra) wil
 
 ## End-Block
 
-Market module calls `k.ReplenishPools()` at the end of every block, which decreases the value of `TerraPoolDelta` (which measures the difference between Terra and Luna pools) depending on `PoolRecoveryPeriod`, slowly.
+Market module calls `k.ReplenishPools()` at the end of every block, which decreases the value of `TerraPoolDelta` (which measures the difference between Terra and Luna pools) depending on `PoolRecoveryPeriod`.
 
 This allows the network to sharply increase spread fees in during acute price fluctuations, and automatically return the spread to normal after some time when the price change is long term.
 

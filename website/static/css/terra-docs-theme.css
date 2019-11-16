@@ -820,3 +820,5 @@ input#search_input_react::placeholder {
 div[data-graphviz] {
     display: none;
 }
+
+.katex { line-height: 1 !important; }
