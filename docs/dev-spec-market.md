@@ -96,11 +96,11 @@ type Keeper struct {
 }
 ```
 
-The Market module makes use of some global params, can be accessed and altered with `k.GetParams()` and `k.SetParams()`. See [Parameters](#parameters) for more.
+The Market module makes use of some global params, which can be accessed and altered with `k.GetParams()` and `k.SetParams()`. See [Parameters](#parameters) for more.
 
-Market also tracks the the difference between the liquidity pools of Terra (all denominations) and Luna in the store, which can be accessed and altered with `k.GetTerraPoolDelta()` and `k.SetTerraPoolDelta()`. 
+Market also tracks the difference between the liquidity pools of Terra (all denominations) and Luna in the store, which can be accessed and altered with `k.GetTerraPoolDelta()` and `k.SetTerraPoolDelta()`. 
 
-The Market module accesses the [Oracle]() module for information regarding price and the [Supply]() module to update account balances after swapping.
+The Market module accesses the [Oracle](dev-spec-oracle.md) module for information regarding price and the [Supply](dev-spec-supply.md) module to update account balances after swapping.
 
 - [`Params`](#parameters)
     - `PoolRecoveryPeriod : int64`
@@ -130,9 +130,9 @@ func (k Keeper) ComputeSwap(ctx sdk.Context, offerCoin sdk.Coin, askDenom string
 func (k Keeper) ApplySwapToPool(ctx sdk.Context, offerCoin sdk.Coin, askCoin sdk.DecCoin) sdk.Error
 ```
 
-`ApplySwapToPools()` is called during the swap to update each of the Terra and Luna pools reflecting their new total balances. `offerPool` increases by the amount of `offer` tokens, and `ask` pool decreases by `ask` tokens provided by the market.
+`ApplySwapToPools()` is called during the swap to update each of the Terra and Luna pools reflecting their new total balances. The pools remain unchanged during Terra<>Terra swaps. `offerPool` increases by the amount of `offer` tokens, and `askPool` decreases by `ask` tokens provided by the market.
 
-For instance, if I am swapping 2 TerraUSD for 3 LUNA, the offer pool (Terra) will increase by 2 USD and the ask pool (Luna) will decrease by 3 tokens. In practice, rather than keeping track of the sizes of the two pools, it is encoded in a positive/negative number `TerraPoolDelta`, with negative numbers representing a larger Luna pool.
+For instance, if I am swapping 2 TerraUSD for 3 LUNA, the offer pool (Terra) will increase by 2 USD and the ask pool (Luna) will decrease by 3 tokens. In practice, rather than keeping track of the sizes of the two pools, it is encoded in a +/- number `TerraPoolDelta`, with postive numbers representing a larger Terra pool. Thus, the delta would increase from 0 to 2.
 
 ## End-Block
 
@@ -153,7 +153,7 @@ type Params struct {
 
 ### `PoolRecoveryPeriod`
 
-Number of blocks after which the pool delta as reset back to equilibrium (delta = 0).
+Number of blocks it takes for the Terra & Luna pools to naturally "reset" toward equilibrium  (delta ~= 0) through automated pool replenishing.
 
 - type: `int64`
 - default value: `14400` (`core.BlocksPerDay`)
