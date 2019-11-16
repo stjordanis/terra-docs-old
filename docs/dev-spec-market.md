@@ -47,7 +47,7 @@ This difference is on the order of about 15 minutes, which is negligible for nea
 
 To defend against this, Terra has implemented the following mechanisms:
 
-- a Tobin Tax (set at 0.3%) Tax for spot-trading Terra<>Terra swaps
+- a Tobin Tax (set at 0.3%) for spot-trading Terra<>Terra swaps
 - a minimum spread (currently set at 2%) for Terra<>Luna swaps
 
 ## Message Types
@@ -120,7 +120,9 @@ func (k Keeper) ComputeSwap(ctx sdk.Context, offerCoin sdk.Coin, askDenom string
 
 `ComputeSwap()` returns the amount of asked coins that should be returned for a given `offerCoin` at the effective exchange rate registered with the oracle, alongside the spread that should be taken.
 
-> A different version `ComputeInternalSwap()` is used internally, which performs the calculations without the constant-product spread.
+If the `offerCoin`'s denomination is the same as `askDenom`, this will return an `ErrRecursiveSwap`.
+
+> A different version `ComputeInternalSwap()` is used internally, which just performs the calculations without the constant-product spread.
 {note}
 
 

@@ -62,7 +62,6 @@ const siteConfig = {
   ],
 
   stylesheets: [
-    "https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css",
     "https://fonts.googleapis.com/css?family=Fira+Code:400,500,700&display=swap"
   ],
 
