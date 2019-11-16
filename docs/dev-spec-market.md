@@ -15,7 +15,9 @@ A user can swap any Terra currency for Luna at the oracle exchange rate. Using t
 
 Starting with Columbus-3 (Vodka testnet), Terra now uses a constant-product automated market making algorithm to ensure liquidity for Terra<>Luna swaps.
 
-The following invariant CP is maintained throughout any swaps:
+Before, Terra had enforced a daily Luna supply change cap such that Luna could inflate or deflate only up to the cap in any given 24 hour period, after which swap transactions would fail. This was to prevent excessive volatility in Luna supply which could lead to divesting attacks \(a large increase in Terra supply putting the peg at risk\) or consensus attacks \(a large increase in Luna supply being staked can lead to a consensus attack on the blockchain\).
+
+Now, with constant-product, the following invariant CP is maintained throughout any swaps, and informs the market-maker on how to properly price swaps whilst maintaining liquidity:
 
 ```text
 CP = (Total units of TerraSDR Pool) * (Total SDR value of Luna Pool)
@@ -28,8 +30,6 @@ CP = 1000000 SDR
 (1000 UST) * (1000 SDR of Luna) = 1000000 SDR
 (900 UST) * (1111.111 SDR of Luna) = 1000000 SDR
 ```
-
-Before, Terra had enforced a daily Luna supply change cap such that Luna could inflate or deflate only up to the cap in any given 24 hour period, after which swap transactions would fail. This was to prevent excessive volatility in Luna supply which could lead to divesting attacks \(a large increase in Terra supply putting the peg at risk\) or consensus attacks \(a large increase in Luna supply being staked can lead to a consensus attack on the blockchain\).
 
 ### Auto-Replenishing Liquidity Pools
 
