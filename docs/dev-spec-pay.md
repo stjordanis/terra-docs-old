@@ -1,9 +1,9 @@
 ---
 id: dev-spec-pay
-title: Pay
+title: Bank
 ---
 
-The pay module is the base transactional layer of the Terra blockchain: it allows assets to be sent from one `Account` to another. It reads the currently effective `tax-rate` and `tax-cap` parameters from the `treasury` module to enforce a stability layer fee.
+The Bank module is the base transactional layer of the Terra blockchain: it allows assets to be sent from one `Account` to another. It reads the currently effective `tax-rate` and `tax-cap` parameters from the `treasury` module to enforce a stability layer fee.
 
 ## Overview
 

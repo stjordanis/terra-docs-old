@@ -2,6 +2,8 @@
 id: dev-users
 title: User Guide
 ---
+
+
 ## Terra Accounts
 
 At the core of every Terra account, there is a seed, which takes the form of a 12 or 24-words mnemonic. From this mnemonic, it is possible to create any number of Terra accounts, i.e. pairs of private key/public key. This is called an HD wallet \(see [BIP32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki) for more information on the HD wallet specification\).

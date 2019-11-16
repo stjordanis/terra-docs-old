@@ -7,9 +7,9 @@ This document will explain how to install and set up Terra Core (repo: [terra-pr
 
 Terra Core will install two command-line executables on your system, `terrad` and `terracli`. 
 
-`terrad` is the daemon process that connects to Terra and communicates with peers on the network, receiviving and processing blocks. When active, it initiates a full node will attempt to download and sync the current blockchain and on your local machine.
+`terrad` is the daemon process that connects to Terra and communicates with peers on the network, receiving and processing blocks. When active, it initiates a full node and will attempt to download and sync the current blockchain and onto your local machine.
 
-You can interact with the Terra blockchain using `terracli`, with commands for querying data, building and signing transactions, as well as broadcasting them to the network through your local node.
+You can interact with the Terra blockchain using `terracli` through commands for querying data, building and signing transactions, as well as broadcasting them to the network via your local node.
 
 Once you've installed the node software, you'll be able to participate in the Columbus-3 mainnet or Vodka testnet as either a [Full Node]() or a [Validator]().
 
