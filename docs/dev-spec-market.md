@@ -34,7 +34,7 @@ Starting with Columbus-3 (Vodka testnet), Terra now uses a Constant Product mark
 
 Before, Terra had enforced a daily Luna supply change cap such that Luna could inflate or deflate only up to the cap in any given 24 hour period, after which further swaps would fail. This was to prevent excessive volatility in Luna supply which could lead to divesting attacks \(a large increase in Terra supply putting the peg at risk\) or consensus attacks \(a large increase in Luna supply being staked can lead to a consensus attack on the blockchain\).
 
-Now, with Constant Product, we define a value $CP$ set to the size of the Terra pool multiplied by a set **fiat value of Luna**, and ensure our market-maker maintains it as invariant during any swaps adjusting the swap fee.
+Now, with Constant Product, we define a value $CP$ set to the size of the Terra pool multiplied by a set **fiat value of Luna**, and ensure our market-maker maintains it as invariant during any swaps through adjusting the spread.
 
 > Our implementation of Constant Product diverges from Unipool's, as we use the fiat value of Luna instead of the size of the Luna pool. This nuance means changes in Luna's price don't affect the product, but rather the size of the Luna pool.
 {note}
@@ -58,7 +58,7 @@ This algorithm ensures that the Terra protocol remains liquid for Terra<>Luna sw
 
 The market starts out with two liquidity pools of equal sizes, one representing Terra (all denominations) and another representing Luna, initialiazed by the parameter `BasePool`.
 
-In practice, rather than keeping track of the sizes of the two pools, the information is encoded in a number $\delta$, which the blockchain stores as `TerraPoolDelta`, representing the deviation $\delta$ of the Terra pool from its base size in units USDR.
+In practice, rather than keeping track of the sizes of the two pools, the information is encoded in a number $\delta$, which the blockchain stores as `TerraPoolDelta`, representing the deviation of the Terra pool from its base size in units USDR.
 
 The size of the Terra and Luna liquidity pools can be generated from $\delta$ using the following formulas:
 
@@ -91,8 +91,8 @@ A `MsgSwap` transaction denotes the `Trader`'s intent to swap their balance of `
 The trader can submit a `MsgSwap` transaction with the amount / denomination of the coin to be swapped, the "offer", and the denomination of the coins to be swapped into, the "ask". The Market module will then use the following procedure to process `MsgSwap`.
 
 1. Market module receives `MsgSwap` message and performs basic validation checks
-2. Calculate exchange rate $ask$ and $spread$ using [`k.ComputeSwap()`](#computeswap)
-3. Update `TerraPoolDelta` with [`k.ApplySwapToPool()`](#applyswaptopool)
+2. Calculate exchange rate $ask$ and $spread$ using [`k.ComputeSwap()`](#kcomputeswap)
+3. Update `TerraPoolDelta` with [`k.ApplySwapToPool()`](#kapplyswaptopool)
 4. Transfer `OfferCoin` from account to module using `supply.SendCoinsFromAccountToModule()`
 5. Burn offered coins, with `supply.BurnCoins()`
 6. Let $ fee = spread * ask $, this is the spread fee.
