@@ -3,17 +3,19 @@ id: dev-spec-oracle
 title: Oracle
 ---
 
-The Oracle module provides the Terra blockchain with an up-to-date and accurate price feed of exchange rates of Luna against various fiat currencies such that the [Market](dev-spec-market.md) module may always provide fair exchanges between Terra<>Terra currency pairs, as well as Terra<>Luna.
+The Oracle module provides the Terra blockchain with an up-to-date and accurate price feed of exchange rates of Luna against various fiat currencies such that the [Market](dev-spec-market.md) may availably provide fair exchanges between Terra<>Terra currency pairs, as well as Terra<>Luna.
 
 Should the system fail to gain an accurate measure of Luna price, a small set of arbitrageurs could profit at the cost of the entire network.
 
-As price information is extrinsic to the blockchain, the Terra network relies on a special set within the validator set to provide price information by submitting a vote for what they believe to be the current price during a periodic price-update interval.
+As price information is extrinsic to the blockchain, the Terra network relies on validators to provide price information by regularly submitting a vote for what they believe to be the current price during a periodic price-update interval (the `VotePeriod`).
 
 ## Voting Procedure
 
-The Oracle obtains consensus on the price of Luna with the following procedure:
+Each of 
 
-* Let $$\{ P_1, P_2, \cdots P_n \}$$ be a set of time intervals, each of duration `params.VotePeriod` (currently set to 30 seconds). Within the span of each $P_i$ validators must submit two messages: 
+The Oracle module obtains consensus on the price of Luna with the following procedure:
+
+* Let $$\{ P_1, P_2, \cdots P_n \}$$ be a set of time intervals, each of duration `params.VotePeriod` (currently set to 30 seconds). Within the span of each $P_i$, validators must submit two messages: 
 
   * A `MsgPricePrevote`, containing the SHA256 hash of the exchange rate of Luna with respect to a Terra peg. For example, in order to support swaps for Terra currencies pegged to KRW, USD, SDR, three prevotes must be submitted: one vote for each of uluna<>ukrw, uluna<>uusd, and uluna<>usdr.
 
@@ -64,7 +66,7 @@ The price used in the hash must be the open market price of Luna, w.r.t. to the 
 
 `Validator` is the validator address of the original validator.
 
-### Vote for price of Luna - `MsgPriceVote` 
+### Vote for Price of Luna - `MsgPriceVote` 
 
 ```go
 // MsgPriceVote - struct for voting on the price of Luna denominated in various Terra assets.
