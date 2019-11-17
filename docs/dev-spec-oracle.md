@@ -98,7 +98,7 @@ The `MsgExchangeRateVote` contains the actual price vote. The `Salt` parameter m
 
 ### Delegate voting rights - `MsgDelegateFeedConsent`
 
-Validators may also elect to delegate voting rights to another key to prevent the block signing key from being kept online. To do so, they must submit a `MsgDelegateFeedConsent`, delegating their oracle voting rights to a `FeedDelegate`, which in turn sign `MsgExchangeRatePrevote` and `MsgExchangeRateVote` on behalf of the validator. 
+Validators may also elect to delegate voting rights to another key to prevent the block signing key from being kept online. To do so, they must submit a `MsgDelegateFeedConsent`, delegating their oracle voting rights to a `Delegatee` that sign `MsgExchangeRatePrevote` and `MsgExchangeRateVote` on behalf of the validator. 
 
 > Make sure to populate the delegate address with some coins by which to pay fees.
 {important}
@@ -111,7 +111,7 @@ type MsgDelegateFeedConsent struct {
 }
 ```
 
-The `Operator` field contains the operator address of the validator. The `FeedDelegate` field is the address of the delegate account that will be submitting price related votes and prevotes on behalf of the `Operator`. 
+The `Operator` field contains the operator address of the validator. The `Delegatee` field is the address of the delegate account that will be submitting price related votes and prevotes on behalf of the `Operator`. 
 
 ## State
 
@@ -141,14 +141,14 @@ Oracle maintains several stores in its state, each indexed as such:
 - `denom`: `string`
 - `v`: `sdk.ValAddress`
 
-Retrieves a `PricePrevote` containing validator `v`'s prevote for a given `denom` for the current `VotePeriod`.
+Retrieves a `ExchangeRatePrevote` containing validator `v`'s prevote for a given `denom` for the current `VotePeriod`.
 
 ### Votes - `Vote[denom, v]`
 
 - `denom`: `string`
 - `v`: `sdk.ValAddress`
 
-Retrieves a `PriceVote` containing validator `v`'s vote for a given `denom` for the current `VotePeriod`.
+Retrieves a `ExchangeRateVote` containing validator `v`'s vote for a given `denom` for the current `VotePeriod`.
 
 ### Luna Exchange Rate - `ExchangeRate[denom]`
 
