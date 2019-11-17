@@ -3,7 +3,7 @@ id: dev-spec-oracle
 title: Oracle
 ---
 
-The Oracle module provides the Terra blockchain with an up-to-date and accurate price feed of exchange rates of Luna against various Terra pegs so that the [Market](dev-spec-market.md) may availably provide fair exchanges between Terra<>Terra currency pairs, as well as Terra<>Luna.
+The Oracle module provides the Terra blockchain with an up-to-date and accurate price feed of exchange rates of Luna against various Terra pegs so that the [Market](dev-spec-market.md) may provide fair exchanges between Terra<>Terra currency pairs, as well as Terra<>Luna.
 
 Should the system fail to gain an accurate measure of Luna price, a small set of arbitrageurs could profit at the cost of the entire network.
 
@@ -11,23 +11,15 @@ As price information is extrinsic to the blockchain, the Terra network relies on
 
 ## Voting Procedure
 
-The Oracle module obtains consensus on the exchange rate of Luna by requiring all members of the validator set to submit a vote for Luna price for every `VotePeriod`.
+The Oracle module obtains consensus on the exchange rate of Luna by requiring all members of the validator set to submit a vote for Luna price for every [`VotePeriod`](#voteperiod).
 
-Validators must first pre-commit to a price, then in the subsequent `VotePeriod` submit and reveal their price alongside a proof that they had pre-commited at that price. This scheme forces the voter to commit to a submission before knowing the votes of others and thereby reduces centralization and free-rider risk in the oracle
+Validators must first pre-commit to a price, then in the subsequent `VotePeriod` submit and reveal their price alongside a proof that they had pre-commited at that price. This scheme forces the voter to commit to a submission before knowing the votes of others and thereby reduces centralization and free-rider risk in the Oracle.
 
-To do so, a validator must first determine what they believe the price of Luna to be with regard to a Terra peg, then commit to it by submitting the hash of their elected price in a `MsgExchangeRatePrevote`. 
+* Let $$\{ P_1, P_2, \cdots, P_n \}$$ be a set of time intervals, each of duration [`params.VotePeriod`](#voteperiod)(currently set to 30 seconds). Within the span of each $P_i$, validators must submit two messages: 
 
-In the following `VotePeriod`, the validator submits their pre-commited price and as well as the salt used to generate the hash in a `MsgExchangeRatePrevote`. If the `MsgExchangeRateVote` doesn't match the hash from the `MsgExchangeRatePrevote`, the vote is considered invalid. During this `VotePeriod`, the validator also submits their `MsgExchangeRatePrevote` for the following interval.
+  * A [`MsgExchangeRatePrevote`](#submit-a-prevote-msgexchangerateprevote), containing the SHA256 hash of the exchange rate of Luna with respect to a Terra peg. For example, in order to support swaps for Terra currencies pegged to KRW, USD, SDR, three prevotes must be submitted: one vote for each of ULUNA<>UKRW, ULUNA<>UUSD, and ULUNA<>USDR.
 
-The Oracle module then tallies up the submissions, updates the blockchain's record of Luna price with the weighted median of the votes, and rewards voters who managed to vote within a narrow band around the new exchange rate.
-
-More formally:
-
-* Let $$\{ P_1, P_2, \cdots, P_n \}$$ be a set of time intervals, each of duration `params.VotePeriod` (currently set to 30 seconds). Within the span of each $P_i$, validators must submit two messages: 
-
-  * A `MsgExchangeRatePrevote`, containing the SHA256 hash of the exchange rate of Luna with respect to a Terra peg. For example, in order to support swaps for Terra currencies pegged to KRW, USD, SDR, three prevotes must be submitted: one vote for each of ULUNA<>UKRW, ULUNA<>UUSD, and ULUNA<>USDR.
-
-  * A `MsgExchangeRateVote`, containing the salt used to create the hash for the prevote submitted in the previous interval $P_{i-1}$.
+  * A [`MsgExchangeRateVote`](#vote-for-exchange-rate-of-luna-msgexchangeratevote), containing the salt used to create the hash for the prevote submitted in the previous interval $P_{i-1}$.
 
 * At the end of each $P_i$, votes submitted are tallied. 
 
@@ -35,9 +27,9 @@ More formally:
 
   * For each currency C, if the total voting power of submitted votes exceeds 50%, a weighted median price of the vote is taken and is recorded on-chain as the effective exchange rate for Luna<>C for $P_{i+1}$.
 
-  * Winners of the ballot for $P_{i-1}$, i.e. voters that have managed to vote within a small band around the weighted median, are rewarded with the spread fees collected on swap operations during $P_i$. For spread rewards, see [this](market.md#spread-rewards).
+  * Winners of the ballot for $P_{i-1}$, i.e. voters that have managed to vote within a narrow band around the weighted median, are rewarded with the spread fees collected on swap operations during $P_i$.
   
-* If an insufficient amount of votes have been received for a currency, below `VoteThreshold`, its exchange rate is deleted from the store, and no swaps can be made with it during P. 
+* If an insufficient amount of votes have been received for a currency, below [`VoteThreshold`](#votethreshold), its exchange rate is deleted from the store, and no swaps can be made with it during $P_i$. 
 
 ```text
 Period  |  P1 |  P2 |  P3 |  ...    |
@@ -46,9 +38,9 @@ Prevote |  O  |  O  |  O  |  ...    |
 Vote    |     |  O  |  O  |  ...    |
 ```
 
-## Ballot Rewards
+### Ballot Rewards
 
-## Slashing
+### Slashing
 
 ## Message Types
 
@@ -79,7 +71,7 @@ The price used in the hash must be the open market price of Luna, w.r.t. to the 
 
 `Validator` is the validator address of the original validator.
 
-### Vote for Exchange Rate of Luna - `MsgExchangeRateVote` 
+### Vote for Exchange Rate of Luna - `MsgExchangeRateVote`
 
 ```go
 // MsgExchangeRateVote - struct for voting on the exchange rate of Luna denominated in various Terra assets.
@@ -175,13 +167,13 @@ Retrieves an `int64`, number of `VotePeriods` that validator `v` missed during t
 ### `tally()`
 
 ```go
-func tally(ctx sdk.Context, pb types.PriceBallot, k Keeper) (weightedMedian sdk.Dec, ballotWinners types.ClaimPool)
+func tally(ctx sdk.Context, pb types.ExchangeRateBallot, rewardBand sdk.Dec) (weightedMedian sdk.Dec, ballotWinners []types.Claim)
 ```
 
 ### `ballotIsPassing()`
 
 ```go
-func ballotIsPassing(ctx sdk.Context, ballot types.PriceBallot, k Keeper) bool
+func ballotIsPassing(ctx sdk.Context, ballot types.ExchangeRateBallot, k Keeper) bool 
 ```
 
 ### `k.getRewardPool()`
