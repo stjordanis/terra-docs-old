@@ -91,8 +91,8 @@ A `MsgSwap` transaction denotes the `Trader`'s intent to swap their balance of `
 The trader can submit a `MsgSwap` transaction with the amount / denomination of the coin to be swapped, the "offer", and the denomination of the coins to be swapped into, the "ask". The Market module will then use the following procedure to process `MsgSwap`.
 
 1. Market module receives `MsgSwap` message and performs basic validation checks
-2. Calculate exchange rate $ask$ and $spread$ using [`ComputeSwap()`](#computeswap)
-3. Update `TerraPoolDelta` with [`ApplySwapToPool()`](#applyswaptopool)
+2. Calculate exchange rate $ask$ and $spread$ using [`k.ComputeSwap()`](#computeswap)
+3. Update `TerraPoolDelta` with [`k.ApplySwapToPool()`](#applyswaptopool)
 4. Transfer `OfferCoin` from account to module using `supply.SendCoinsFromAccountToModule()`
 5. Burn offered coins, with `supply.BurnCoins()`
 6. Let $ fee = spread * ask $, this is the spread fee.
@@ -128,7 +128,7 @@ A `sdk.Dec` that represents the difference between size of current Terra pool an
 
 ## Functions
 
-### `ComputeSwap()`
+### `k.ComputeSwap()`
 
 ```go
 func (k Keeper) ComputeSwap(ctx sdk.Context, offerCoin sdk.Coin, askDenom string)
@@ -143,17 +143,17 @@ This function detects the swap type from the offer and ask denominations and ret
 
 If the `offerCoin`'s denomination is the same as `askDenom`, this will raise `ErrRecursiveSwap`.
 
-> `ComputeSwap()` uses `ComputeInternalSwap()` internally, which just contains the logic for calculating proper ask coins to exchange, without the Constant Product spread.
+> `k.ComputeSwap()` uses `k.ComputeInternalSwap()` internally, which just contains the logic for calculating proper ask coins to exchange, without the Constant Product spread.
 {note}
 
 
-### `ApplySwapToPool()`
+### `k.ApplySwapToPool()`
 
 ```go
 func (k Keeper) ApplySwapToPool(ctx sdk.Context, offerCoin sdk.Coin, askCoin sdk.DecCoin) sdk.Error
 ```
 
-`ApplySwapToPools()` is called during the swap to update the blockchain's measure of $\delta$, `TerraPoolDelta`, when the balances of the Terra and Luna liquidity pools have changed. 
+`k.ApplySwapToPools()` is called during the swap to update the blockchain's measure of $\delta$, `TerraPoolDelta`, when the balances of the Terra and Luna liquidity pools have changed. 
 
 Terra currencies share the same liquidity pool, so `TerraPoolDelta` remains unaltered during Terra<>Terra swaps.
 
