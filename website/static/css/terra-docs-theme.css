@@ -826,7 +826,8 @@ div[data-graphviz] {
     line-height: 0 !important;
     margin: 0;
 	padding: 0;
-	border: 0;
-	font: inherit;
-	vertical-align: baseline;
+}
+
+.katex-display {
+    margin-bottom: 45px;
 }

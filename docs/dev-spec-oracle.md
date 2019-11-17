@@ -13,7 +13,7 @@ As price information is extrinsic to the blockchain, the Terra network relies on
 
 The Oracle obtains consensus on the price of Luna with the following procedure:
 
-* Let $$\{ P_1, P_2, \cdots P_n \}$$ be a set of time intervals, each of duration `params.VotePeriod` (currently set to 1 minute). Within the span of each $P_i$ validators must submit two messages: 
+* Let $$\{ P_1, P_2, \cdots P_n \}$$ be a set of time intervals, each of duration `params.VotePeriod` (currently set to 30 seconds). Within the span of each $P_i$ validators must submit two messages: 
 
   * A `MsgPricePrevote`, containing the SHA256 hash of the exchange rate of Luna with respect to a Terra peg. For example, in order to support swaps for Terra currencies pegged to KRW, USD, SDR, three prevotes must be submitted: one vote for each of uluna<>ukrw, uluna<>uusd, and uluna<>usdr.
 
@@ -103,6 +103,13 @@ The `Operator` field contains the operator address of the validator. The `FeedDe
 ## Parameters
 
 ```go
+
+// Default parameter values
+const (
+	DefaultVotePeriod  = core.BlocksPerMinute // 30 seconds
+	DefaultVotesWindow = int64(1000)          // 1000 oracle period
+)
+
 // Default parameter values
 var (
 	DefaultVoteThreshold            = sdk.NewDecWithPrec(50, 2) // 50%
