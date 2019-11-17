@@ -595,6 +595,8 @@ h6 {
     font-size: var(--base-font-size);
 }
 
+
+
 sup {
     vertical-align: super;
     font-size: smaller;
@@ -822,7 +824,7 @@ div[data-graphviz] {
 }
 
 .katex * { 
-    font-size: 97% !important;
+    font-size: 98% !important;
     line-height: 0 !important;
     margin: 0;
 	padding: 0;
