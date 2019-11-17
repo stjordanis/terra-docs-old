@@ -13,19 +13,19 @@ As price information is extrinsic to the blockchain, the Terra network relies on
 
 The Oracle obtains consensus on the price of Luna with the following procedure:
 
-* Let { P_1, P_2, ..., P_n } be a set of time intervals, each of duration `params.VotePeriod` (currently set to 1 minute). Within the span of each P_i, validators must submit two messages: 
+* Let $$\{ P_1, P_2, \cdots P_n \}$$ be a set of time intervals, each of duration `params.VotePeriod` (currently set to 1 minute). Within the span of each $P_i$ validators must submit two messages: 
 
   * A `MsgPricePrevote`, containing the SHA256 hash of the exchange rate of Luna with respect to a Terra peg. For example, in order to support swaps for Terra currencies pegged to KRW, USD, SDR, three prevotes must be submitted: one vote for each of uluna<>ukrw, uluna<>uusd, and uluna<>usdr.
 
-  * A `MsgPriceVote`, containing the salt used to create the hash for the prevote submitted in the previous interval P_i-1.
+  * A `MsgPriceVote`, containing the salt used to create the hash for the prevote submitted in the previous interval $P_{i-1}$.
 
-* At the end of each P_i, votes submitted are tallied. 
+* At the end of each $P_i$, votes submitted are tallied. 
 
-  * The submitted salt of each vote is used to verify consistency with the prevote submitted by the validator in P_i-1. If the validator has not submitted a prevote, or the SHA256 resulting from the salt does not match the hash from the prevote, the vote is dropped.
+  * The submitted salt of each vote is used to verify consistency with the prevote submitted by the validator in $P_{i-1}$. If the validator has not submitted a prevote, or the SHA256 resulting from the salt does not match the hash from the prevote, the vote is dropped.
 
-  * For each currency C, if the total voting power of submitted votes exceeds 50%, a weighted median price of the vote is taken and is recorded on-chain as the effective exchange rate for Luna<>C for P_i+1.
+  * For each currency C, if the total voting power of submitted votes exceeds 50%, a weighted median price of the vote is taken and is recorded on-chain as the effective exchange rate for Luna<>C for $P_{i+1}$.
 
-  * Winners of the ballot for P_i-1, i.e. voters that have managed to vote within a small band around the weighted median, are rewarded with the spread fees collected on swap operations during P_i. For spread rewards, see [this](market.md#spread-rewards).
+  * Winners of the ballot for $P_{i-1}$, i.e. voters that have managed to vote within a small band around the weighted median, are rewarded with the spread fees collected on swap operations during $P_i$. For spread rewards, see [this](market.md#spread-rewards).
   
 * If an insufficient amount of votes have been received for a currency, below `VoteThreshold`, its exchange rate is deleted from the store, and no swaps can be made with it during P. 
 

@@ -1,7 +1,7 @@
 // Customize Markdown
 
 const ejs = require("ejs");
-
+const katex = require("remarkable-katex");
 // Template engine
 const template = (md) => {
     md.core.ruler.before("block", "template", (state) => {
@@ -38,6 +38,7 @@ const classy = require("remarkable-classy");
 
 module.exports = [
     template,
+    katex,
     plantuml,
     graphviz,
     classy

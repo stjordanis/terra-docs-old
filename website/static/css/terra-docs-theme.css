@@ -821,4 +821,12 @@ div[data-graphviz] {
     display: none;
 }
 
-.katex { line-height: 1 !important; }
+.katex * { 
+    font-size: 97% !important;
+    line-height: 0 !important;
+    margin: 0;
+	padding: 0;
+	border: 0;
+	font: inherit;
+	vertical-align: baseline;
+}
