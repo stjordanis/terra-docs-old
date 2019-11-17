@@ -98,22 +98,9 @@ The trader can submit a `MsgSwap` transaction with the amount / denomination of 
 6. Let $ fee = spread * ask $, this is the spread fee.
 7. Mint $ ask - fee $ coins of `AskDenom` with `supply.MintCoins()`. This implicitly applies the spread fee as the $ fee $ coins are burned.
 8. Send newly minted coins to trader with `supply.SendCoinsFromModuleToAccount()`
-9. Emit [`MsgSwap`](#msgswap) event to publicize swap and record spread fee
+9. Emit [`swap`](#swap) event to publicize swap and record spread fee
 
 If the trader's `Account` has insufficient balance to execute the swap, the swap transaction fails. Upon successful completion of swaps involving Luna, a portion of the coins to be credited to the user's account is withheld as the spread fee.
-
-## Tags
-
-The Market module emits the following events/tags
-
-### MsgSwap
-
-| Key | Value |
-| :-- | :-- |
-| `"offer"` | offered coins |
-| `"trader"` | trader's address |
-| `"swap_coin"` | swapped coins |
-| `"swap_fee"` | spread fee |
 
 ## State
 
@@ -131,18 +118,13 @@ type Keeper struct {
 }
 ```
 
-The Market module makes use of some global params, which can be accessed and altered with `k.GetParams()` and `k.SetParams()`. See [Parameters](#parameters) for more.
-
-Market also tracks the difference between the Terra (all denominations) and Luna liquidity pools in the store, which can be accessed and altered with `k.GetTerraPoolDelta()` and `k.SetTerraPoolDelta()`. 
+The Market module makes use of some global params, which can be accessed and altered with `k.{Get, Set}Params()`. See [Parameters](#parameters) for more.
 
 The Market module accesses the [Oracle](dev-spec-oracle.md) module for information regarding price and the [Supply](dev-spec-supply.md) module to update account balances after swapping.
 
-- [`Params`](#parameters)
-    - `PoolRecoveryPeriod : int64`
-    - `BasePool : sdk.Dec`
-    - `MinSpread : sdk.Dec`
-    - `TobinTax : sdk.Dec`
-- `TerraPoolDelta : sdk.Dec` - represents the difference between size of current Terra pool and its original base size, valued in USDR.
+### Pool Delta δ - `TerraPoolDelta`
+
+A `sdk.Dec` that represents the difference between size of current Terra pool and its original base size, valued in USDR, accessed through `k.{Get, Set}TerraPoolDelta()`.
 
 ## Functions
 
@@ -188,6 +170,20 @@ $$ \delta_{t+1} = \delta_{t} - (\delta_{t}/{pr}) $$
 
 This allows the network to sharply increase spread fees in during acute price fluctuations, and automatically return the spread to normal after some time when the price change is long term.
 
+## Tags
+
+The Market module emits the following events/tags
+
+### swap
+
+| Key | Value |
+| :-- | :-- |
+| `"offer"` | offered coins |
+| `"trader"` | trader's address |
+| `"swap_coin"` | swapped coins |
+| `"swap_fee"` | spread fee |
+
+
 ## Parameters
 
 ```go
@@ -226,6 +222,7 @@ A fee added on for swap between Terra currencies (spot-trading).
 
 - type: `sdk.Dec`
 - default value: `sdk.NewDecWithPrec(30, 4)` (0.3%)
+
 
 ## Errors
 

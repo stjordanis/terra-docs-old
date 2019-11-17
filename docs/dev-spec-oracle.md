@@ -11,13 +11,21 @@ As price information is extrinsic to the blockchain, the Terra network relies on
 
 ## Voting Procedure
 
-Each of 
+The Oracle module obtains consensus on the price of Luna by requiring all members of the validator set to submit a vote for the price of Luna during every `VotePeriod`.
 
-The Oracle module obtains consensus on the price of Luna with the following procedure:
+Validators must first pre-commit to a price, then in the subsequent `VotePeriod` reveal their price and submit a proof of they had commited to that price. This scheme forces the voter to commit to a price submission before knowing the votes of others and thereby reduces centralization and free-rider risk in the oracle
 
-* Let $$\{ P_1, P_2, \cdots P_n \}$$ be a set of time intervals, each of duration `params.VotePeriod` (currently set to 30 seconds). Within the span of each $P_i$, validators must submit two messages: 
+To do so, a validator must first determine what they believe the price of Luna to be with regard to a Terra peg, then commit to it by submitting the SHA256 hash of their elected price in a `MsgPricePrevote`. 
 
-  * A `MsgPricePrevote`, containing the SHA256 hash of the exchange rate of Luna with respect to a Terra peg. For example, in order to support swaps for Terra currencies pegged to KRW, USD, SDR, three prevotes must be submitted: one vote for each of uluna<>ukrw, uluna<>uusd, and uluna<>usdr.
+In the following `VotePeriod`, the validator submits their pre-commited price and as well as the salt used to generate the hash in a `MsgPriceVote`. If the `MsgPriceVote` doesn't match the hash from the `MsgPricePrevote`, the vote is considered invalid. During this `VotePeriod`, the validator also submits their `MsgPricePrevote` for the following interval.
+
+The Oracle module then tallies up the submissions, updates the blockchain's record of Luna price with the weighted median of the votes, and rewards voters who managed vote within a narrow band around the new price.
+
+More formally:
+
+* Let $$\{ P_1, P_2, \cdots, P_n \}$$ be a set of time intervals, each of duration `params.VotePeriod` (currently set to 30 seconds). Within the span of each $P_i$, validators must submit two messages: 
+
+  * A `MsgPricePrevote`, containing the SHA256 hash of the exchange rate of Luna with respect to a Terra peg. For example, in order to support swaps for Terra currencies pegged to KRW, USD, SDR, three prevotes must be submitted: one vote for each of ULUNA<>UKRW, ULUNA<>UUSD, and ULUNA<>USDR.
 
   * A `MsgPriceVote`, containing the salt used to create the hash for the prevote submitted in the previous interval $P_{i-1}$.
 
@@ -38,8 +46,6 @@ Prevote |  O  |  O  |  O  |  ...    |
 Vote    |     |  O  |  O  |  ...    |
 ```
 
-Effectively, this scheme forces the voter to commit to a price submission before knowing the votes of others and thereby reduces centralization and free-rider risk in the oracle.
-
 ## Message Types
 
 ### Submit a Prevote - `MsgPricePrevote`
@@ -49,10 +55,10 @@ Effectively, this scheme forces the voter to commit to a price submission before
 // The purpose of prevote is to hide vote price with hash
 // which is formatted as hex string in SHA256("salt:price:denom:voter")
 type MsgPricePrevote struct {
-    Hash      string         `json:"hash"` // hex string
-    Denom     string         `json:"denom"`
-    Feeder    sdk.AccAddress `json:"feeder"`
-    Validator sdk.ValAddress `json:"validator"`
+	Hash      string         `json:"hash" yaml:"hash"` // hex string
+	Denom     string         `json:"denom" yaml:"denom"`
+	Feeder    sdk.AccAddress `json:"feeder" yaml:"feeder"`
+	Validator sdk.ValAddress `json:"validator" yaml:"validator"`
 }
 ```
 
@@ -73,11 +79,11 @@ The price used in the hash must be the open market price of Luna, w.r.t. to the 
 // For example, if the validator believes that the effective price of Luna in USD is 10.39, that's
 // what the price field would be, and if 1213.34 for KRW, same.
 type MsgPriceVote struct {
-    Price     sdk.Dec        `json:"price"` // the effective price of Luna in {Denom}
-    Salt      string         `json:"salt"`
-    Denom     string         `json:"denom"`
-    Feeder    sdk.AccAddress `json:"feeder"`
-    Validator sdk.ValAddress `json:"validator"`
+	Price     sdk.Dec        `json:"price" yaml:"price"` // the effective price of Luna in {Denom}
+	Salt      string         `json:"salt" yaml:"salt"`
+	Denom     string         `json:"denom" yaml:"denom"`
+	Feeder    sdk.AccAddress `json:"feeder" yaml:"feeder"`
+	Validator sdk.ValAddress `json:"validator" yaml:"validator"`
 }
 ```
 
@@ -94,54 +100,161 @@ Validators may also elect to delegate voting rights to another key to prevent th
 ```go
 // MsgDelegateFeederPermission - struct for delegating oracle voting rights to another address.
 type MsgDelegateFeederPermission struct {
-	Operator     sdk.ValAddress `json:"operator"`
-	FeedDelegate sdk.AccAddress `json:"feed_delegate"`
+	Operator  sdk.ValAddress `json:"operator" yaml:"operator"`
+	Delegatee sdk.AccAddress `json:"delegatee" yaml:"delegatee"`
 }
+
 ```
 
 The `Operator` field contains the operator address of the validator. The `FeedDelegate` field is the address of the delegate account that will be submitting price related votes and prevotes on behalf of the `Operator`. 
 
+## State
+
+```go
+type Keeper struct {
+	cdc        *codec.Codec
+	storeKey   sdk.StoreKey
+	paramSpace params.Subspace
+
+	distrKeeper   types.DistributionKeeper
+	StakingKeeper types.StakingKeeper
+	supplyKeeper  types.SupplyKeeper
+
+	distrName string
+
+	// codespace
+	codespace sdk.CodespaceType
+}
+```
+
+The Oracle module keeps a set of [parameters](#parameters).
+
+Oracle maintains several stores in its state:
+
+### Prevotes - `Prevote[denom, v]`
+
+#### Indices 
+
+- `denom`: `string`
+- `v`: `sdk.ValAddress`
+
+Retrieves a `PricePrevote` containing validator `v`'s prevote for a given `denom`.
+
+### Votes - `Vote[denom, v]`
+
+#### Indices 
+
+- `denom`: `string`
+- `v`: `sdk.ValAddress`
+
+Retrieves a `PriceVote` containing validator `v`'s vote for a given `denom`.
+
+### Luna Price - `Price[denom]`
+
+#### Indices 
+
+- `denom`: `string`
+
+Retrieves the price of Luna `sdk.Dec` against a given `denom`.
+
+### Feeder Delegations - `FeederDelegation[v]`
+
+#### Indices 
+
+- `v`: `sdk.ValAddress`
+
+Retrieves a `sdk.ValAddress` containing validator `v`'s delegated price feeder's address.
+
+## Prevote Functions
+
+## Vote Functions
+
+## Feeder Delegation Functions
+
+
+## End-Block
 
 ## Parameters
 
 ```go
-
-// Default parameter values
-const (
-	DefaultVotePeriod  = core.BlocksPerMinute // 30 seconds
-	DefaultVotesWindow = int64(1000)          // 1000 oracle period
-)
-
-// Default parameter values
-var (
-	DefaultVoteThreshold            = sdk.NewDecWithPrec(50, 2) // 50%
-	DefaultRewardBand               = sdk.NewDecWithPrec(1, 2) // 1%
-	DefaultRewardDistributionPeriod = core.BlocksPerMonth // 432,000
-	DefaultMinValidVotesPerWindow   = sdk.NewDecWithPrec(5, 2) // 5%
-    DefaultWhitelist                = DenomList{core.MicroKRWDenom,
-         core.MicroSDRDenom, core.MicroUSDDenom} // ukrw, usdr, uusd
-)
-
-...
-
 // Params oracle parameters
 type Params struct {
-    // the number of blocks during which voting takes place.
     VotePeriod int64 `json:"vote_period" yaml:"vote_period"`
-
-    // the minimum percentage of votes that must be received for a ballot to pass.
 	VoteThreshold sdk.Dec `json:"vote_threshold" yaml:"vote_threshold"`
-    
-    // the ratio of allowable price error that can be rewared.
     RewardBand sdk.Dec `json:"reward_band" yaml:"reward_band"`
-    
-    // the number of blocks of the the period during which seigiornage reward comes in and then is distributed.
     RewardDistributionPeriod int64 `json:"reward_distribution_period" yaml:"reward_distribution_period"`
-    
-    // the denom list that can be acitivated,
 	Whitelist DenomList `json:"whitelist" yaml:"whitelist"`
 }
 ```
+
+### `VotePeriod`
+
+The number of blocks during which voting takes place.
+
+- type: `int64`
+- default value: `core.BlocksPerMinute` (30 seconds)
+
+### `VoteThreshold`
+
+The minimum percentage of votes that must be received for a ballot to pass.
+
+- type: `sdk.Dec`
+- default value: `sdk.NewDecWithPrec(50, 2)` (50%)
+
+### `RewardBand`
+
+The ratio of allowable price error that can be rewared.
+
+- type: `sdk.Dec`
+- default value: `sdk.NewDecWithPrec(1, 2)` (1%)
+
+### `RewardDistributionPeriod`
+
+The number of blocks of the the period during which seigiornage reward comes in and then is distributed.
+
+- type: `int64`
+- default value: `core.BlocksPerMonth` (432,000, or 1 month)
+
+### `Whitelist`
+
+The list of currencies that can be voted on. This is set to (UKRW, USDR, UUSD) by default.
+
+- type: `oracle.DenomList`
+- default value: `DenomList{core.MicroKRWDenom, core.MicroSDRDenom, core.MicroUSDDenom}`
+
+## Tags
+
+The Oracle module emits the following events/tags
+
+### price_update
+
+| Key | Value |
+| :-- | :-- |
+| `"denom"` | denomination |
+| `"price"` | new LUNA price with respect to denom |
+
+### prevote
+
+| Key | Value |
+| :-- | :-- |
+| `"denom"` | denomination |
+| `"voter"` | validator's address |
+| `"feeder"` | feeder's address |
+
+### vote
+
+| Key | Value |
+| :-- | :-- |
+| `"denom"` | denomination |
+| `"voter"` | validator's address |
+| `"feeder"` | feeder's address |
+
+### feed_delegate
+
+| Key | Value |
+| :-- | :-- |
+| `"operator"` | delegating validator's address |
+| `"feeder"` | feeder's address |
 
 ## Errors
 
