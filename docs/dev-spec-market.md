@@ -5,7 +5,7 @@ title: Market
 
 The Market module contains the logic for atomic swaps between Terra currencies (e.g. UST<>KRT), as well as between Terra and Luna (e.g. SDT<>LUNA).
 
-A user can swap SDT \(TerraSDR\), UST \(TerraUSD\) for Luna at the exchange rate registered with the oracle, and the network will charge a minimum spread of 2% taken as the network's swap fee against front-running.
+A user can swap SDT \(TerraSDR\), UST \(TerraUSD\), or any other Terra currency for Luna at the exchange rate registered with the oracle, and the network will charge a minimum spread of 2% taken as the network's swap fee against front-running.
 
 For example, assume that oracle reports that the Luna<>SDT exchange rate is 10, and for Luna<>KRT, 10,000. Factoring in the spread, swapping 1 SDT will return 980 KRT worth of Luna (2% of 1000 is 20, taken as the swap fee).
 
@@ -15,7 +15,7 @@ Using the same exchange rates in the above example, a user can swap 1 SDT for 0.
 
 Starting with Columbus-3 (Vodka testnet), Terra now uses a constant-product automated market making algorithm to ensure liquidity for Terra<>Luna swaps.
 
-Before, Terra had enforced a daily Luna supply change cap such that Luna could inflate or deflate only up to the cap in any given 24 hour period, after which swap transactions would fail. This was to prevent excessive volatility in Luna supply which could lead to divesting attacks \(a large increase in Terra supply putting the peg at risk\) or consensus attacks \(a large increase in Luna supply being staked can lead to a consensus attack on the blockchain\).
+Before, Terra had enforced a daily Luna supply change cap such that Luna could inflate or deflate only up to the cap in any given 24 hour period, after which further swaps would fail. This was to prevent excessive volatility in Luna supply which could lead to divesting attacks \(a large increase in Terra supply putting the peg at risk\) or consensus attacks \(a large increase in Luna supply being staked can lead to a consensus attack on the blockchain\).
 
 Now, with constant-product, the following invariant CP is maintained throughout any swaps, and informs the market-maker on how to properly price swaps whilst maintaining liquidity:
 
@@ -23,7 +23,7 @@ Now, with constant-product, the following invariant CP is maintained throughout 
 CP = (Total units of TerraSDR Pool) * (Total SDR value of Luna Pool)
 ```
 
-For instance, if we start with equal pools of Terra and Luna, both worth 1000 SDR total, a swap of 100 SDT for Luna gives you around 90.91 Luna. The offer of 100 SDT is added to the Terra pool, and the 90.91 SDT worth of Luna are taken out of the Luna pool. 
+For example, we'll start with equal pools of Terra and Luna, both worth 1000 SDR total. The size of the Terra pool is 1000 UST, and assuming the price of Luna<>SDR is 0.5, the size of the Luna pool is 2000 Luna. A swap of 100 SDT for Luna would return around 90.91 SDR worth of Luna (~= 181.82 LUNA). The offer of 100 SDT is added to the Terra pool, and the 90.91 SDT worth of Luna are taken out of the Luna pool. 
 
 ```text
 CP = 1000000 SDR
@@ -31,19 +31,21 @@ CP = 1000000 SDR
 (1100 SDT) * (909.0909... SDR of Luna) = 1000000 SDR
 ```
 
+This algorithm ensures that the Terra protocol remains liquid for Terra<>Luna swaps. Of course, this specific example was meant to be more illustrative than realistic -- with much larger liquidity pools used in production, the magnitude of the spread is diminished. 
+
 ### Auto-Replenishing Liquidity Pools
 
 The market starts out with two liquidity pools of equal sizes, one representing Terra (all denominations) and another representing Luna, initialiazed by the parameter `BasePool`. The blockchain maintains in its state `TerraPoolDelta`, which is a number that represents the deviation between Terra/Luna pools from their initial base values -- one number that  provides a descriptive snapshot of the demand difference.
 
 At the end of each block, the market module will "replenish" the pools by decreasing the delta between the Terra and Luna pools. The rate at which the pools will be replenished toward equilibrium is set by the parameter `PoolRecoveryPeriod`, with lower periods meaning faster recovery times, denoting more sensitivity to changing prices.
 
-This mechanism ensures liquidity and acts as a sort of low-pass filter, allowing for the spread fee (which is calculated by the delta) to drop back down when changes in price are interpreted by the network as a rising trend in the true price of the peg rather than spikes from large, temporary positions. 
+This mechanism ensures liquidity and acts as a sort of low-pass filter, allowing for the spread fee (which is calculated by the delta) to drop back down when changes in price are interpreted by the network as a lasting, rising trend in the true price of the peg rather than spikes from large, temporary positions from trading. 
 
 ## Defense Mechanisms
 
 Since Terra's price feed is derived from validator oracles, there is necessarily a delay between the on-chain reported price and the actual realtime price. 
 
-This difference is on the order of about 15 minutes, which is negligible for nearly all practical transactions. However an attacker could take advantage of this lag and extract value out of the network through a front-running attack.
+This difference is on the order of about 1 minute (our oracle `VotePeriod` is 30 seconds), which is negligible for nearly all practical transactions. However an attacker could take advantage of this lag and extract value out of the network through a front-running attack.
 
 To defend against this, Terra has implemented the following mechanisms:
 
@@ -73,12 +75,26 @@ The trader can submit a `MsgSwap` transaction with the amount / denomination of 
 2. Calculate exchange rate and spread using [`ComputeSwap()`](#computeswap)
 3. Update new Terra/Luna pool deltas with [`ApplySwapToPool()`](#applyswaptopool)
 4. Transfer coins from account to module using `supply.SendCoinsFromAccountToModule()`
-5. Charge a spread (if applicable) and distribute to vote winners in `Oracle`
+5. Charge a spread (if applicable), by subtracting from asked coins
 6. Burn offered coins, with `supply.BurnCoins()`
-7. Mint asked coins with `supply.MintCoins()`
+7. Mint asked coins (after spread is subtracted) with `supply.MintCoins()`
 8. Send newly minted coins to trader `supply.SendCoinsFromModuleToAccount()`
+9. Emit [`MsgSwap`](#msgswap) event to publicize swap and record spread fee
 
 If the trader's `Account` has insufficient balance to execute the swap, the swap transaction fails. Upon successful completion of swaps involving Luna, a portion of the coins to be credited to the user's account is withheld as the spread fee.
+
+## Tags
+
+The Market module emits the following events/tags
+
+### MsgSwap
+
+| Key | Value |
+| :-- | :-- |
+| `"offer"` | offered coins |
+| `"trader"` | trader's address |
+| `"swap_coin"` | swapped coins |
+| `"swap_fee"` | spread fee |
 
 ## State
 
@@ -98,7 +114,7 @@ type Keeper struct {
 
 The Market module makes use of some global params, which can be accessed and altered with `k.GetParams()` and `k.SetParams()`. See [Parameters](#parameters) for more.
 
-Market also tracks the difference between the liquidity pools of Terra (all denominations) and Luna in the store, which can be accessed and altered with `k.GetTerraPoolDelta()` and `k.SetTerraPoolDelta()`. 
+Market also tracks the difference between the Terra (all denominations) and Luna liquidity pools in the store, which can be accessed and altered with `k.GetTerraPoolDelta()` and `k.SetTerraPoolDelta()`. 
 
 The Market module accesses the [Oracle](dev-spec-oracle.md) module for information regarding price and the [Supply](dev-spec-supply.md) module to update account balances after swapping.
 
@@ -107,7 +123,7 @@ The Market module accesses the [Oracle](dev-spec-oracle.md) module for informati
     - `BasePool : sdk.Dec`
     - `MinSpread : sdk.Dec`
     - `TobinTax : sdk.Dec`
-- `TerraPoolDelta : sdk.Dec` - represents the difference between the pools, valued in USDR.
+- `TerraPoolDelta : sdk.Dec` - represents the difference between size of current Terra pool and its original base size, valued in USDR. Can recreate size of Terra and Luna pools.
 
 ## Functions
 
@@ -134,7 +150,14 @@ func (k Keeper) ApplySwapToPool(ctx sdk.Context, offerCoin sdk.Coin, askCoin sdk
 
 `ApplySwapToPools()` is called during the swap to update each of the Terra and Luna pools reflecting their new total balances. The pools remain unchanged during Terra<>Terra swaps. `offerPool` increases by the amount of `offer` tokens, and `askPool` decreases by `ask` tokens provided by the market.
 
-For instance, if I am swapping 2 TerraUSD for 3 LUNA, the offer pool (Terra) will increase by 2 USD and the ask pool (Luna) will decrease by 3 tokens. In practice, rather than keeping track of the sizes of the two pools, it is encoded in a +/- number `TerraPoolDelta`, with postive numbers representing a larger Terra pool. Thus, the delta would increase from 0 to 2.
+For instance, if I am swapping 2 TerraSDR for 3 LUNA, the offer pool (Terra) will increase by 2 SDR and the ask pool (Luna) will decrease by 3 tokens. In practice, rather than keeping track of the sizes of the two pools, it is encoded in a +/- number `TerraPoolDelta`, with postive numbers representing a larger Terra pool. Thus, the delta would increase from 0 to 2.
+
+The true effective size of the Terra and Luna liquidity pools can be recreated from this number using the following formula:
+
+```text
+TerraPool = BaesPool + TerraPoolDelta
+LunaPool = BasePool*BasePool / TerraPool
+```
 
 ## End-Block
 
