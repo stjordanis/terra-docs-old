@@ -595,6 +595,8 @@ h6 {
     font-size: var(--base-font-size);
 }
 
+
+
 sup {
     vertical-align: super;
     font-size: smaller;
@@ -819,4 +821,15 @@ input#search_input_react::placeholder {
 
 div[data-graphviz] {
     display: none;
+}
+
+.katex * { 
+    font-size: 98% !important;
+    line-height: 0 !important;
+    margin: 0;
+	padding: 0;
+}
+
+.katex-display {
+    margin-bottom: 45px;
 }

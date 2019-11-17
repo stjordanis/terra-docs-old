@@ -3,27 +3,29 @@ id: dev-spec-oracle
 title: Oracle
 ---
 
-The objective of the oracle module is to get accurate exchange rates of Luna with various fiat currencies such that the system can facilitate fair exchanges of Terra stablecoins and Luna. Should the system fail to gain an accurate understanding of Luna, a small set of arbitrageurs could profit at the cost of the entire system.
+The Oracle module provides the Terra blockchain with an up-to-date and accurate price feed of exchange rates of Luna against various fiat currencies such that the [Market](dev-spec-market.md) module may always provide fair exchanges between Terra<>Terra currency pairs, as well as Terra<>Luna.
 
-The Oracle module forms a consensus on the exchange rate of Luna with respect to various fiat currencies, in order to facilitate swaps amongst the stablecoins mirroring those currencies as well as ensuring their price-stability.
+Should the system fail to gain an accurate measure of Luna price, a small set of arbitrageurs could profit at the cost of the entire network.
+
+As price information is extrinsic to the blockchain, the Terra network relies on a special set within the validator set to provide price information by submitting a vote for what they believe to be the current price during a periodic price-update interval.
 
 ## Voting Procedure
 
-In order to get fair exchange rates, the oracle operates in the following way:
+The Oracle obtains consensus on the price of Luna with the following procedure:
 
-* Let P = {P1, P2, ...} be a time series split up by `params.VotePeriod`, currently 1 minute. In each P, validators must submit two votes: 
+* Let $$\{ P_1, P_2, \cdots P_n \}$$ be a set of time intervals, each of duration `params.VotePeriod` (currently set to 30 seconds). Within the span of each $P_i$ validators must submit two messages: 
 
-  * A `MsgPricePrevote`, containing the SHA256 hash of the exchange rate of Luna is with respect to a Terra peg. For example, in order to support swaps for Terra currencies pegged to KRW, USD, SDR, three prevotes must be submitted each containing the uluna&lt;&gt;ukrw, uluna&lt;&gt;uusd, and uluna&lt;&gt;usdr exchange rates. 
+  * A `MsgPricePrevote`, containing the SHA256 hash of the exchange rate of Luna with respect to a Terra peg. For example, in order to support swaps for Terra currencies pegged to KRW, USD, SDR, three prevotes must be submitted: one vote for each of uluna<>ukrw, uluna<>uusd, and uluna<>usdr.
 
-  * A `MsgPriceVote`, containing the salt used to create the hash for the prevote submitted in P-1.  
+  * A `MsgPriceVote`, containing the salt used to create the hash for the prevote submitted in the previous interval $P_{i-1}$.
 
-* At the end of each P, votes submitted are tallied. 
+* At the end of each $P_i$, votes submitted are tallied. 
 
-  * The submitted salt of each vote is used to verify consistency with the prevote submitted by the validator in P-1. If the validator has not submitted a prevote, or the SHA256 resulting from the salt does not match the hash from the prevote, the vote is dropped.
+  * The submitted salt of each vote is used to verify consistency with the prevote submitted by the validator in $P_{i-1}$. If the validator has not submitted a prevote, or the SHA256 resulting from the salt does not match the hash from the prevote, the vote is dropped.
 
-  * For each currency, if the total voting power of submitted votes exceeds 50%, a weighted median price of the vote is taken and is record on-chain as the effective exchange rate for Luna w.r.t. said currency for P+1.
+  * For each currency C, if the total voting power of submitted votes exceeds 50%, a weighted median price of the vote is taken and is recorded on-chain as the effective exchange rate for Luna<>C for $P_{i+1}$.
 
-  * Winners of the ballot for P-1, i.e. voters that have managed to vote within a small band around the weighted median, get rewarded by spread fees collected by swap operations during P. For spread rewards, see [this](market.md#spread-rewards).
+  * Winners of the ballot for $P_{i-1}$, i.e. voters that have managed to vote within a small band around the weighted median, are rewarded with the spread fees collected on swap operations during $P_i$. For spread rewards, see [this](market.md#spread-rewards).
   
 * If an insufficient amount of votes have been received for a currency, below `VoteThreshold`, its exchange rate is deleted from the store, and no swaps can be made with it during P. 
 
@@ -34,7 +36,7 @@ Prevote |  O  |  O  |  O  |  ...    |
 Vote    |     |  O  |  O  |  ...    |
 ```
 
-Effectively this scheme forces the voter to commit to a firm price submission before knowing the votes of others, and thereby reduces centralization and free-rider risk in the oracle.
+Effectively, this scheme forces the voter to commit to a price submission before knowing the votes of others and thereby reduces centralization and free-rider risk in the oracle.
 
 ## Message Types
 
@@ -101,6 +103,13 @@ The `Operator` field contains the operator address of the validator. The `FeedDe
 ## Parameters
 
 ```go
+
+// Default parameter values
+const (
+	DefaultVotePeriod  = core.BlocksPerMinute // 30 seconds
+	DefaultVotesWindow = int64(1000)          // 1000 oracle period
+)
+
 // Default parameter values
 var (
 	DefaultVoteThreshold            = sdk.NewDecWithPrec(50, 2) // 50%
