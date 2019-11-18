@@ -17,7 +17,7 @@ This difference is on the order of about 1 minute (our oracle `VotePeriod` is 30
 
 To defend against this, the Market module enforces the following swap fees:
 
-- a Tobin Tax (set at [0.3%](#tobintax)) for spot-converting Terra<>Terra swaps
+- a Tobin Tax (set at [0.25%](#tobintax)) for spot-converting Terra<>Terra swaps
 - a minimum spread (set at [2%](#minspread)) for Terra<>Luna swaps
 
 ## Terra/Luna Swaps
@@ -36,7 +36,7 @@ Before, Terra had enforced a daily Luna supply change cap such that Luna could i
 
 Now, with Constant Product, we define a value $CP$ set to the size of the Terra pool multiplied by a set **fiat value of Luna**, and ensure our market-maker maintains it as invariant during any swaps through adjusting the spread.
 
-> Our implementation of Constant Product diverges from Unipool's, as we use the fiat value of Luna instead of the size of the Luna pool. This nuance means changes in Luna's price don't affect the product, but rather the size of the Luna pool.
+> Our implementation of Constant Product diverges from Uniswap's, as we use the fiat value of Luna instead of the size of the Luna pool. This nuance means changes in Luna's price don't affect the product, but rather the size of the Luna pool.
 {note}
 
 $$
@@ -44,7 +44,7 @@ CP = Pool_{Terra} * Fiat_{Luna}
 $$
 
 
-For example, we'll start with equal pools of Terra and Luna, both worth 1000 SDR total. The size of the Terra pool is 1000 UST, and assuming the price of Luna<>SDR is 0.5, the size of the Luna pool is 2000 Luna. A swap of 100 SDT for Luna would return around 90.91 SDR worth of Luna (~= 181.82 LUNA). The offer of 100 SDT is added to the Terra pool, and the 90.91 SDT worth of Luna are taken out of the Luna pool. 
+For example, we'll start with equal pools of Terra and Luna, both worth 1000 SDR total. The size of the Terra pool is 1000 UST, and assuming the price of Luna<>SDR is 0.5, the size of the Luna pool is 2000 Luna. A swap of 100 SDT for Luna would return around 90.91 SDR worth of Luna (≈ 181.82 LUNA). The offer of 100 SDT is added to the Terra pool, and the 90.91 SDT worth of Luna are taken out of the Luna pool. 
 
 ```text
 CP = 1000000 SDR
@@ -58,7 +58,7 @@ This algorithm ensures that the Terra protocol remains liquid for Terra<>Luna sw
 
 The market starts out with two liquidity pools of equal sizes, one representing Terra (all denominations) and another representing Luna, initialiazed by the parameter `BasePool`.
 
-In practice, rather than keeping track of the sizes of the two pools, the information is encoded in a number $\delta$, which the blockchain stores as `TerraPoolDelta`, representing the deviation of the Terra pool from its base size in units USDR.
+In practice, rather than keeping track of the sizes of the two pools, the information is encoded in a number $\delta$, which the blockchain stores as `TerraPoolDelta`, representing the deviation of the Terra pool from its base size in units µSDR.
 
 The size of the Terra and Luna liquidity pools can be generated from $\delta$ using the following formulas:
 
@@ -124,7 +124,7 @@ The Market module accesses the [Oracle](dev-spec-oracle.md) module for informati
 
 ### Pool Delta δ - `TerraPoolDelta`
 
-A `sdk.Dec` that represents the difference between size of current Terra pool and its original base size, valued in USDR, accessed through `k.{Get, Set}TerraPoolDelta()`.
+A `sdk.Dec` that represents the difference between size of current Terra pool and its original base size, valued in µSDR, accessed through `k.{Get, Set}TerraPoolDelta()`.
 
 ## Functions
 
@@ -197,7 +197,7 @@ type Params struct {
 
 ### `PoolRecoveryPeriod`
 
-Number of blocks it takes for the Terra & Luna pools to naturally "reset" toward equilibrium  (delta ~= 0) through automated pool replenishing.
+Number of blocks it takes for the Terra & Luna pools to naturally "reset" toward equilibrium  ($\delta \to 0$) through automated pool replenishing.
 
 - type: `int64`
 - default value: `14400` (`core.BlocksPerDay`)
@@ -207,7 +207,7 @@ Number of blocks it takes for the Terra & Luna pools to naturally "reset" toward
 Initial starting size of both Terra and Luna liquidity pools.
 
 - type: `sdk.Dec`
-- default value: `1000000 * core.MicroUnit` (1,000,000,000 USDR)
+- default value: `sdk.NewDec(250000 * core.MicroUnit)` (250,000SDR = 250,000,000,000µSDR)
 
 ### `MinSpread`
 
@@ -221,7 +221,7 @@ Minimum spread charged on Terra<>Luna swaps to prevent leaking value from front-
 A fee added on for swap between Terra currencies (spot-trading).
 
 - type: `sdk.Dec`
-- default value: `sdk.NewDecWithPrec(30, 4)` (0.3%)
+- default value: `sdk.NewDecWithPrec(25, 4)` (0.25%)
 
 
 ## Errors

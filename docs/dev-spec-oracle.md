@@ -5,19 +5,17 @@ title: Oracle
 
 The Oracle module provides the Terra blockchain with an up-to-date and accurate price feed of exchange rates of Luna against various Terra pegs so that the [Market](dev-spec-market.md) may provide fair exchanges between Terra<>Terra currency pairs, as well as Terra<>Luna.
 
-Should the system fail to gain an accurate measure of Luna price, a small set of arbitrageurs could profit at the cost of the entire network.
-
 As price information is extrinsic to the blockchain, the Terra network relies on validators to provide price information by regularly submitting a vote for what they believe to be the current price during a periodic price-update interval (the `VotePeriod`).
 
 ## Voting Procedure
 
-The Oracle module obtains consensus on the exchange rate of Luna by requiring all members of the validator set to submit a vote for Luna price for every [`VotePeriod`](#voteperiod).
+For every [`VotePeriod`](#voteperiod) the Oracle module obtains consensus on the exchange rate of Luna against a subset of Terra denominations $ D \in W $ [`Whitelist`](#whitelist) by requiring all members of the validator set to submit a vote for Luna price before the end of the interval.
 
 Validators must first pre-commit to a price, then in the subsequent `VotePeriod` submit and reveal their price alongside a proof that they had pre-commited at that price. This scheme forces the voter to commit to a submission before knowing the votes of others and thereby reduces centralization and free-rider risk in the Oracle.
 
 * Let $$\{ P_1, P_2, \cdots, P_n \}$$ be a set of time intervals, each of duration [`params.VotePeriod`](#voteperiod)(currently set to 30 seconds). Within the span of each $P_i$, validators must submit two messages: 
 
-  * A [`MsgExchangeRatePrevote`](#submit-a-prevote-msgexchangerateprevote), containing the SHA256 hash of the exchange rate of Luna with respect to a Terra peg. For example, in order to support swaps for Terra currencies pegged to KRW, USD, SDR, three prevotes must be submitted: one vote for each of ULUNA<>UKRW, ULUNA<>UUSD, and ULUNA<>USDR.
+  * A [`MsgExchangeRatePrevote`](#submit-a-prevote-msgexchangerateprevote), containing the SHA256 hash of the exchange rate of Luna with respect to a Terra peg. A separate prevote must be submitted for each different denomination to report Luna price on.
 
   * A [`MsgExchangeRateVote`](#vote-for-exchange-rate-of-luna-msgexchangeratevote), containing the salt used to create the hash for the prevote submitted in the previous interval $P_{i-1}$.
 
@@ -25,7 +23,7 @@ Validators must first pre-commit to a price, then in the subsequent `VotePeriod`
 
   * The submitted salt of each vote is used to verify consistency with the prevote submitted by the validator in $P_{i-1}$. If the validator has not submitted a prevote, or the SHA256 resulting from the salt does not match the hash from the prevote, the vote is dropped.
 
-  * For each currency C, if the total voting power of submitted votes exceeds 50%, a weighted median price of the vote is taken and is recorded on-chain as the effective exchange rate for Luna<>C for $P_{i+1}$.
+  * For each denomination $ d \in D $, if the total voting power of submitted votes exceeds 50%, a weighted median price of the vote is taken and is recorded on-chain as the effective exchange rate for Luna<>C for $P_{i+1}$.
 
   * Winners of the ballot for $P_{i-1}$, i.e. voters that have managed to vote within a narrow band around the weighted median, are rewarded with the spread fees collected on swap operations during $P_i$.
   
@@ -206,7 +204,7 @@ At the end of every block, the Oracle module checks whether it's the last block 
 3. For each remaining `denom` with a passing ballot:
     - Tally up votes and find the weighted median price and winners with [`tally()`](#tally)
     - Iterate through winners of the ballot and add their weight to their running total
-    - Set the Luna price on the blockchain for that Luna<>`denom` with `k.SetLunaPrice()`
+    - Set the Luna exchange rate on the blockchain for that Luna<>`denom` with `k.SetLunaExchangeRate()`
     - Emit a [`price_update`](#price_update) event
 4. Distribute rewards to ballot winners with [`k.RewardBallotWinners()`](#krewardballotwinners)
 5. Clear all prevotes except for those for the next `VotePeriod` from the store
@@ -244,21 +242,21 @@ The minimum percentage of votes that must be received for a ballot to pass.
 
 ### `RewardBand`
 
-The ratio of allowable price error that can be rewared.
+The tolerated error from the final weighted mean exchange rate that can receive rewards.
 
 - type: `sdk.Dec`
 - default value: `sdk.NewDecWithPrec(1, 2)` (1%)
 
 ### `RewardDistributionPeriod`
 
-The number of vote periods during which seigiornage reward comes in and then is distributed.
+The number of vote periods during which seigniorage reward comes in and then is distributed.
 
 - type: `int64`
 - default value: `core.BlocksPerMonth` (1 month window)
 
 ### `Whitelist`
 
-The list of currencies that can be voted on. This is set to (UKRW, USDR, UUSD) by default.
+The list of currencies that can be voted on. This is set to (µKRW, µSDR, µUSD) by default.
 
 - type: `oracle.DenomList`
 - default value: `DenomList{core.MicroKRWDenom, core.MicroSDRDenom, core.MicroUSDDenom}`
