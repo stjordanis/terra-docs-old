@@ -7,6 +7,9 @@ The Oracle module provides the Terra blockchain with an up-to-date and accurate 
 
 As price information is extrinsic to the blockchain, the Terra network relies on validators to provide price information by regularly submitting a vote for what they believe to be the current price during a periodic price-update interval (the `VotePeriod`).
 
+> Since the Oracle service is powered by validators, you may find it interesting to look at the [Staking](#dev-spec-staking) module, which covers the logic for staking and validators.
+{note}
+
 ## Voting Procedure
 
 For every [`VotePeriod`](#voteperiod) the Oracle module obtains consensus on the exchange rate of Luna against a subset of Terra denominations $ D \in W $ [`Whitelist`](#whitelist) by requiring all members of the validator set to submit a vote for Luna price before the end of the interval.
@@ -23,7 +26,7 @@ Validators must first pre-commit to a price, then in the subsequent `VotePeriod`
 
   * The submitted salt of each vote is used to verify consistency with the prevote submitted by the validator in $P_{i-1}$. If the validator has not submitted a prevote, or the SHA256 resulting from the salt does not match the hash from the prevote, the vote is dropped.
 
-  * For each denomination $ d \in D $, if the total voting power of submitted votes exceeds 50%, a weighted median price of the vote is taken and is recorded on-chain as the effective exchange rate for Luna<>C for $P_{i+1}$.
+  * Let $Active(D, i)$ be the subset of denominations in $D$ for which the total voting power of submitted votes exceeds 50%. For each $d \in Active(D, i)$, the weighted median price of the votes is recorded on-chain as the effective exchange rate for Luna<>$d$ for $P_{i+1}$.
 
   * Winners of the ballot for $P_{i-1}$, i.e. voters that have managed to vote within a narrow band around the weighted median, are rewarded with the spread fees collected on swap operations during $P_i$.
   
@@ -194,21 +197,22 @@ func SlashAndResetMissCounters(ctx sdk.Context, k Keeper) {
 
 ## End-Block
 
-At the end of every block, the Oracle module checks whether it's the last block of the `VotePeriod`. If it is, then the following procedure is run:
+At the end of every block, the Oracle module checks whether it's the last block of the `VotePeriod`. If it is, it implements the [Voting Procedure](#voting-procedure):
 
-1. Clear all current active Luna prices from the store
-2. For each denomination:
-    - If it's not found in [`Whitelist`](#whitelist), skip it.
-    - If there the number of votes in the ballot are fewer than [`VoteThreshold`](#votethreshold), skip it.
-3. Keep track of validators and their "weights" -- winnings
-3. For each remaining `denom` with a passing ballot:
+1. All current active Luna exchange rates are purged from the state
+2. Received votes are organized into ballots by denomination, and `abstain` votes, as well as votes by inactive or jailed validators are ignored
+3. Denominations not meeting the following requirements will be dropped:
+    - Must appear in the permitted denominations in [`Whitelist`](#whitelist)
+    - Ballot for denomination must have at least [`VoteThreshold`](#votethreshold) total vote power
+4. For each remaining `denom` with a passing ballot:
     - Tally up votes and find the weighted median price and winners with [`tally()`](#tally)
     - Iterate through winners of the ballot and add their weight to their running total
     - Set the Luna exchange rate on the blockchain for that Luna<>`denom` with `k.SetLunaExchangeRate()`
     - Emit a [`price_update`](#price_update) event
-4. Distribute rewards to ballot winners with [`k.RewardBallotWinners()`](#krewardballotwinners)
-5. Clear all prevotes except for those for the next `VotePeriod` from the store
-6. Clear all votes
+5. Count up the validators who missed the Oracle vote and increase the appropriate miss counters
+6. If at the end of a [`SlashWindow`](#slashwindow), penalize validators who have missed more than the penalty threshold (submitted fewer valid votes than [`MinValidPerWindow`](#minvalidperwindow))
+7. Distribute rewards to ballot winners with [`k.RewardBallotWinners()`](#krewardballotwinners)
+8. Clear all prevotes (except ones for the next `VotePeriod`) and votes from the store
 
 ## Parameters
 

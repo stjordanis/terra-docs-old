@@ -3,10 +3,8 @@ id: validator-faq
 title: Validator FAQ
 ---
 
-{% hint style="warning" %}
-Disclaimer This is work in progress.
-Mechanisms and values are susceptible to change.
-{% endhint %}
+> This is work in progress. Mechanisms and values are susceptible to change.
+{warning}
 
 ## General Concepts
 

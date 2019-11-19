@@ -207,7 +207,7 @@ Number of blocks it takes for the Terra & Luna pools to naturally "reset" toward
 Initial starting size of both Terra and Luna liquidity pools.
 
 - type: `sdk.Dec`
-- default value: `sdk.NewDec(250000 * core.MicroUnit)` (250,000SDR = 250,000,000,000µSDR)
+- default value: `sdk.NewDec(250000 * core.MicroUnit)` (250,000 SDR = 250,000,000,000 µSDR)
 
 ### `MinSpread`
 

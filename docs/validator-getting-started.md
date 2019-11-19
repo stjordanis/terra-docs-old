@@ -6,9 +6,8 @@ title: Getting Started
 Information on how to join the current testnet (`genesis.json` file and seeds) is held in our "networks" [repo](https://github.com/terra-project/networks).
 Please check there if you are looking to join our latest testnet.
 
-{% hint style="warning" %}
-This documentation is only intended for validators of the **Soju public testnet** and the **Columbus public mainnet**.
-{% endhint %}
+> This documentation is only intended for validators of the **Soju public testnet** and the **Columbus public mainnet**.
+{important}
 
 Before setting up your validator node, make sure you've already gone through the [Full Node Setup](dev-join-network.md) guide.
 
@@ -28,10 +27,9 @@ terrad tendermint show-validator
 
 Next, craft your `terrad gentx` command:
 
-{% hint style="warning" %}
-Don't use more Luna than you have!
-You can always get more by using the [Faucet](https://faucet.terra.money/)!
-{% endhint %}
+> Don't use more Luna than you have!
+> You can always get more by using the [Faucet](https://faucet.terra.money/)!
+{ tip }
 
 ```bash
 terracli tx staking create-validator \
@@ -79,9 +77,8 @@ terrad gentx \
 
 **Note**: This command automatically store your `gentx` in `~/.terrad/config/gentx` for it to be processed at genesis.
 
-{% hint style="info" %}
-Consult `terrad gentx --help` for more information on the flags defaults.
-{% endhint %}
+> Consult `terrad gentx --help` for more information on the flags defaults.
+{info}
 
 A `gentx` is a JSON file carrying a self-delegation. All genesis transactions are collected by a `genesis coordinator` and validated against an initial `genesis.json`. Such initial `genesis.json` contains only a list of accounts and their coins. Once the transactions are processed, they are merged in the `genesis.json`'s `gentxs` field.
 
@@ -165,11 +162,7 @@ terracli tx staking edit-validator \
 **Note**: The `commission-rate` value must adhere to the following invariants:
 
 * Must be between 0 and the validator's `commission-max-rate`
-* Must not exceed the validator's `commission-max-change-rate` which is maximum
-
-  % point change rate **per day**. In other words, a validator can only change
-
-  its commission once per day and within `commission-max-change-rate` bounds.
+* Must not exceed the validator's `commission-max-change-rate` which is maximum % point change rate **per day**. In other words, a validator can only change its commission once per day and within `commission-max-change-rate` bounds.
 
 ## View Validator Description
 
@@ -208,9 +201,8 @@ terracli query tendermint-validator-set | grep "$(terrad tendermint show-validat
 
 You should also be able to see your validator on the Terra Station. You are looking for the `bech32` encoded `address` in the `~/.terrad/config/priv_validator.json` file.
 
-{% hint style="warning" %}
-To be in the validator set, you need to have more total voting power than the 100th validator.
-{% endhint %}
+> To be in the validator set, you need to have more total voting power than the 100th validator.
+{important}
 
 ## Common Problems
 
@@ -230,9 +222,8 @@ Wait for your full node to catch up to the latest block. Next, run the following
 terracli tx slashing unjail <terra> --chain-id=<chain_id> --from=<from>
 ```
 
-{% hint style="danger" %}
-If you don't wait for `terrad` to sync before running `unjail`, you will receive an error message telling you your validator is still jailed.
-{% endhint %}
+> If you don't wait for `terrad` to sync before running `unjail`, you will receive an error message telling you your validator is still jailed.
+{ warning }
 
 Lastly, check your validator again to see if your voting power is back.
 
