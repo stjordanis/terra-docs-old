@@ -5,7 +5,7 @@ title: Oracle
 
 The Oracle module provides the Terra blockchain with an up-to-date and accurate price feed of exchange rates of Luna against various Terra pegs so that the [Market](dev-spec-market.md) may provide fair exchanges between Terra<>Terra currency pairs, as well as Terra<>Luna.
 
-As price information is extrinsic to the blockchain, the Terra network relies on validators to periodically  vote on the current LUNA exchange rate, with the protocol tallying up the results once per `VotePeriod` and updating the on-chain exchange rate as the weighted median of the ballot.
+As price information is extrinsic to the blockchain, the Terra network relies on validators to periodically  vote on the current Luna exchange rate, with the protocol tallying up the results once per `VotePeriod` and updating the on-chain exchange rate as the weighted median of the ballot.
 
 > Since the Oracle service is powered by validators, you may find it interesting to look at the [Staking](#dev-spec-staking) module, which covers the logic for staking and validators.
 {note}
@@ -20,7 +20,7 @@ Validators must first pre-commit to a exchange rate, then in the subsequent `Vot
 
 Let P(1), P(2), P(3), ... P(N) be time intervals up to , each of duration [`params.VotePeriod`](#voteperiod)(currently set to 30 seconds). Within the span of each P(T), validators must submit two messages: 
 
-  * A [`MsgExchangeRatePrevote`](#submit-a-prevote-msgexchangerateprevote), containing the SHA256 hash of the exchange rate of LUNA with respect to a Terra peg. A separate prevote must be submitted for each different denomination to report LUNA exchange rate on.
+  * A [`MsgExchangeRatePrevote`](#submit-a-prevote-msgexchangerateprevote), containing the SHA256 hash of the exchange rate of Luna with respect to a Terra peg. A separate prevote must be submitted for each different denomination to report Luna exchange rate on.
 
   * A [`MsgExchangeRateVote`](#vote-for-exchange-rate-of-luna-msgexchangeratevote), containing the salt used to create the hash for the prevote submitted in the previous interval P(T-1).
 
@@ -35,7 +35,7 @@ Vote    |     |  O  |  O  |  ...    |
 
 A validator may abstain from voting by submitting a non-positive integer for the `ExchangeRate` field in [`MsgExchangeRateVote`](#vote-for-exchange-rate-of-luna-msgexchangeratevote). Doing so will absolve them of any penalties for missing `VotePeriod`s, but also disqualify them from receiving Oracle seigniorage rewards for faithful reporting.
 
-> A validator that decides to participate in the oracle process **must submit a vote for the LUNA exchange rate against every denomination specified in [`Whitelist`](#whitelist) during every `VotePeriod`**. For every `VotePeriod` during which they fail to do so, it is considered a "miss."
+> A validator that decides to participate in the oracle process **must submit a vote for the Luna exchange rate against every denomination specified in [`Whitelist`](#whitelist) during every `VotePeriod`**. For every `VotePeriod` during which they fail to do so, it is considered a "miss."
 >
 > Participating validators must maintain a valid vote rate of at least [`MinValidPerWindow`](#minvalidperwindow), lest they get their stake slashed (currently set to [0.01%](#slashfraction)) and temporarily jailed.
 {warning}
@@ -46,7 +46,7 @@ At the end of each P(T), the submitted votes are tallied.
 
 The submitted salt of each vote is used to verify consistency with the prevote submitted by the validator in P(T-1). If the validator has not submitted a prevote, or the SHA256 resulting from the salt does not match the hash from the prevote, the vote is dropped.
 
-For each denomination, if the total voting power of submitted votes exceeds 50%, the weighted median of the votes is recorded on-chain as the effective exchange rate for LUNA against that denomination for the following `VotePeriod` P(T+1). 
+For each denomination, if the total voting power of submitted votes exceeds 50%, the weighted median of the votes is recorded on-chain as the effective exchange rate for Luna against that denomination for the following `VotePeriod` P(T+1). 
 
 Denominations receiving fewer than [`VoteThreshold`](#votethreshold) total voting power have their exchange rates deleted from the store, and no swaps can be made with it during P(T). 
 
@@ -59,7 +59,7 @@ Winners of the ballot for P(T-1), i.e. voters that have managed to vote within a
 
 ## Message Types
 
-> The control flow for vote-tallying, LUNA exchange rate updates, ballot rewards and slashing happens at the end of every `VotePeriod`, and is found at the [end-block ABCI function](#end-block) rather than inside message handlers.
+> The control flow for vote-tallying, Luna exchange rate updates, ballot rewards and slashing happens at the end of every `VotePeriod`, and is found at the [end-block ABCI function](#end-block) rather than inside message handlers.
 {note}
 
 ### Submit a Prevote - `MsgExchangeRatePrevote`
@@ -80,13 +80,13 @@ The `MsgExchangeRatePrevote` is just the submission of the leading 20 bytes of t
 
 `Denom` is the denomination of the currency for which the vote is being cast. For example, if the voter wishes to submit a prevote for the usd, then the correct `Denom` is `uusd`.
 
-The exchange rate used in the hash must be the open market exchange rate of LUNA, with respect to the denomination matching `Denom`. For example, if `Denom` is `uusd` and the going exchange rate for LUNA is 1 USD, then "1" must be used as the exchange rate, as `1 uluna` = `1 uusd`. 
+The exchange rate used in the hash must be the open market exchange rate of Luna, with respect to the denomination matching `Denom`. For example, if `Denom` is `uusd` and the going exchange rate for Luna is 1 USD, then "1" must be used as the exchange rate, as `1 uluna` = `1 uusd`. 
 
 `Feeder` is used if the validator wishes to delegate oracle vote signing to a separate key to de-risk exposing their validator signing key.
 
 `Validator` is the validator address of the original validator.
 
-### Vote for Exchange Rate of LUNA - `MsgExchangeRateVote`
+### Vote for Exchange Rate of Luna - `MsgExchangeRateVote`
 
 ```go
 // MsgExchangeRateVote - struct for voting on the exchange rate of Luna denominated in various Terra assets.
@@ -138,13 +138,13 @@ Retrieves a `ExchangeRatePrevote` containing validator `v`'s prevote for a given
 
 Retrieves a `ExchangeRateVote` containing validator `v`'s vote for a given `denom` for the current `VotePeriod`.
 
-### LUNA Exchange Rate - `ExchangeRate[denom]`
+### Luna Exchange Rate - `ExchangeRate[denom]`
 
 - `denom`: `string`
 
 Retrieves the current exchange rate of Luna `sdk.Dec` against a given `denom`, as acknowledged by the Terra protocol. Can be accessed and altered using `k.{Get, Set}LunaExchangeRate()`, `k.DeleteLunaExchangeRate()`.
 
-You can get the active list of `denoms` trading against LUNA (denominations with votes past [`VoteThreshold`](#votethreshold)) with `k.GetActiveDenoms()`.
+You can get the active list of `denoms` trading against Luna (denominations with votes past [`VoteThreshold`](#votethreshold)) with `k.GetActiveDenoms()`.
 
 ### Oracle Delegates - `FeederDelegation[v]`
 
@@ -178,7 +178,7 @@ func (k Keeper) RewardBallotWinners(ctx sdk.Context, ballotWinners types.ClaimPo
 
 At the end of every `VotePeriod`, a portion of the seigniorage is rewarded to the oracle ballot winners (validators who submitted an exchange rate vote within the band).
 
-The total amount of LUNA rewarded per `VotePeriod` is equal to the current amount of LUNA in the reward pool (the LUNA owned by the Oracle module) divided by the parameter [`RewardDistributionWindow`](#rewarddistributionwindow).
+The total amount of Luna rewarded per `VotePeriod` is equal to the current amount of Luna in the reward pool (the Luna owned by the Oracle module) divided by the parameter [`RewardDistributionWindow`](#rewarddistributionwindow).
 
 Each winning validator gets a portion of the reward proportional to their winning vote weight for that period.
 
@@ -198,7 +198,7 @@ After checking all validators, all miss counters are reset back to zero for the 
 
 At the end of every block, the Oracle module checks whether it's the last block of the `VotePeriod`. If it is, it implements the [Voting Procedure](#voting-procedure):
 
-1. All current active LUNA exchange rates are purged from the store
+1. All current active Luna exchange rates are purged from the store
 
 2. Received votes are organized into ballots by denomination. Abstained votes, as well as votes by inactive or jailed validators are ignored
 
@@ -209,7 +209,7 @@ At the end of every block, the Oracle module checks whether it's the last block 
 4. For each remaining `denom` with a passing ballot:
     - Tally up votes and find the weighted median exchange rate and winners with [`tally()`](#tally)
     - Iterate through winners of the ballot and add their weight to their running total
-    - Set the LUNA exchange rate on the blockchain for that LUNA<>`denom` with `k.SetLunaExchangeRate()`
+    - Set the Luna exchange rate on the blockchain for that Luna<>`denom` with `k.SetLunaExchangeRate()`
     - Emit a [`exchange_rate_update`](#exchange_rate_update) event
 
 5. Count up the validators who missed the Oracle vote and increase the appropriate miss counters
@@ -301,7 +301,7 @@ The Oracle module emits the following events/tags
 | Key | Value |
 | :-- | :-- |
 | `"denom"` | denomination |
-| `"exchange_rate"` | new LUNA exchange rate with respect to denom |
+| `"exchange_rate"` | new Luna exchange rate with respect to denom |
 
 ### prevote
 
