@@ -104,24 +104,6 @@ If the trader's `Account` has insufficient balance to execute the swap, the swap
 
 ## State
 
-```go
-type Keeper struct {
-	cdc        *codec.Codec
-	storeKey   sdk.StoreKey
-	paramSpace params.Subspace
-
-	oracleKeeper types.OracleKeeper
-	SupplyKeeper types.SupplyKeeper
-
-	// codespace
-	codespace sdk.CodespaceType
-}
-```
-
-The Market module makes use of some global params, which can be accessed and altered with `k.{Get, Set}Params()`. See [Parameters](#parameters) for more.
-
-The Market module accesses the [Oracle](dev-spec-oracle.md) module for information regarding price and the [Supply](dev-spec-supply.md) module to update account balances after swapping.
-
 ### Pool Delta δ - `TerraPoolDelta`
 
 A `sdk.Dec` that represents the difference between size of current Terra pool and its original base size, valued in µSDR, accessed through `k.{Get, Set}TerraPoolDelta()`.
