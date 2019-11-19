@@ -32,7 +32,7 @@ const siteConfig = {
   /* path to images for header/footer */
   headerIcon: 'img/docs_logo.svg',
   footerIcon: 'img/inverted_logo.svg',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/favicon.png',
 
   // header -- don't show title text
   disableHeaderTitle: true,
