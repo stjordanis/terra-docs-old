@@ -5,32 +5,24 @@ title: Oracle
 
 The Oracle module provides the Terra blockchain with an up-to-date and accurate price feed of exchange rates of Luna against various Terra pegs so that the [Market](dev-spec-market.md) may provide fair exchanges between Terra<>Terra currency pairs, as well as Terra<>Luna.
 
-As price information is extrinsic to the blockchain, the Terra network relies on validators to provide price information by regularly submitting a vote for what they believe to be the current price during a periodic price-update interval (the `VotePeriod`).
+As price information is extrinsic to the blockchain, the Terra network relies on validators to periodically  vote on the current Luna exchange rate, with the protocol tallying up the results once per `VotePeriod` and updating the on-chain price as the weighted median of the ballot.
 
 > Since the Oracle service is powered by validators, you may find it interesting to look at the [Staking](#dev-spec-staking) module, which covers the logic for staking and validators.
 {note}
 
 ## Voting Procedure
 
-For every [`VotePeriod`](#voteperiod) the Oracle module obtains consensus on the exchange rate of Luna against a subset of Terra denominations $ D \in W $ [`Whitelist`](#whitelist) by requiring all members of the validator set to submit a vote for Luna price before the end of the interval.
+During each [`VotePeriod`](#voteperiod), the Oracle module obtains consensus on the exchange rate of Luna against a subset of Terra denominations $ D \in W $ [`Whitelist`](#whitelist) by requiring all members of the validator set to submit a vote for Luna price before the end of the interval.
 
 Validators must first pre-commit to a price, then in the subsequent `VotePeriod` submit and reveal their price alongside a proof that they had pre-commited at that price. This scheme forces the voter to commit to a submission before knowing the votes of others and thereby reduces centralization and free-rider risk in the Oracle.
 
-* Let $$\{ P_1, P_2, \cdots, P_n \}$$ be a set of time intervals, each of duration [`params.VotePeriod`](#voteperiod)(currently set to 30 seconds). Within the span of each $P_i$, validators must submit two messages: 
+### Prevote and Vote
+
+Let $$\{ P_1, P_2, \cdots, P_n \}$$ be a set of time intervals, each of duration [`params.VotePeriod`](#voteperiod)(currently set to 30 seconds). Within the span of each $P_i$, validators must submit two messages: 
 
   * A [`MsgExchangeRatePrevote`](#submit-a-prevote-msgexchangerateprevote), containing the SHA256 hash of the exchange rate of Luna with respect to a Terra peg. A separate prevote must be submitted for each different denomination to report Luna price on.
 
   * A [`MsgExchangeRateVote`](#vote-for-exchange-rate-of-luna-msgexchangeratevote), containing the salt used to create the hash for the prevote submitted in the previous interval $P_{i-1}$.
-
-* At the end of each $P_i$, votes submitted are tallied. 
-
-  * The submitted salt of each vote is used to verify consistency with the prevote submitted by the validator in $P_{i-1}$. If the validator has not submitted a prevote, or the SHA256 resulting from the salt does not match the hash from the prevote, the vote is dropped.
-
-  * Let $Active(D, i)$ be the subset of denominations in $D$ for which the total voting power of submitted votes exceeds 50%. For each $d \in Active(D, i)$, the weighted median price of the votes is recorded on-chain as the effective exchange rate for Luna<>$d$ for $P_{i+1}$.
-
-  * Winners of the ballot for $P_{i-1}$, i.e. voters that have managed to vote within a narrow band around the weighted median, are rewarded with the spread fees collected on swap operations during $P_i$.
-  
-* If an insufficient amount of votes have been received for a currency, below [`VoteThreshold`](#votethreshold), its exchange rate is deleted from the store, and no swaps can be made with it during $P_i$. 
 
 ```text
 Period  |  P1 |  P2 |  P3 |  ...    |
@@ -39,13 +31,33 @@ Prevote |  O  |  O  |  O  |  ...    |
 Vote    |     |  O  |  O  |  ...    |
 ```
 
+#### Abstaining from Voting
+
+A validator may abstain from voting by submitting negative or 0 prices for the Luna exchange rate. Doing so will absolve them of any penalties for missing `VotePeriod`s, but also disqualify themn from receiving Oracle seigniorage rewards for faithfully reporting Luna prices.
+
+> A validator that decides to participate in the oracle process **must submit a vote for the Luna exchange** rate against every denomination specified in [`Whitelist`](#whitelist) during every `VotePeriod`. For every `VotePeriod` during which they fail to do so, it is considered a "miss." Participating validators must maintain a valid vote rate of at least [`MinValidPerWindow`](#minvalidperwindow), lest they get their stake slashed (currently set to [0.01%](#slashfraction)) and temporarily jailed.
+{warning}
+
+### Vote Tally
+
+At the end of each $P_i$, the submitted votes are tallied. 
+
+The submitted salt of each vote is used to verify consistency with the prevote submitted by the validator in $P_{i-1}$. If the validator has not submitted a prevote, or the SHA256 resulting from the salt does not match the hash from the prevote, the vote is dropped.
+
+Let $Active(D, i)$ be the subset of denominations in $D$ for which the total voting power of submitted votes exceeds 50%. For each $d \in Active(D, i)$, the weighted median price of the votes is recorded on-chain as the effective exchange rate for Luna<>$d$ for $P_{i+1}$.
+
+If an insufficient amount of votes have been received for a currency, below [`VoteThreshold`](#votethreshold), its exchange rate is deleted from the store, and no swaps can be made with it during $P_i$. 
+
 ### Ballot Rewards
 
-### Slashing
+Winners of the ballot for $P_{i-1}$, i.e. voters that have managed to vote within a narrow band around the weighted median, are rewarded with a portion of the collected seigniorage. See [`k.RewardBallotWinners()`](#krewardballotwinners) for more details.
+
+> Starting from Columbus-3, fees from [Market](dev-spec-market.md) swaps are no longer are included in the oracle reward pool, and are immediately burned during the swap operation.
+{note}
 
 ## Message Types
 
-> The control flow for vote-tallying, Luna price updates, ballot rewards and slashing is found at the [end-block ABCI function](#end-block) rather than inside message handlers.
+> The control flow for vote-tallying, Luna price updates, ballot rewards and slashing happens at the end of every `VotePeriod`, and is found at the [end-block ABCI function](#end-block) rather than inside message handlers.
 {note}
 
 ### Submit a Prevote - `MsgExchangeRatePrevote`
@@ -171,17 +183,9 @@ Retrieves an `int64`, number of `VotePeriods` that validator `v` missed during t
 func tally(ctx sdk.Context, pb types.ExchangeRateBallot, rewardBand sdk.Dec) (weightedMedian sdk.Dec, ballotWinners []types.Claim)
 ```
 
-### `ballotIsPassing()`
+This function contains the logic for tallying up the votes for a specific ballot of a denomination, and determines the weighted median $ M $ as well as the winners of the ballot.
 
-```go
-func ballotIsPassing(ctx sdk.Context, ballot types.ExchangeRateBallot, k Keeper) bool 
-```
-
-### `k.getRewardPool()`
-
-```go
-func (k Keeper) getRewardPool(ctx sdk.Context) sdk.Coins
-```
+Let $ \sigma $ be the standard deviation of the votes in the ballot, and $ R $ be the [`RewardBand`](#rewardband) parameter. The band around the median is set to be $ \varepsilon = \max(\sigma, R/2) $. All valid (i.e. bonded and non-jailed) validators that submitted an exchange rate vote in the interval $ \left[ M - \varepsilon, M + \varepsilon \right] $ should be included in the set of winners, weighted by their relative vote power.
 
 ### `k.RewardBallotWinners()`
 
@@ -189,11 +193,21 @@ func (k Keeper) getRewardPool(ctx sdk.Context) sdk.Coins
 func (k Keeper) RewardBallotWinners(ctx sdk.Context, ballotWinners types.ClaimPool)
 ```
 
+At the end of every `VotePeriod`, a portion of the seigniorage is rewarded to the oracle ballot winners (validators who submitted an exchange rate vote within the band).
+
+The total amount of LUNA rewarded per `VotePeriod` is equal to the current amount of LUNA in the reward pool (the LUNA owned by the Oracle module) divided by the parameter [`RewardDistributionWindow`](#rewarddistributionwindow).
+
+Each winning validator gets a portion of the reward proportional to their winning vote weight for that period.
+
 ### `SlashAndResetMissCounters()`
 
 ```go
-func SlashAndResetMissCounters(ctx sdk.Context, k Keeper) {
+func SlashAndResetMissCounters(ctx sdk.Context, k Keeper)
 ```
+
+This function is called at the end of every `SlashWindow` and will check the miss counters of every validator to see if that validator met the minimum valid votes defined in the parameter [`MinValidPerWindow`](#minvalidperwindow) (did not miss more than the threshold).
+
+If a validator does not reach the criteria, their staked funds are slashed by [`SlashFraction`](#slashfraction), and they are jailed.
 
 ## End-Block
 
@@ -251,7 +265,7 @@ The tolerated error from the final weighted mean exchange rate that can receive 
 - type: `sdk.Dec`
 - default value: `sdk.NewDecWithPrec(1, 2)` (1%)
 
-### `RewardDistributionPeriod`
+### `RewardDistributionWindow`
 
 The number of vote periods during which seigniorage reward comes in and then is distributed.
 
