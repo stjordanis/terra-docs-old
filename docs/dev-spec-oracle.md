@@ -209,6 +209,8 @@ This function is called at the end of every `SlashWindow` and will check the mis
 
 If a validator does not reach the criteria, their staked funds are slashed by [`SlashFraction`](#slashfraction), and they are jailed.
 
+After checking all validators, all miss counters are reset back to zero for the next `SlashWindow`.
+
 ## End-Block
 
 At the end of every block, the Oracle module checks whether it's the last block of the `VotePeriod`. If it is, it implements the [Voting Procedure](#voting-procedure):
