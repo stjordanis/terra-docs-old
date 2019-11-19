@@ -12,7 +12,7 @@ As price information is extrinsic to the blockchain, the Terra network relies on
 
 ## Voting Procedure
 
-During each [`VotePeriod`](#voteperiod), the Oracle module obtains consensus on the exchange rate of Luna against a subset of Terra denominations $ D \in W $ [`Whitelist`](#whitelist) by requiring all members of the validator set to submit a vote for Luna price before the end of the interval.
+During each [`VotePeriod`](#voteperiod), the Oracle module obtains consensus on the exchange rate of Luna against denominations specified in [`Whitelist`](#whitelist) by requiring all members of the validator set to submit a vote for Luna price before the end of the interval.
 
 Validators must first pre-commit to a price, then in the subsequent `VotePeriod` submit and reveal their price alongside a proof that they had pre-commited at that price. This scheme forces the voter to commit to a submission before knowing the votes of others and thereby reduces centralization and free-rider risk in the Oracle.
 
@@ -46,9 +46,7 @@ At the end of each $P_i$, the submitted votes are tallied.
 
 The submitted salt of each vote is used to verify consistency with the prevote submitted by the validator in $P_{i-1}$. If the validator has not submitted a prevote, or the SHA256 resulting from the salt does not match the hash from the prevote, the vote is dropped.
 
-Let $Active(D, i)$ be the subset of denominations in $D$ for which the total voting power of submitted votes exceeds 50%. For each $d \in Active(D, i)$, the weighted median price of the votes is recorded on-chain as the effective exchange rate for Luna<>$d$ for $P_{i+1}$.
-
-If an insufficient amount of votes have been received for a currency, below [`VoteThreshold`](#votethreshold), its exchange rate is deleted from the store, and no swaps can be made with it during $P_i$. 
+For each denomination, if the total voting power of submitted votes exceeds 50%, the weighted median price of the votes is recorded on-chain as the effective exchange rate for Luna<>$d$ for $P_{i+1}$. Denominations that receive fewer than [`VoteThreshold`](#votethreshold) total voting power have their exchange rates deleted from the store, and no swaps can be made with it during $P_i$. 
 
 ### Ballot Rewards
 
@@ -217,8 +215,8 @@ After checking all validators, all miss counters are reset back to zero for the 
 
 At the end of every block, the Oracle module checks whether it's the last block of the `VotePeriod`. If it is, it implements the [Voting Procedure](#voting-procedure):
 
-1. All current active Luna exchange rates are purged from the state
-2. Received votes are organized into ballots by denomination, and `abstain` votes, as well as votes by inactive or jailed validators are ignored
+1. All current active Luna exchange rates are purged from the store
+2. Received votes are organized into ballots by denomination. Abstained votes, as well as votes by inactive or jailed validators are ignored
 3. Denominations not meeting the following requirements will be dropped:
     - Must appear in the permitted denominations in [`Whitelist`](#whitelist)
     - Ballot for denomination must have at least [`VoteThreshold`](#votethreshold) total vote power
