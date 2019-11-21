@@ -18,11 +18,11 @@ Validators must first pre-commit to a exchange rate, then in the subsequent `Vot
 
 ### Prevote and Vote
 
-Let P(1), P(2), P(3), ... P(N) be time intervals up to , each of duration [`params.VotePeriod`](#voteperiod)(currently set to 30 seconds). Within the span of each P(T), validators must submit two messages: 
+Let P(1), P(2), P(3), ... P(N) be time intervals each of duration [`params.VotePeriod`](#voteperiod)(currently set to 30 seconds). Within the span of each P(T), validators must submit two messages: 
 
-  * A [`MsgExchangeRatePrevote`](#submit-a-prevote-msgexchangerateprevote), containing the SHA256 hash of the exchange rate of Luna with respect to a Terra peg. A separate prevote must be submitted for each different denomination to report Luna exchange rate on.
+  * A [`MsgExchangeRatePrevote`](#msgexchangerateprevote), containing the SHA256 hash of the exchange rate of Luna with respect to a Terra peg. A separate prevote must be submitted for each different denomination to report Luna exchange rate on.
 
-  * A [`MsgExchangeRateVote`](#vote-for-exchange-rate-of-luna-msgexchangeratevote), containing the salt used to create the hash for the prevote submitted in the previous interval P(T-1).
+  * A [`MsgExchangeRateVote`](#msgexchangeratevote), containing the salt used to create the hash for the prevote submitted in the previous interval P(T-1).
 
 ```text
 Period  |  P1 |  P2 |  P3 |  ...    |
@@ -33,7 +33,7 @@ Vote    |     |  O  |  O  |  ...    |
 
 #### Abstaining from Voting
 
-A validator may abstain from voting by submitting a non-positive integer for the `ExchangeRate` field in [`MsgExchangeRateVote`](#vote-for-exchange-rate-of-luna-msgexchangeratevote). Doing so will absolve them of any penalties for missing `VotePeriod`s, but also disqualify them from receiving Oracle seigniorage rewards for faithful reporting.
+A validator may abstain from voting by submitting a non-positive integer for the `ExchangeRate` field in [`MsgExchangeRateVote`](#msgexchangeratevote). Doing so will absolve them of any penalties for missing `VotePeriod`s, but also disqualify them from receiving Oracle seigniorage rewards for faithful reporting.
 
 > A validator that decides to participate in the oracle process **must submit a vote for the Luna exchange rate against every denomination specified in [`Whitelist`](#whitelist) during every `VotePeriod`**. For every `VotePeriod` during which they fail to do so, it is considered a "miss."
 >
