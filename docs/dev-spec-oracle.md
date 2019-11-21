@@ -62,7 +62,9 @@ Winners of the ballot for P(T-1), i.e. voters that have managed to vote within a
 > The control flow for vote-tallying, Luna exchange rate updates, ballot rewards and slashing happens at the end of every `VotePeriod`, and is found at the [end-block ABCI function](#end-block) rather than inside message handlers.
 {note}
 
-### Submit a Prevote - `MsgExchangeRatePrevote`
+### `MsgExchangeRatePrevote`
+
+#### Submit a Vote
 
 ```go
 // MsgExchangeRatePrevote - struct for prevoting on the ExchangeRateVote.
@@ -86,7 +88,9 @@ The exchange rate used in the hash must be the open market exchange rate of Luna
 
 `Validator` is the validator address of the original validator.
 
-### Vote for Exchange Rate of Luna - `MsgExchangeRateVote`
+### `MsgExchangeRateVote`
+
+#### Vote for Exchange Rate of Luna
 
 ```go
 // MsgExchangeRateVote - struct for voting on the exchange rate of Luna denominated in various Terra assets.
@@ -103,11 +107,14 @@ type MsgExchangeRateVote struct {
 
 The `MsgExchangeRateVote` contains the actual exchange rate vote. The `Salt` parameter must match the salt used to create the prevote, otherwise the voter cannot be rewarded.
 
-### Delegate voting rights - `MsgDelegateFeedConsent`
+### `MsgDelegateFeedConsent`
+
+#### Delegate Voting Rights
 
 Validators may also elect to delegate voting rights to another key to prevent the block signing key from being kept online. To do so, they must submit a `MsgDelegateFeedConsent`, delegating their oracle voting rights to a `Delegatee` that sign `MsgExchangeRatePrevote` and `MsgExchangeRateVote` on behalf of the validator. 
 
 > Make sure to populate the delegate address with some coins by which to pay fees.
+> . 
 {important}
 
 ```go
@@ -122,23 +129,27 @@ The `Operator` field contains the operator address of the validator. The `Delega
 
 ## State
 
-Oracle maintains several stores in its state, each indexed as such:
+Oracle maintains several `KVStores`, each indexed as such:
 
-### Prevotes - `Prevote[denom, v]`
+### Prevotes
 
-- `denom`: `string`
-- `v`: `sdk.ValAddress`
+- `k.GetExchangeRatePrevote(ctx, denom string, voter sdk.ValAddress) ExchangeRatePrevote`
+- `k.AddExchangeRatePrevote(ctx, prevote ExchangeRatePrevote)`
+- `k.DeleteExchangeRatePrevote(ctx, prevote ExchangeRatePrevote)`
+- `k.IterateExchangeRatePrevotes(ctx, handler func(prevote ExchangeRatePrevote) (stop bool))`
 
-Retrieves a `ExchangeRatePrevote` containing validator `v`'s prevote for a given `denom` for the current `VotePeriod`.
+`ExchangeRatePrevote` containing validator `voter`'s prevote for a given `denom` for the current `VotePeriod`.
 
-### Votes - `Vote[denom, v]`
+### Votes
 
-- `denom`: `string`
-- `v`: `sdk.ValAddress`
+- `k.GetExchangeRateVote(ctx, denom string, voter sdk.ValAddress) ExchangeRateVote`
+- `k.AddExchangeRateVote(ctx, vote ExchangeRateVote)`
+- `k.DeleteExchangeRateVote(ctx, vote ExchangeRateVote)`
+- `k.IterateExchangeRateVotes(ctx, handler func(prevote ExchangeRateVote) (stop bool))`
 
-Retrieves a `ExchangeRateVote` containing validator `v`'s vote for a given `denom` for the current `VotePeriod`.
+`ExchangeRateVote` containing validator `voter`'s vote for a given `denom` for the current `VotePeriod`.
 
-### Luna Exchange Rate - `ExchangeRate[denom]`
+### Luna Exchange Rate
 
 - `denom`: `string`
 
@@ -146,13 +157,13 @@ Retrieves the current exchange rate of Luna `sdk.Dec` against a given `denom`, a
 
 You can get the active list of `denoms` trading against Luna (denominations with votes past [`VoteThreshold`](#votethreshold)) with `k.GetActiveDenoms()`.
 
-### Oracle Delegates - `FeederDelegation[v]`
+### Oracle Delegates
 
 - `v`: `sdk.ValAddress`
 
 Retrieves a `sdk.ValAddress`, the address of `v`'s delegated feeder. Can be accessed and altered using `k.{Get, Set}OracleDelegate()`, `k.IterateOracleDelegates()`.
 
-### Validator Misses - `MissCounter[v]`
+### Validator Misses
 
 - `v`: `sdk.ValAddress`
 
@@ -194,7 +205,9 @@ If a validator does not reach the criteria, their staked funds are slashed by [`
 
 After checking all validators, all miss counters are reset back to zero for the next `SlashWindow`.
 
-## End-Block
+## Transitions
+
+### End-Block
 
 At the end of every block, the Oracle module checks whether it's the last block of the `VotePeriod`. If it is, it implements the [Voting Procedure](#voting-procedure):
 
