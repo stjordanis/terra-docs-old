@@ -10,14 +10,13 @@
     "version": "docusaurus-version",
     "rename-version": "docusaurus-rename-version"
   },
-  "devDependencies": {
-    "terra-docusaurus": "file:./terra-docusaurus"
-  },
+  "devDependencies": {},
   "dependencies": {
     "ejs": "^2.7.1",
     "katex": "^0.11.1",
     "remarkable-classy": "^0.0.1",
     "remarkable-katex": "^1.0.1",
-    "remarkable-plantuml": "^1.1.0"
+    "remarkable-plantuml": "^1.1.0",
+    "terra-docusaurus": "file:./terra-docusaurus"
   }
 }

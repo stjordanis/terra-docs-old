@@ -19,7 +19,25 @@
 
     p,
     ul * {
-        page-break-inside: avoid !important;
+        page-break-inside: avoid 
+    }
+
+    .docs-prev, .docs-next {
+        display: none !important;
+    }
+
+    .print-only {
+        height: 38px;
+        margin-bottom: 0px;
+        position: relative;
+        top: -25px;
+        text-align: center;
+    }
+}
+
+@media screen {
+    .print-only {
+        display: none !important;
     }
 }
 

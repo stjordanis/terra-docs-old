@@ -235,6 +235,10 @@ class Doc extends React.Component {
 
     return (
       <div className="post">
+        <img
+          className="print-only"
+          src={"/terra-docs/img/docs_logo.svg"}
+        /><br/>
         <header className="postHeader">
           {editLink}
           {!this.props.hideTitle && (
