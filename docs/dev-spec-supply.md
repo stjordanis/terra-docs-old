@@ -1,9 +1,10 @@
 ---
-id: dev-spec-mint
-title: Mint
+id: dev-spec-supply
+title: Supply
 ---
 
-The Mint module tracks the issuance of various terra currencies.
+> Terra's Supply module inherits from Cosmos SDK's [`supply`](https://github.com/cosmos/cosmos-sdk/tree/v0.37.4/docs/spec/supply) module.
+{note}
 
 ## Overview
 

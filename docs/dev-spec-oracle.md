@@ -18,11 +18,11 @@ Validators must first pre-commit to a exchange rate, then in the subsequent `Vot
 
 ### Prevote and Vote
 
-Let P(1), P(2), P(3), ... P(N) be time intervals each of duration [`params.VotePeriod`](#voteperiod)(currently set to 30 seconds). Within the span of each P(T), validators must submit two messages: 
+Let $P_t$ be the current time interval of duration defined by [`VotePeriod`](#voteperiod)(currently set to 30 seconds) during which validators must submit two messages: 
 
-  * A [`MsgExchangeRatePrevote`](#msgexchangerateprevote), containing the SHA256 hash of the exchange rate of Luna with respect to a Terra peg. A separate prevote must be submitted for each different denomination to report Luna exchange rate on.
+  * A [`MsgExchangeRatePrevote`](#msgexchangerateprevote), containing the SHA256 hash of the exchange rate of Luna with respect to a Terra peg. A separate prevote must be submitted for each different denomination on which to report a Luna exchange rate.
 
-  * A [`MsgExchangeRateVote`](#msgexchangeratevote), containing the salt used to create the hash for the prevote submitted in the previous interval P(T-1).
+  * A [`MsgExchangeRateVote`](#msgexchangeratevote), containing the salt used to create the hash for the prevote submitted in the previous interval $P_{t-1}$.
 
 ```text
 Period  |  P1 |  P2 |  P3 |  ...    |
@@ -42,17 +42,19 @@ A validator may abstain from voting by submitting a non-positive integer for the
 
 ### Vote Tally
 
-At the end of each P(T), the submitted votes are tallied. 
+At the end of $P_t$, the submitted votes are tallied. 
 
-The submitted salt of each vote is used to verify consistency with the prevote submitted by the validator in P(T-1). If the validator has not submitted a prevote, or the SHA256 resulting from the salt does not match the hash from the prevote, the vote is dropped.
+The submitted salt of each vote is used to verify consistency with the prevote submitted by the validator in $P_{t-1}$. If the validator has not submitted a prevote, or the SHA256 resulting from the salt does not match the hash from the prevote, the vote is dropped.
 
-For each denomination, if the total voting power of submitted votes exceeds 50%, the weighted median of the votes is recorded on-chain as the effective exchange rate for Luna against that denomination for the following `VotePeriod` P(T+1). 
+For each denomination, if the total voting power of submitted votes exceeds 50%, the weighted median of the votes is recorded on-chain as the effective exchange rate for Luna against that denomination for the following `VotePeriod` $P_{t+1}$. 
 
-Denominations receiving fewer than [`VoteThreshold`](#votethreshold) total voting power have their exchange rates deleted from the store, and no swaps can be made with it during P(T). 
+Denominations receiving fewer than [`VoteThreshold`](#votethreshold) total voting power have their exchange rates deleted from the store, and no swaps can be made with it during the next `VotePeriod` $P_{t+1}$. 
 
 ### Ballot Rewards
 
-Winners of the ballot for P(T-1), i.e. voters that have managed to vote within a narrow band around the weighted median, are rewarded with a portion of the collected seigniorage. See [`k.RewardBallotWinners()`](#krewardballotwinners) for more details.
+After the votes are tallied, the winners of the ballots are determined.
+
+Voters that have managed to vote within a narrow band around the weighted median, are rewarded with a portion of the collected seigniorage. See [`k.RewardBallotWinners()`](#krewardballotwinners) for more details.
 
 > Starting from Columbus-3, fees from [Market](dev-spec-market.md) swaps are no longer are included in the oracle reward pool, and are immediately burned during the swap operation.
 {note}
@@ -135,7 +137,6 @@ Oracle maintains several `KVStores`, each indexed as such:
 - `k.GetExchangeRatePrevote(ctx, denom string, voter sdk.ValAddress) ExchangeRatePrevote`
 - `k.AddExchangeRatePrevote(ctx, prevote ExchangeRatePrevote)`
 - `k.DeleteExchangeRatePrevote(ctx, prevote ExchangeRatePrevote)`
-- `k.IterateExchangeRatePrevotes(ctx, handler func(prevote ExchangeRatePrevote) (stop bool))`
 
 `ExchangeRatePrevote` containing validator `voter`'s prevote for a given `denom` for the current `VotePeriod`.
 
@@ -144,16 +145,14 @@ Oracle maintains several `KVStores`, each indexed as such:
 - `k.GetExchangeRateVote(ctx, denom string, voter sdk.ValAddress) ExchangeRateVote`
 - `k.AddExchangeRateVote(ctx, vote ExchangeRateVote)`
 - `k.DeleteExchangeRateVote(ctx, vote ExchangeRateVote)`
-- `k.IterateExchangeRateVotes(ctx, handler func(prevote ExchangeRateVote) (stop bool))`
 
 `ExchangeRateVote` containing validator `voter`'s vote for a given `denom` for the current `VotePeriod`.
 
 ### Luna Exchange Rate
 
-- `k.GetLunaExchangeRate(ctx, denom string) (exchangeRate sdk.Dec, err sdk.Error)`
+- `k.GetLunaExchangeRate(ctx, denom string) (sdk.Dec, sdk.Error)`
 - `k.SetLunaExchangeRate(ctx, denom string, exchangeRate sdk.Dec)`
 - `k.DeleteLunaExchangeRate(ctx, denom string)`
-- `k.IterateLunaExchangeRates(ctx, handler func(denom string, exchangeRate sdk.Dec) (stop bool))`
 
 An `sdk.Dec` that stores the current Luna exchange rate against a given `denom`, which is used by the [`Market`](dev-spec-market.md) module for pricing swaps.
 
@@ -161,17 +160,15 @@ You can get the active list of `denoms` trading against Luna (denominations with
 
 ### Oracle Delegates
 
-- `k.GetOracleDelegate(ctx, operator sdk.ValAddress) (delegate sdk.AccAddress)`
-- `k.SetOracleDelegate(ctx, operator sdk.ValAddress, delegatedFeeder sdk.AccAddress)`
-- `k.IterateOracleDelegates(ctx, handler func(delegator sdk.ValAddress, delegatee sdk.AccAddress) (stop bool))`
+- `k.GetOracleDelegate(ctx, operator sdk.ValAddress) sdk.AccAddress`
+- `k.SetOracleDelegate(ctx, operator sdk.ValAddress, delegate sdk.AccAddress)`
 
 An `sdk.AccAddress` (`terra-` account) address of `operator`'s delegated price feeder.
 
 ### Validator Misses
 
-- `k.GetMissCounter(ctx, operator sdk.ValAddress) (missCounter int64)`
+- `k.GetMissCounter(ctx, operator sdk.ValAddress) int64`
 - `k.SetMissCounter(ctx, operator sdk.ValAddress, missCounter int64)`
-- `k.IterateMissCounters(ctx, handler func(operator sdk.ValAddress, missCounter int64) (stop bool))`
 
 An `int64` representing the number of `VotePeriods` that validator `operator` missed during the current `SlashWindow`.
 
@@ -319,18 +316,18 @@ The ratio of minimum valid oracle votes per slash window to avoid slashing.
 - type: `sdk.Dec`
 - default value: `sdk.NewDecWithPrec(5, 2)` (5%)
 
-## Tags
+## Events
 
-The Oracle module emits the following events/tags
+The Oracle module emits the following events
 
-### exchange_rate_update
+### `exchange_rate_update`
 
 | Key | Value |
 | :-- | :-- |
 | `"denom"` | denomination |
 | `"exchange_rate"` | new Luna exchange rate with respect to denom |
 
-### prevote
+### `prevote`
 
 | Key | Value |
 | :-- | :-- |
@@ -338,7 +335,7 @@ The Oracle module emits the following events/tags
 | `"voter"` | validator's address |
 | `"feeder"` | feeder's address |
 
-### vote
+### `vote`
 
 | Key | Value |
 | :-- | :-- |
@@ -346,7 +343,7 @@ The Oracle module emits the following events/tags
 | `"voter"` | validator's address |
 | `"feeder"` | feeder's address |
 
-### feed_delegate
+### `feed_delegate`
 
 | Key | Value |
 | :-- | :-- |

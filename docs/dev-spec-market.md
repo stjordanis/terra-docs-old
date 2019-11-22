@@ -75,6 +75,8 @@ This mechanism ensures liquidity and acts as a sort of low-pass filter, allowing
 
 ### `MsgSwap`
 
+#### Swap Request
+
 ```go
 // MsgSwap contains a swap request
 type MsgSwap struct {
@@ -157,11 +159,11 @@ $$ \delta_{t+1} = \delta_{t} - (\delta_{t}/{pr}) $$
 
 This allows the network to sharply increase spread fees in during acute price fluctuations, and automatically return the spread to normal after some time when the price change is long term.
 
-## Tags
+## Events
 
-The Market module emits the following events/tags
+The Market module emits the following events
 
-### swap
+### `swap`
 
 | Key | Value |
 | :-- | :-- |
