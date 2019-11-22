@@ -80,9 +80,9 @@ const siteConfig = {
   // search via algolia
   algolia: {
     placeholder: 'Search',
-    apiKey: 'my-api-key',
-    indexName: 'my-index-name',
-    algoliaOptions: {} // Optional, if provided by Algolia
+    apiKey: '5957091e293f7b97f2994bde312aed99',
+    indexName: 'terra-project',
+    algoliaOptions: {'facetFilters': ["language:en"] } // Optional, if provided by Algolia
   },
 
   markdownPlugins,
