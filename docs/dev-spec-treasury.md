@@ -12,9 +12,9 @@ The Treasury module acts as the "central bank" of the Terra economy, measuring m
 
 The Treasury observes three macroeconomic indicators for each epoch (set to 1 week) and keeps [historical records](#indicators) of their values during previous epochs.
 
-- __Tax Rewards__: $T$, Income generated from transaction fees (stability fee) in a during a time interval.
-- __Seigniorage Rewards__: $S$, Amount of seignorage during the epoch that is destined for ballot rewards inside the `Oracle` rewards.
-- __Total Staked Luna__: $\lambda$, Luna that has been staked by users and bonded by their delegated validators.
+- __Tax Rewards__: $T$, Income generated from transaction fees (stability fee) in a during the epoch.
+- __Seigniorage Rewards__: $S$, Amount of seignorage generated from Luna swaps to Terra during the epoch that is destined for ballot rewards inside the `Oracle` rewards.
+- __Total Staked Luna__: $\lambda$, total Luna that has been staked by users and bonded by their delegated validators.
 
 These indicators can be used to derive two other values, the __Tax Reward per unit Luna__ represented by $\tau = T / \lambda $, used in [Updating Tax Rate](#kupdatetaxpolicy), and __total mining rewards__ $R = T + S$, simply the sum of the Tax Rewards and the Seigniorage Rewards, used in [Updating Reward Weight](#kupdaterewardpolicy).
 
@@ -136,7 +136,7 @@ For instance, if a transaction's value were 100 SDT, and tax rate and tax cap 5%
 - `k.RecordEpochTaxProceeds(ctx, delta sdk.Coins)`
 - `k.PeekEpochTaxProceeds(ctx) sdk.Coins`
 
-The `sdk.Coins` that represents the Tax Rewards accrued from transaction fees in the current epoch.
+The `sdk.Coins` that represents the Tax Rewards $T$ for the current epoch.
 
 ### Epoch Initial Issuance
 
@@ -156,7 +156,7 @@ The Treasury keeps track of following indicators for the present and previous ep
 - `k.GetTR(ctx, epoch int64) sdk.Dec`
 - `k.SetTR(ctx, epoch int64, TR sdk.Dec)`
 
-An `sdk.Dec` representing the Tax Rate $T$ for the `epoch`.
+An `sdk.Dec` representing the Tax Rewards $T$ for the `epoch`.
 
 #### Seigniorage Rewards
 
