@@ -10,15 +10,13 @@ The Treasury module acts as the "central bank" of the Terra economy, measuring m
 
 ## Observed Indicators
 
-The Treasury observes three macroeconomic indicators for each epoch (set to 1 week), keeping [historical records](#indicators). For the epoch, consider:
+The Treasury observes three macroeconomic indicators for each epoch (set to 1 week) and keeps [historical records](#indicators) of their values during previous epochs.
 
 - __Tax Rewards__: $T$, Income generated from transaction fees (stability fee) in a during a time interval.
 - __Seigniorage Rewards__: $S$, Amount of seignorage during the epoch that is destined for ballot rewards inside the `Oracle` rewards.
 - __Total Staked Luna__: $\lambda$, Luna that has been staked by users and bonded by their delegated validators.
 
-Total mining rewards $R = T + S$ for Luna is simply the sum of the Tax Rewards and the Seigniorage Rewards.
-
-Another figure of interest is the __Tax Reward per unit Luna__, represented by $ R / \lambda $.
+These indicators can be used to derive two other values, the __Tax Reward per unit Luna__ represented by $\tau = T / \lambda $, used in [Updating Tax Rate](#kupdatetaxpolicy), and __total mining rewards__ $R = T + S$, simply the sum of the Tax Rewards and the Seigniorage Rewards, used in [Updating Reward Weight](#kupdaterewardpolicy).
 
 The protocol can compute and compare the short-term ([`WindowShort`](#windowshort)) and long-term ([`WindowLong`](#windowlong)) rolling averages of the above indicators to determine the relative direction and velocity of the Terra economy.
 
@@ -42,7 +40,7 @@ After `WindowLong` epochs, the Treasury re-calibrates each lever to stabilize un
 Updates are constrained by the [`TaxPolicy`](#taxpolicy) and [`RewardPolicy`](#rewardpolicy) parameters, respectively. The type `PolicyConstraints` specifies the floor, ceiling, and the max periodic changes for each variable. 
 
 ```go
-// PolicyConstraints wraps constraints around updating a key Treasury variable
+// PolicyConstraints defines constraints around updating a key Treasury variable
 type PolicyConstraints struct {
     RateMin       sdk.Dec  `json:"rate_min"`
     RateMax       sdk.Dec  `json:"rate_max"`
@@ -194,13 +192,13 @@ This function gets called at the end of an epoch to calculate the next value of 
 
 Consider $ r_t $ to be the current tax rate, and $ n $ to be the [`MiningIncrement`](#miningincrement) parameter.
 
-1. Calculate the rolling average $T_y$ of Tax Rewards per unit Luna over the last year `WindowLong`.
+1. Calculate the rolling average $\tau_y$ of Tax Rewards per unit Luna over the last year `WindowLong`.
 
-2. Calculate the rolling average $T_m$ of Tax Rewards per unit Luna over the last month `WindowShort`.
+2. Calculate the rolling average $\tau_m$ of Tax Rewards per unit Luna over the last month `WindowShort`.
 
-3. If $T_m = 0$, there was no tax revenue in the last month. The tax rate should thus be set to the maximum permitted by the Tax Policy.
+3. If $\tau_m = 0$, there was no tax revenue in the last month. The tax rate should thus be set to the maximum permitted by the Tax Policy.
 
-4. Otherwise, the new tax rate is $r_{t+1} = (n r_t T_y)/T_m$, subject to the rules of `pc.Clamp()` (see [constraints](#policy-constraints)).
+4. Otherwise, the new tax rate is $r_{t+1} = (n r_t \tau_y)/\tau_m$, subject to the rules of `pc.Clamp()` (see [constraints](#policy-constraints)).
 
 As such, the Treasury hikes up tax rates when tax revenues in a shorter time window is performing poorly in comparison to the longer term tax revenue average. It lowers tax rates when short term tax revenues are outperforming the longer term index. 
 
@@ -269,7 +267,7 @@ If the blockchain is at the final block of the epoch, the following procedure is
 
 ## Events
 
-The Treasury module emits the following events
+The Treasury module emits the following events:
 
 ### `policy_update`
 

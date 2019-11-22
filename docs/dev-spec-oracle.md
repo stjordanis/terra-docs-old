@@ -318,7 +318,7 @@ The ratio of minimum valid oracle votes per slash window to avoid slashing.
 
 ## Events
 
-The Oracle module emits the following events
+The Oracle module emits the following events:
 
 ### `exchange_rate_update`
 
