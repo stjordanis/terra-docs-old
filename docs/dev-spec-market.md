@@ -73,7 +73,7 @@ This mechanism ensures liquidity and acts as a sort of low-pass filter, allowing
 
 ## Message Types
 
-### Swap Request - `MsgSwap`
+### `MsgSwap`
 
 ```go
 // MsgSwap contains a swap request
@@ -106,7 +106,10 @@ If the trader's `Account` has insufficient balance to execute the swap, the swap
 
 ### Pool Delta δ - `TerraPoolDelta`
 
-A `sdk.Dec` that represents the difference between size of current Terra pool and its original base size, valued in µSDR, accessed through `k.{Get, Set}TerraPoolDelta()`.
+- `k.GetTerraPoolDelta(ctx) sdk.Dec`
+- `k.SetTerraPoolDelta(ctx, delta sdk.Dec)`
+
+An `sdk.Dec` that represents the difference between size of current Terra pool and its original base size, valued in µSDR.
 
 ## Functions
 
@@ -144,7 +147,9 @@ For Terra<>Luna swaps, the relative sizes of the pools will be different after t
 - For Terra to Luna, $ \delta' = \delta + Offer_{\mu SDR} $
 - For Luna to Terra, $ \delta' = \delta - Ask_{\mu SDR} $
 
-## End-Block
+## Transitions
+
+### End-Block
 
 Market module calls `k.ReplenishPools()` at the end of every block, which decreases the value of `TerraPoolDelta` (which measures the difference between Terra and Luna pools) depending on `PoolRecoveryPeriod`, $pr$.
 

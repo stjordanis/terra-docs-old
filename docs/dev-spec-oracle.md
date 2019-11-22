@@ -84,7 +84,7 @@ type MsgExchangeRatePrevote struct {
 
 The exchange rate used in the hash must be the open market exchange rate of Luna, with respect to the denomination matching `Denom`. For example, if `Denom` is `uusd` and the going exchange rate for Luna is 1 USD, then "1" must be used as the exchange rate, as `1 uluna` = `1 uusd`. 
 
-`Feeder` is used if the validator wishes to delegate oracle vote signing to a separate key to de-risk exposing their validator signing key.
+`Feeder` is used if the validator wishes to delegate oracle vote signing to a separate key (who "feeds" the price in lieu of the operator) to de-risk exposing their validator signing key.
 
 `Validator` is the validator address of the original validator.
 
@@ -124,7 +124,7 @@ Validators may also elect to delegate voting rights to another key to prevent th
 > Delegate validators will likely require you to deposit some funds (in Terra or Luna) which they can use to pay fees, sent in a separate `MsgSend`. This agreement is made off-chain and not enforced by the Terra protocol. 
 {important}
 
-The `Operator` field contains the operator address of the validator (prefixed `terravaloper`). The `Delegatee` field is the account address (prefixed `terra`) of the delegatee account that will be submitting exchange rate related votes and prevotes on behalf of the `Operator`. 
+The `Operator` field contains the operator address of the validator (prefixed `terravaloper-`). The `Delegatee` field is the account address (prefixed `terra-`) of the delegatee account that will be submitting exchange rate related votes and prevotes on behalf of the `Operator`. 
 
 ## State
 
@@ -150,10 +150,10 @@ Oracle maintains several `KVStores`, each indexed as such:
 
 ### Luna Exchange Rate
 
-- `k.GetLunaExchangeRate(ctx sdk.Context, denom string) (exchangeRate sdk.Dec, err sdk.Error)`
-- `k.SetLunaExchangeRate(ctx sdk.Context, denom string, exchangeRate sdk.Dec)`
-- `k.DeleteLunaExchangeRate(ctx sdk.Context, denom string)`
-- `k.IterateLunaExchangeRates(ctx sdk.Context, handler func(denom string, exchangeRate sdk.Dec) (stop bool))`
+- `k.GetLunaExchangeRate(ctx, denom string) (exchangeRate sdk.Dec, err sdk.Error)`
+- `k.SetLunaExchangeRate(ctx, denom string, exchangeRate sdk.Dec)`
+- `k.DeleteLunaExchangeRate(ctx, denom string)`
+- `k.IterateLunaExchangeRates(ctx, handler func(denom string, exchangeRate sdk.Dec) (stop bool))`
 
 An `sdk.Dec` that stores the current Luna exchange rate against a given `denom`, which is used by the [`Market`](dev-spec-market.md) module for pricing swaps.
 
@@ -161,17 +161,17 @@ You can get the active list of `denoms` trading against Luna (denominations with
 
 ### Oracle Delegates
 
-- `k.GetOracleDelegate(ctx sdk.Context, operator sdk.ValAddress) (delegate sdk.AccAddress)`
-- `k.SetOracleDelegate(ctx sdk.Context, operator sdk.ValAddress, delegatedFeeder sdk.AccAddress)`
-- `k.IterateOracleDelegates(ctx sdk.Context, handler func(delegator sdk.ValAddress, delegatee sdk.AccAddress) (stop bool))`
+- `k.GetOracleDelegate(ctx, operator sdk.ValAddress) (delegate sdk.AccAddress)`
+- `k.SetOracleDelegate(ctx, operator sdk.ValAddress, delegatedFeeder sdk.AccAddress)`
+- `k.IterateOracleDelegates(ctx, handler func(delegator sdk.ValAddress, delegatee sdk.AccAddress) (stop bool))`
 
-An `sdk.AccAddress` (`terra`- account) address of `operator`'s delegated feeder.
+An `sdk.AccAddress` (`terra-` account) address of `operator`'s delegated price feeder.
 
 ### Validator Misses
 
-- `k.GetMissCounter(ctx sdk.Context, operator sdk.ValAddress) (missCounter int64)`
-- `k.SetMissCounter(ctx sdk.Context, operator sdk.ValAddress, missCounter int64)`
-- `k.IterateMissCounters(ctx sdk.Context, handler func(operator sdk.ValAddress, missCounter int64) (stop bool))`
+- `k.GetMissCounter(ctx, operator sdk.ValAddress) (missCounter int64)`
+- `k.SetMissCounter(ctx, operator sdk.ValAddress, missCounter int64)`
+- `k.IterateMissCounters(ctx, handler func(operator sdk.ValAddress, missCounter int64) (stop bool))`
 
 An `int64` representing the number of `VotePeriods` that validator `operator` missed during the current `SlashWindow`.
 
