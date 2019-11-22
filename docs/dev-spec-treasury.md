@@ -218,9 +218,9 @@ Consider $ w_t $ to be the current reward weight, and $ b $ to be the [`Seignior
 
 2. Calculate the sum of $R_m$ of total mining rewards over the last month `WindowLong`.
 
-3. If either $R_m = 0$ or $S_m = 0$ there was no seigniorage revenue or mining in the last month. The Rewards Weight should thus be set to the maximum permitted by the Reward Policy.
+3. If either $R_m = 0$ or $S_m = 0$ there was no mining and seigniorage rewards in the last month. The Rewards Weight should thus be set to the maximum permitted by the Reward Policy.
 
-4. Otherwise, the new Reward Weight is $ w_{t+1} = b w_t R_m / S_m $, subject to the rules of `pc.Clamp()` (see [constraints](#policy-constraints)).
+4. Otherwise, the new Reward Weight is $ w_{t+1} = b w_t S_m / R_m $, subject to the rules of `pc.Clamp()` (see [constraints](#policy-constraints)).
 
 
 ### `k.UpdateTaxCap()`
