@@ -18,7 +18,7 @@ Validators must first pre-commit to a exchange rate, then in the subsequent `Vot
 
 ### Prevote and Vote
 
-Let $P_t$ be a time interval of duration [`params.VotePeriod`](#voteperiod)(currently set to 30 seconds). Within the span of $P_t$, validators must submit two messages: 
+Let $P_t$ be the current time interval of duration defined by [`VotePeriod`](#voteperiod)(currently set to 30 seconds) during which validators must submit two messages: 
 
   * A [`MsgExchangeRatePrevote`](#msgexchangerateprevote), containing the SHA256 hash of the exchange rate of Luna with respect to a Terra peg. A separate prevote must be submitted for each different denomination on which to report a Luna exchange rate.
 
