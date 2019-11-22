@@ -81,7 +81,7 @@
       "dev-codebase",
       {
         "type": "subcategory",
-        "label": "MODULE SPECS",
+        "label": "CORE MODULES",
         "ids": [
           "dev-spec-distribution",
           "dev-spec-staking",

@@ -163,7 +163,7 @@ This allows the network to sharply increase spread fees in during acute price fl
 
 The Market module emits the following events
 
-### swap
+### `swap`
 
 | Key | Value |
 | :-- | :-- |
