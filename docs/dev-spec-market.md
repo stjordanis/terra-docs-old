@@ -9,20 +9,21 @@ The ability to guarantee an available, liquid market with fair exchange rates be
 
 As mentioned in the protocol, the price stability of TerraSDR's peg to the SDR is achieved through Terra<>Luna arbitrage activity against the protocol's algorithmic market-maker which expands and contracts Terra supply to maintain the peg.
 
-A user may swap SDT \(TerraSDR\), UST \(TerraUSD\), or any other Terra currency for Luna at the exchange rate registered with the oracle, and the protocol will charge a minimum spread of 2% taken as the network's swap fee against front-running. 
-
-For example, assume that oracle reports that the Luna<>SDT exchange rate is 10, and for Luna<>KRT, 10,000. Factoring in the spread, swapping 1 SDT will return 980 KRT worth of Luna (2% of 1000 is 20, taken as the swap fee).
-
 ## Swap Fees
 
 Since Terra's price feed is derived from validator oracles, there is necessarily a delay between the on-chain reported price and the actual realtime price. 
 
 This difference is on the order of about 1 minute (our oracle `VotePeriod` is 30 seconds), which is negligible for nearly all practical transactions. However an attacker could take advantage of this lag and extract value out of the network through a front-running attack.
 
-To defend against this, the Market module enforces the following swap fees:
+To defend against this, the Market module enforces the following swap fees
 
-- a Tobin Tax (set at [0.25%](#tobintax)) for spot-converting Terra<>Terra swaps
-- a minimum spread (set at [2%](#minspread)) for Terra<>Luna swaps
+- a __Tobin Tax__ (set at [0.25%](#tobintax)) for spot-converting Terra<>Terra swaps
+
+	To illustrate, assume that oracle reports that the Luna<>SDT exchange rate is 10, and for Luna<>KRT, 10,000. Sending in 1 SDT will get you 0.1 Luna, which is 1000 KRT. After applying the Tobin Tax, you'll end up with 975 KRT (0.25% of 1000 is 25), a better rate than could get in any forex market.
+
+- a __minimum spread__ (set at [2%](#minspread)) for Terra<>Luna swaps
+
+	Using the same exchange rates above, swapping 1 SDT will return 980 KRT worth of Luna (2% of 1000 is 20, taken as the swap fee). In the other direction, 1 Luna would give you 9.8 SDT (2% of 10 = 0.2), or 9800 KRT (2% of 10,000 = 200).
 
 ## Constant Product Market-Maker
 
