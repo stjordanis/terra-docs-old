@@ -17,8 +17,8 @@ const siteConfig = {
 
   website: 'https://terra.money',
 
-  url: 'https://ouiliame.github.io', // Your docs website URL
-  baseUrl: '/terra-docs/', // Base URL for your poject */
+  url: 'https://docs.wcdc.me', // Your docs website URL
+  baseUrl: '/', // Base URL for your poject */
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
   //   baseUrl: '/test-site/',
@@ -56,9 +56,9 @@ const siteConfig = {
     'https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js',
     'https://buttons.github.io/buttons.js',
     'https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js',
-    '/terra-docs/js/code-block-buttons.js',
-    '/terra-docs/js/viz.js',
-    '/terra-docs/js/render-graphs.js'
+    '/js/code-block-buttons.js',
+    '/js/viz.js',
+    '/js/render-graphs.js'
   ],
 
   stylesheets: [

@@ -283,10 +283,10 @@ The tolerated error from the final weighted mean exchange rate that can receive 
 
 ### `RewardDistributionWindow`
 
-The number of vote periods during which seigniorage reward comes in and then is distributed.
+The number of blocks during which seigniorage reward comes in and then is distributed.
 
 - type: `int64`
-- default value: `core.BlocksPerMonth` (1 month window)
+- default value: `core.BlocksPerYear` (1 year window)
 
 ### `Whitelist`
 
@@ -304,10 +304,10 @@ The ratio of penalty on bonded tokens.
 
 ### `SlashWindow`
 
-The number of vote periods for slashing tallying.
+The number of blocks for slashing tallying.
 
 - type: `int64`
-- default value: `core.BlocksPerHour / DefaultVotePeriod` (1 hour window)
+- default value: `core.BlocksPerWeek` (1 week window)
 
 ### `MinValidPerWindow`
 

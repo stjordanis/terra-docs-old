@@ -115,7 +115,7 @@ A `MsgSwap` transaction denotes the `Trader`'s intent to swap their balance of `
 
 ## State
 
-### Pool Delta δ - `TerraPoolDelta`
+### Terra Pool Delta δ
 
 - `k.GetTerraPoolDelta(ctx) sdk.Dec`
 - `k.SetTerraPoolDelta(ctx, delta sdk.Dec)`

@@ -180,7 +180,11 @@ An `sdk.Int` representing the Total Staked Luna $\lambda$ for the `epoch`.
 func (k Keeper) UpdateIndicators(ctx sdk.Context)
 ```
 
-This function gets run at the end of an epoch and updates the live on-chain of the tracked macroeconomic indicators tax rewards $ T $, seigniorage rewards $ S $, and total staked Luna $ \lambda $.
+This function gets run at the end of an epoch $t$ and records the current values of tax rewards $T$, seigniorage rewards $S$, and total staked Luna $\lambda$ as the historic indicators for epoch $t$ before moving to the next epoch $t+1$.
+
+- $T_t$ is the current value in `TaxProceeds
+- $S_t = \Sigma * w$, with epoch seigniorage $\Sigma$ and reward weight $w$.
+- $\lambda$ is simply the result of `staking.TotalBondedTokens()`
 
 ### `k.UpdateTaxPolicy()`
 
@@ -239,7 +243,7 @@ func (k Keeper) SettleSeigniorage(ctx sdk.Context)
 
 This function is called at the end of an epoch to compute seigniorage and forwards the funds to the [`Oracle`](dev-spec-oracle.md) module for ballot rewards, and the [`Distribution`](dev-spec-distribution.md) for the community pool.
 
-1. The seigniorage $\Sigma$ of the current epoch is calculated by taking the difference between the supply at the start of the epoch ([Epoch Initial Issuance](#epoch-initial-issuance)) and the Luna supply at the time of calling. 
+1. The seigniorage $\Sigma$ of the current epoch is calculated by taking the difference between the Luna supply at the start of the epoch ([Epoch Initial Issuance](#epoch-initial-issuance)) and the Luna supply at the time of calling. 
 
 	Note that $ \Sigma > 0 $ when the current Luna supply is lower than at the start of the epoch, because the Luna had been burned from Luna swaps into Terra. See [here](dev-spec-market.md#seigniorage).
 
