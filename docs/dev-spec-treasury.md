@@ -108,7 +108,7 @@ type RewardWeightUpdateProposal struct {
 
 ### Tax Rate
 
-- `k.GetTaxRate(ctx) (taxRate sdk.Dec)`
+- `k.GetTaxRate(ctx) sdk.Dec`
 - `k.SetTaxRate(ctx, taxRate sdk.Dec)`
 
 `sdk.Dec` representing the value of the Tax Rate policy lever for the current epoch.
@@ -131,7 +131,7 @@ type RewardWeightUpdateProposal struct {
 
 Treasury keeps a `KVStore` that maps a denomination `denom` to an `sdk.Int` that represents that maximum income that can be generated from taxes on a transaction in that denomination. This is updated every epoch with the equivalent value of [`TaxPolicy.Cap`](#taxpolicy) at the current exchange rate.
 
-For instance, if a transaction's value were 100 SDT, and tax rate and tax cap 5% and 1 SDT respectively, the income generated from the transaction would be 1 SDT.
+For instance, if a transaction's value were 100 SDT, and tax rate and tax cap 5% and 1 SDT respectively, the income generated from the transaction would be 1 SDT instead of 5 SDT, as it exceeds the tax cap.
 
 ### Tax Proceeds
 
