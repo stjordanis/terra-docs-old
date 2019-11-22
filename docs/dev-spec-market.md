@@ -9,6 +9,10 @@ The ability to guarantee an available, liquid market with fair exchange rates be
 
 As mentioned in the protocol, the price stability of TerraSDR's peg to the SDR is achieved through Terra<>Luna arbitrage activity against the protocol's algorithmic market-maker which expands and contracts Terra supply to maintain the peg.
 
+A user may swap SDT \(TerraSDR\), UST \(TerraUSD\), or any other Terra currency for Luna at the exchange rate registered with the oracle, and the protocol will charge a minimum spread of 2% taken as the network's swap fee against front-running. 
+
+For example, assume that oracle reports that the Luna<>SDT exchange rate is 10, and for Luna<>KRT, 10,000. Factoring in the spread, swapping 1 SDT will return 980 KRT worth of Luna (2% of 1000 is 20, taken as the swap fee).
+
 ## Swap Fees
 
 Since Terra's price feed is derived from validator oracles, there is necessarily a delay between the on-chain reported price and the actual realtime price. 
@@ -20,15 +24,7 @@ To defend against this, the Market module enforces the following swap fees:
 - a Tobin Tax (set at [0.25%](#tobintax)) for spot-converting Terra<>Terra swaps
 - a minimum spread (set at [2%](#minspread)) for Terra<>Luna swaps
 
-## Terra/Luna Swaps
-
-A user may swap SDT \(TerraSDR\), UST \(TerraUSD\), or any other Terra currency for Luna at the exchange rate registered with the oracle, and the protocol will charge a minimum spread of 2% taken as the network's swap fee against front-running.
-
-For example, assume that oracle reports that the Luna<>SDT exchange rate is 10, and for Luna<>KRT, 10,000. Factoring in the spread, swapping 1 SDT will return 980 KRT worth of Luna (2% of 1000 is 20, taken as the swap fee).
-
-Using the same exchange rates in the above example, a user can swap 1 SDT for 0.1 Luna, or 0.1 Luna for 1 SDT (before spread).
-
-### Constant Product Market-Maker
+## Constant Product Market-Maker
 
 Starting with Columbus-3 (Vodka testnet), Terra now uses a Constant Product market-making algorithm to ensure liquidity for Terra<>Luna swaps.
 
@@ -54,7 +50,7 @@ CP = 1000000 SDR
 
 This algorithm ensures that the Terra protocol remains liquid for Terra<>Luna swaps. Of course, this specific example was meant to be more illustrative than realistic -- with much larger liquidity pools used in production, the magnitude of the spread is diminished. 
 
-#### Virtual Liquidity Pools
+### Virtual Liquidity Pools
 
 The market starts out with two liquidity pools of equal sizes, one representing Terra (all denominations) and another representing Luna, initialiazed by the parameter `BasePool`.
 
@@ -70,6 +66,34 @@ Pool_{Luna} &= ({Pool_{Base}})^2 / Pool_{Terra}
 At the [end of each block](#end-block), the market module will attempt to "replenish" the pools by decreasing the magnitude of $\delta$ between the Terra and Luna pools. The rate at which the pools will be replenished toward equilibrium is set by the parameter `PoolRecoveryPeriod`, with lower periods meaning faster recovery times, denoting more sensitivity to changing prices.
 
 This mechanism ensures liquidity and acts as a sort of low-pass filter, allowing for the spread fee (which is a function of `TerraPoolDelta`) to drop back down when changes in price are interpreted by the network as a lasting, rising trend in the true price of the peg rather than noisy spikes from temporary trading activity.
+
+## Swap Procedure
+
+1. Market module receives [`MsgSwap`](#msgswap) message and performs basic validation checks
+
+2. Calculate exchange rate $ask$ and $spread$ using [`k.ComputeSwap()`](#kcomputeswap)
+
+3. Update `TerraPoolDelta` with [`k.ApplySwapToPool()`](#kapplyswaptopool)
+
+4. Transfer `OfferCoin` from account to module using `supply.SendCoinsFromAccountToModule()`
+
+5. Burn offered coins, with `supply.BurnCoins()`.
+
+6. Let $ fee = spread * ask $, this is the spread fee.
+
+7. Mint $ ask - fee $ coins of `AskDenom` with `supply.MintCoins()`. This implicitly applies the spread fee as the $ fee $ coins are burned.
+
+8. Send newly minted coins to trader with `supply.SendCoinsFromModuleToAccount()`
+
+9. Emit [`swap`](#swap) event to publicize swap and record spread fee
+
+If the trader's `Account` has insufficient balance to execute the swap, the swap transaction fails. 
+
+Upon successful completion of Terra<>Luna swaps, a portion of the coins to be credited to the user's account is withheld as the spread fee. 
+
+### Seigniorage
+
+For Luna swaps into Terra, the Luna that recaptured by the protocol is burned and is called seigniorage -- the value generated from issuing new Terra. At the end of the epoch, the total seigniorage for the epoch will be calculated and reintroduced into the economy as ballot rewards for the exchange rate oracle and to the community pool by the Treasury module, described more fully [here](dev-spec-treasury.md#ksettleseigniorage).
 
 ## Message Types
 
@@ -87,22 +111,6 @@ type MsgSwap struct {
 ```
 
 A `MsgSwap` transaction denotes the `Trader`'s intent to swap their balance of `OfferCoin` for new denomination `AskDenom`, for both Terra<>Terra and Terra<>Luna swaps.
-
-#### Swap Procedure
-
-The trader can submit a `MsgSwap` transaction with the amount / denomination of the coin to be swapped, the "offer", and the denomination of the coins to be swapped into, the "ask". The Market module will then use the following procedure to process `MsgSwap`.
-
-1. Market module receives `MsgSwap` message and performs basic validation checks
-2. Calculate exchange rate $ask$ and $spread$ using [`k.ComputeSwap()`](#kcomputeswap)
-3. Update `TerraPoolDelta` with [`k.ApplySwapToPool()`](#kapplyswaptopool)
-4. Transfer `OfferCoin` from account to module using `supply.SendCoinsFromAccountToModule()`
-5. Burn offered coins, with `supply.BurnCoins()`
-6. Let $ fee = spread * ask $, this is the spread fee.
-7. Mint $ ask - fee $ coins of `AskDenom` with `supply.MintCoins()`. This implicitly applies the spread fee as the $ fee $ coins are burned.
-8. Send newly minted coins to trader with `supply.SendCoinsFromModuleToAccount()`
-9. Emit [`swap`](#swap) event to publicize swap and record spread fee
-
-If the trader's `Account` has insufficient balance to execute the swap, the swap transaction fails. Upon successful completion of swaps involving Luna, a portion of the coins to be credited to the user's account is withheld as the spread fee.
 
 ## State
 

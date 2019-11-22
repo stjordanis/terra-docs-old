@@ -241,7 +241,9 @@ func (k Keeper) SettleSeigniorage(ctx sdk.Context)
 
 This function is called at the end of an epoch to compute seigniorage and forwards the funds to the [`Oracle`](dev-spec-oracle.md) module for ballot rewards, and the [`Distribution`](dev-spec-distribution.md) for the community pool.
 
-1. The seigniorage $\Sigma$ of the current epoch is calculated by taking the difference between the Luna supply at the time of calling and the supply at the start of the epoch ([Epoch Initial Issuance](#epoch-initial-issuance)).
+1. The seigniorage $\Sigma$ of the current epoch is calculated by taking the difference between the supply at the start of the epoch ([Epoch Initial Issuance](#epoch-initial-issuance)) and the Luna supply at the time of calling. 
+
+	Note that $ \Sigma > 0 $ when the current Luna supply is lower than at the start of the epoch, because the Luna had been burned from Luna swaps into Terra. See [here](dev-spec-market.md#seigniorage).
 
 2. The Reward Weight $w$ is the percentage of the seigniorage designated for ballot rewards. Amount $S$ of new Luna is minted, and the [`Oracle`](dev-spec-oracle.md) module receives $S = \Sigma * w$ of the seigniorage.
 
