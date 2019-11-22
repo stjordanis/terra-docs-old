@@ -11,7 +11,8 @@ This document describes 3 ways to setup a network of `terrad` nodes, each servin
 
 Supporting code can be found in the [networks directory](https://github.com/terra-project/core/tree/develop/networks) and additionally the `local` or `remote` sub-directories.
 
-> NOTE: The `remote` network bootstrapping may be out of sync with the latest releases and is not to be relied upon.
+> The `remote` network bootstrapping may be out of sync with the latest releases and is not to be relied upon.
+{note}
 
 ## Single-node, local, manual testnet
 
@@ -161,9 +162,8 @@ terracli keys list --home ./build/node0/terracli
 
 Now that accounts exists, you may create new accounts and send those accounts funds!
 
-{% hint style="info" %}
-Each node's seed is located at `./build/nodeN/terracli/key_seed.json` and can be restored to the CLI using the `terracli keys add --restore` command.
-{% endhint %}
+> Each node's seed is located at `./build/nodeN/terracli/key_seed.json` and can be restored to the CLI using the `terracli keys add --restore` command.
+{tip}
 
 ### Special binaries
 
