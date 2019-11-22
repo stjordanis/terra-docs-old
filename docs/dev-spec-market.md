@@ -75,6 +75,8 @@ This mechanism ensures liquidity and acts as a sort of low-pass filter, allowing
 
 ### `MsgSwap`
 
+#### Swap Request
+
 ```go
 // MsgSwap contains a swap request
 type MsgSwap struct {

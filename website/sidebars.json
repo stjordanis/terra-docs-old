@@ -76,24 +76,22 @@
       "validator-faq"
     ],
     "Developer Guide": [
+      "dev-getting-started",
+      "dev-client-libraries",
+      "dev-codebase",
       {
         "type": "subcategory",
-        "label": "TERRA CORE",
+        "label": "MODULE SPECS",
         "ids": [
-          "dev-spec-pay",
-          "dev-spec-mint",
+          "dev-spec-distribution",
+          "dev-spec-staking",
+          "dev-spec-auth",
+          "dev-spec-bank",
+          "dev-spec-supply",
           "dev-spec-oracle",
-          "dev-spec-market",
           "dev-spec-treasury",
-          "dev-spec-budget"
-        ]
-      },
-      {
-        "type": "subcategory",
-        "label": "CLIENT LIBRARIES",
-        "ids": [
-          "dev-terrajs",
-          "dev-terrapy"
+          "dev-spec-governance",
+          "dev-spec-market"
         ]
       }
     ],

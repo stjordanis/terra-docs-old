@@ -3,26 +3,28 @@ id: dev-spec-treasury
 title: Treasury
 ---
 
-The Treasury module is the "central bank" of the Terra economy. It keeps track of income from stability fees and other mining rewards, measures macroeconomic activity, and modulates Luna miner incentive toward stable, long-term growth through adjustment of Tax Rate and Reward Weight.
+The Treasury module acts as the "central bank" of the Terra economy, [measuring macroeconomic activity](#observed-indicators) by observing Luna rewards and [adjusting monetary policy](#monetary-policy-levers) to modulate miner incentives toward stable, long-term growth.
+
+> While the Treasury stabilizes miner demand, the [`Market`](dev-spec-market.md) is responsible for Terra price-stability.
+{note}
 
 ## Observed Indicators
 
-The Treasury observes and records three indicators for each epoch (set to 1 week). The protocol then computes and compares the short-term (`WindowShort`) and long-term (`WindowLong`) moving averages to be able to determine the relative direction and velocity of the macroeconomic activity.
+The Treasury observes three macroeconomic indicators for each epoch (set to 1 week), keeping [historical records](#historical-indicators). 
 
 - __Tax Rewards__: Income generated from transaction fees (stability fee) in a during a time interval.
-
 - __Seigniorage Rewards__: Amount of Terra from seigniorage that has been burned.
-
 - __Staked Luna__: Total Luna that has been staked by users and bonded by their delegated validators.
 
-The Total Mining Rewards for Luna is equal to the sum of the Tax Rewards and the Seigniorage Rewards.
+The __Total Mining Rewards__ for Luna is the sum of the Tax Rewards and the Seigniorage Rewards.
+
+The protocol can compute and compare the short-term (`WindowShort`) and long-term (`WindowLong`) moving averages of the above indicators to determine the relative direction and velocity of the Terra economy.
 
 ## Monetary Policy Levers
 
 The Treasury module has two monetary policy levers:
 
 - __Tax Rate__, which adjusts the amount of income coming from Terra transactions.
-
 - __Reward Weight__, also known as _Luna burn rate_, which is the portion of seigniorage that is burned to reward miners by creating scarcity within Luna.
 
 Every `WindowLong`, the Treasury re-evaluates each lever to stabilize unit staking returns for Luna, thereby ensuring stable and predictable minign rewards from staking.
@@ -98,13 +100,13 @@ The Treasury mirrors the tax rate when adjusting the mining reward weight. It ob
 
 ### Tax Rate
 
-`sdk.Dec` representing the on-chain tax rate for the current epoch.
+`sdk.Dec` representing the on-chain Tax Rate policy lever for the current epoch.
 
 - default value: `sdk.NewDecWithPrec(1, 3)` (0.1%)
 
 ### Reward Weight
 
-`sdk.Dec` representing the on-chain reward weight for the current epoch.
+`sdk.Dec` representing the on-chain Reward Weight policy lever, _Luna burn rate_, for the current epoch.
 
 - default value: `sdk.NewDecWithPrec(5, 2)` (5%)
 
@@ -141,22 +143,35 @@ An `sdk.Coins` that represents the total supply of Luna at the beginning of the 
 
 ## Functions
 
+### `k.SettleSeigniorage()`
+
+```go
+func (k Keeper) SettleSeigniorage(ctx sdk.Context)
+```
+
+### `k.UpdateTaxCap()`
+
+```go
+func (k Keeper) UpdateTaxCap(ctx sdk.Context) sdk.Coins
+```
+
+### `k.UpdateTaxPolicy`
+
+```go
+func (k Keeper) UpdateTaxPolicy(ctx sdk.Context) (newTaxRate sdk.Dec)
+```
+
 ## Transitions
 
 ### End-Block
 
-At the end of each block, the Treasury module checks if it's the end of the epoch. If so, the following procedure is:
+If the blockchain is at the final block of the epoch, the following procedure is run:
 
 1. Update all the indicators with `k.UpdateIndicators()`
-
 2. Check if the blockchain is still in the probation period.
-
 3. Settle all open seigniorage balances for the epoch and forward funds to the Oracle and Community-Pool accounts
-
 4. Calculate the Tax Rate, Reward Weight, and Tax Cap for the next epoch.
-
 5. Emit the [`policy_update`](#policy_update) event, recording the new policy lever values.
-
 6. Finally, update Luna issuance with `k.RecordEpochInitialIssuance()`
 
 
