@@ -257,7 +257,7 @@ If the blockchain is at the final block of the epoch, the following procedure is
 
 1. Update all the indicators with [`k.UpdateIndicators()`](#kupdateindicators)
 
-2. If the blockchain is in [probation](#probation), skip to step 6.
+2. If the this current block is under [probation](#probation), skip to step 6.
 
 3. [Settle seigniorage](#ksettleseigniorage) accrued during the epoch and make funds available to ballot rewards and the community pool during the next epoch.
 
