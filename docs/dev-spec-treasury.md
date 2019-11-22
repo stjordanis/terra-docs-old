@@ -31,7 +31,7 @@ The protocol can compute and compare the short-term ([`WindowShort`](#windowshor
 
 - __Reward Weight__ $w$ which is the portion of seigniorage allocated for the reward pool for the ballot winners for correctly voting within the reward band of the weighted median of exchange rate in the [`Oracle`](dev-spec-oracle.md) module.
 
-	The Treasury observes the overall burden seigniorage needs to bear in the overall reward profile, [`SeigniorageBurdenTarget`](#seigniorageburdentarget), and hikes up rates accordingly, described [here](#kupdaterewardpolicy). 
+	The Treasury observes the portion of burden seigniorage needed to bear the overall reward profile, [`SeigniorageBurdenTarget`](#seigniorageburdentarget), and hikes up rates accordingly, described [here](#kupdaterewardpolicy). 
 
 After `WindowLong` epochs, the Treasury re-calibrates each lever to stabilize unit returns for Luna, thereby ensuring predictable mining rewards from staking. Both [Tax Rate](#tax-rate) and [Reward Weight](#reward-weight) are stored as values in the `KVStore`, and can have their values updated either through passed governance proposals.
 
@@ -330,12 +330,16 @@ Constraints / rules for updating the [Reward Weight](#reward-weight) monetary po
 ### `SeigniorageBurdenTarget`
 
 - type: `sdk.Dec`
-- default value: `sdk.NewDecWithPrec(67, 2)` (5%)
+- default value: `sdk.NewDecWithPrec(67, 2)` (67%)
+
+Multiplier specifying portion of burden seigniorage needed to bear the overall reward profile for Reward Weight updates during epoch transition.
 
 ### `MiningIncrement`
 
 - type: `sdk.Dec`
 - default value: `sdk.NewDecWithPrec(107, 2)` (107%; exponential growth)
+
+Multiplier determining an annual growth rate for Tax Rate policy updates during epoch transition.
 
 ### `WindowShort`
 
@@ -347,7 +351,7 @@ A number of epochs that specifuies a time interval for calculating short-term mo
 ### `WindowLong`
 
 - type: `int64`
-- default value: `4` (year = 52 weeks)
+- default value: `52` (year = 52 weeks)
 
 A number of epochs that specifies a time interval for calculating long-term moving average.
 
