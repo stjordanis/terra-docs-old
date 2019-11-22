@@ -319,9 +319,9 @@ The ratio of minimum valid oracle votes per slash window to avoid slashing.
 - type: `sdk.Dec`
 - default value: `sdk.NewDecWithPrec(5, 2)` (5%)
 
-## Tags
+## Events
 
-The Oracle module emits the following events/tags
+The Oracle module emits the following events
 
 ### exchange_rate_update
 

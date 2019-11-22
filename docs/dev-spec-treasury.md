@@ -3,23 +3,33 @@ id: dev-spec-treasury
 title: Treasury
 ---
 
-The Treasury module is the "central bank" of the Terra economy. It monitors changes in the macroeconomic variables, and adjusts Terra monetary polices accordingly.
+The Treasury module is the "central bank" of the Terra economy. It keeps track of income from stability fees and other mining rewards, measures macroeconomic activity, and modulates Luna miner incentive toward stable, long-term growth through adjustment of Tax Rate and Reward Weight.
 
-## Observed Macroeconomic Variables
+## Observed Indicators
 
-The treasury observes two main variables:
+The Treasury observes and records three indicators for each epoch (set to 1 week). The protocol then computes and compares the short-term (`WindowShort`) and long-term (`WindowLong`) moving averages to be able to determine the relative direction and velocity of the macroeconomic activity.
 
-* Periodic Tax returns: stability fee income that has been made in a given period, namely `WindowShort`. In tandem to this, the treasury also monitors the rolling average of stability fee revenues in a longer timeframe, `WindowLong`, to be able to compare the performance of tax income in a shorter time window compared to a longer one.
+- __Tax Rewards__: Income generated from transaction fees (stability fee) in a during a time interval.
 
-* Periodic Terra seigniorage burn: the amount of Terra seigniorage that has been burned \(total periodic seigniorage \* mining reward weight\) in a given period. Similar to tax returns, the treasury measures the index in light of a short and long time window.
+- __Seigniorage Rewards__: Amount of Terra from seigniorage that has been burned.
 
-Tax income and seigniorage burn combined makes up the total mining rewards for Luna.
+- __Staked Luna__: Total Luna that has been staked by users and bonded by their delegated validators.
 
-## Tax Rate and Reward Weight
+The Total Mining Rewards for Luna is equal to the sum of the Tax Rewards and the Seigniorage Rewards.
 
-The treasury module has two monetary policy levers in its toolkit. The tax rate, by which it can increase fees coming in from Terra transactions, and and the mining reward weight, which is the portion of seigniorage that is burned to reward miners via scarcity. Every `WindowLong`, it re-evaluates each lever to stabilize unit staking returns for Luna, thereby optimizing for stable cash flows from Terra staking.
+## Monetary Policy Levers
+
+The Treasury module has two monetary policy levers:
+
+- __Tax Rate__, which adjusts the amount of income coming from Terra transactions.
+
+- __Reward Weight__, also known as _Luna burn rate_, which is the portion of seigniorage that is burned to reward miners by creating scarcity within Luna.
+
+Every `WindowLong`, the Treasury re-evaluates each lever to stabilize unit staking returns for Luna, thereby ensuring stable and predictable minign rewards from staking.
 
 ## Policy Constraints
+
+Both Tax Rate and Reward Weight updates are constrained by the [`TaxPolicy`](#taxpolicy) and [`RewardPolicy`](#rewardpolicy) parameters. The type `PolicyConstraint` specifies the floor, ceiling, and the max periodic changes for each variable. 
 
 ```go
 // PolicyConstraints wraps constraints around updating a key Treasury variable
@@ -29,32 +39,32 @@ type PolicyConstraints struct {
     Cap           sdk.Coin `json:"cap"`
     ChangeRateMax sdk.Dec  `json:"change_max"`
 }
-
-// Clamp constrains a policy variable update within the policy constraints
-func (pc PolicyConstraints) Clamp(prevRate sdk.Dec, newRate sdk.Dec) (clampedRate sdk.Dec) {
-    if newRate.LT(pc.RateMin) {
-        newRate = pc.RateMin
-    } else if newRate.GT(pc.RateMax) {
-        newRate = pc.RateMax
-    }
-
-    delta := newRate.Sub(prevRate)
-    if newRate.GT(prevRate) {
-        if delta.GT(pc.ChangeRateMax) {
-            newRate = prevRate.Add(pc.ChangeRateMax)
-        }
-    } else {
-        if delta.Abs().GT(pc.ChangeRateMax) {
-            newRate = prevRate.Sub(pc.ChangeRateMax)
-        }
-    }
-    return newRate
-}
 ```
 
-Both tax rate and seigniorage burn weight updates are limited by `PolicyConstraint`, which specifies the floor, ceiling, and the max periodic changes for each variable.
+The logic for constraining a policy lever update is performed by `pc.Clamp()`, shown below.
 
-Both tax rate and seigniorage burn weight updates are limited by `PolicyConstraint`, which specifies the floor, ceiling, and the max periodic changes for each variable.
+```go
+// Clamp constrains a policy variable update within the policy constraints
+func (pc PolicyConstraints) Clamp(prevRate sdk.Dec, newRate sdk.Dec) (clampedRate sdk.Dec) {
+	if newRate.LT(pc.RateMin) {
+		newRate = pc.RateMin
+	} else if newRate.GT(pc.RateMax) {
+		newRate = pc.RateMax
+	}
+
+	delta := newRate.Sub(prevRate)
+	if newRate.GT(prevRate) {
+		if delta.GT(pc.ChangeRateMax) {
+			newRate = prevRate.Add(pc.ChangeRateMax)
+		}
+	} else {
+		if delta.Abs().GT(pc.ChangeRateMax) {
+			newRate = prevRate.Sub(pc.ChangeRateMax)
+		}
+	}
+	return newRate
+}
+```
 
 ## Proposal Types
 
@@ -108,7 +118,12 @@ The Treasury mirrors the tax rate when adjusting the mining reward weight. It ob
 
 ### Epoch Initial Issuance
 
-`sdk.Coins`
+- `k.GetEpochInitialIssuance(ctx) (res sdk.Coins)`
+- `k.RecordEpochInitialIssuance(ctx)`
+- `k.SetEpochInitialIssuance(ctx, issuance sdk.Coins)`
+- `k.PeekEpochSeigniorage(ctx) sdk.Int`
+
+An `sdk.Coins` that represents the total supply of Luna at the beginning of the epoch. Note that peeking will give the total amount of µLuna instead of `sdk.Coins` for convenience.
 
 ### Historical Indicators
 
@@ -130,9 +145,24 @@ The Treasury mirrors the tax rate when adjusting the mining reward weight. It ob
 
 ### End-Block
 
-### Tags
+At the end of each block, the Treasury module checks if it's the end of the epoch. If so, the following procedure is:
 
-The Treasury module emits the following events/tags
+1. Update all the indicators with `k.UpdateIndicators()`
+
+2. Check if the blockchain is still in the probation period.
+
+3. Settle all open seigniorage balances for the epoch and forward funds to the Oracle and Community-Pool accounts
+
+4. Calculate the Tax Rate, Reward Weight, and Tax Cap for the next epoch.
+
+5. Emit the [`policy_update`](#policy_update) event, recording the new policy lever values.
+
+6. Finally, update Luna issuance with `k.RecordEpochInitialIssuance()`
+
+
+## Events
+
+The Treasury module emits the following events
 
 ### policy_update
 
