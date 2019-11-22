@@ -10,7 +10,7 @@ Welcome to the official Terra Documentation. Since Terra is a large project and 
 
 * [**Node Software**](node-installation.md) describes how to run a full node to be a part of the Terra network or a testnet, for both validators and non-validators.
 
-* [**Validator Guide**](validator-validator-intro.md) provides more in-depth treatment for how to run a validator node, and outlines important responsibilities and helpful guidelines.
+* [**Validator Guide**](validator-intro.md) provides more in-depth treatment for how to run a validator node, and outlines important responsibilities and helpful guidelines.
 
 * [**Developer Guide**](dev-getting-started.md) is for developers who want to familiarize themselves with Terra Core codebase or write third-party software that integrates with the Terra blockchain.
 
