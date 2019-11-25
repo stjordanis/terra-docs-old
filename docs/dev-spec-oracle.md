@@ -16,6 +16,10 @@ During each [`VotePeriod`](#voteperiod), the Oracle module obtains consensus on 
 
 Validators must first pre-commit to a exchange rate, then in the subsequent `VotePeriod` submit and reveal their exchange rate alongside a proof that they had pre-commited at that price. This scheme forces the voter to commit to a submission before knowing the votes of others and thereby reduces centralization and free-rider risk in the Oracle.
 
+#### Abstaining from Voting
+
+A validator may abstain from voting by submitting a non-positive integer for the `ExchangeRate` field in [`MsgExchangeRateVote`](#msgexchangeratevote). Doing so will absolve them of any penalties for missing `VotePeriod`s, but also disqualify them from receiving Oracle seigniorage rewards for faithful reporting.
+
 ### Prevote and Vote
 
 Let $P_t$ be the current time interval of duration defined by [`VotePeriod`](#voteperiod)(currently set to 30 seconds) during which validators must submit two messages: 
@@ -23,15 +27,6 @@ Let $P_t$ be the current time interval of duration defined by [`VotePeriod`](#vo
   * A [`MsgExchangeRatePrevote`](#msgexchangerateprevote), containing the SHA256 hash of the exchange rate of Luna with respect to a Terra peg. A separate prevote must be submitted for each different denomination on which to report a Luna exchange rate.
 
   * A [`MsgExchangeRateVote`](#msgexchangeratevote), containing the salt used to create the hash for the prevote submitted in the previous interval $P_{t-1}$.
-
-> A validator that decides to participate in the oracle process **must submit a vote for the Luna exchange rate against every denomination specified in [`Whitelist`](#whitelist) during every `VotePeriod`**. For every `VotePeriod` during which they fail to do so, it is considered a "miss."
->
-> Participating validators must maintain a valid vote rate of at least [`MinValidPerWindow`](#minvalidperwindow), lest they get their stake slashed (currently set to [0.01%](#slashfraction)) and temporarily jailed.
-{important}
-
-#### Abstaining from Voting
-
-A validator may abstain from voting by submitting a non-positive integer for the `ExchangeRate` field in [`MsgExchangeRateVote`](#msgexchangeratevote). Doing so will absolve them of any penalties for missing `VotePeriod`s, but also disqualify them from receiving Oracle seigniorage rewards for faithful reporting.
 
 ### Vote Tally
 
@@ -45,12 +40,26 @@ Denominations receiving fewer than [`VoteThreshold`](#votethreshold) total votin
 
 ### Ballot Rewards
 
-After the votes are tallied, the winners of the ballots are determined.
+After the votes are tallied, the winners of the ballots are determined (see [`tally()`](#tally)).
 
 Voters that have managed to vote within a narrow band around the weighted median, are rewarded with a portion of the collected seigniorage. See [`k.RewardBallotWinners()`](#krewardballotwinners) for more details.
 
 > Starting from Columbus-3, fees from [Market](dev-spec-market.md) swaps are no longer are included in the oracle reward pool, and are immediately burned during the swap operation.
 {note}
+
+### Slashing
+
+> Be sure to read this section carefully as it concerns potential loss of funds.
+{important}
+
+A `VotePeriod` during which either of the following events occur is considered a "miss":
+
+- The validator fails to submits a vote for Luna exchange rate against **every** denomination specified in[`Whitelist`](#whitelist)
+
+- The validator fails to vote within the reward band around the weighted median for one or more denominations
+
+During every [`SlashWindow`](#slashwindow), participating validators must maintain a valid vote rate of at least [`MinValidPerWindow`](#minvalidperwindow) (5%), lest they get their stake slashed (currently set to [0.01%](#slashfraction)). The slashed validator is automatically temporarily "jailed" by the protocol (to protect the funds of delegators), and the operator is expected to fix the discrepancy promptly to resume validator participation.
+
 
 ## Message Types
 
