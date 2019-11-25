@@ -1,6 +1,7 @@
 ---
-id: validator-faq
-title: Validator FAQ
+id: validator-troubleshooting
+title: Validator Troubleshooting
+sidebar_label: Troubleshooting
 ---
 
 > This is work in progress. Mechanisms and values are susceptible to change.
