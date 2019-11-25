@@ -1,8 +1,8 @@
 {
   "docs": {
     "Overview": [
-      "dev-intro",
-      "dev-faq"
+      "index",
+      "overview-history"
     ],
     "Terra Protocol": [
       "dev-what-is-terra",
@@ -54,13 +54,13 @@
       }
     ],
     "User Guide": [
-      "dev-installation",
-      "dev-users",
-      "dev-light-client",
       {
         "type": "subcategory",
-        "label": "GUIDES",
+        "label": "NODE SOFTWARE",
         "ids": [
+          "dev-installation",
+          "dev-users",
+          "dev-light-client",
           "dev-terracli",
           "dev-ledger-nano-support",
           "dev-production",
@@ -71,17 +71,30 @@
     ],
     "Validator Guide": [
       "validator-intro",
-      "validator-getting-started",
-      "validator-security",
-      "validator-faq"
+      "validator-faq",
+      {
+        "type": "subcategory",
+        "label": "GUIDES",
+        "ids": [
+          "validator-getting-started",
+          "validator-security",
+          "validator-troubleshooting"
+        ]
+      }
     ],
     "Developer Guide": [
       "dev-getting-started",
-      "dev-architecture",
-      "dev-block-lifecycle",
       {
         "type": "subcategory",
-        "label": "CORE MODULES",
+        "label": "CODEBASE",
+        "ids": [
+          "dev-architecture",
+          "dev-process-flows"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "MODULE SPECS",
         "ids": [
           "dev-spec-auth",
           "dev-spec-bank",

@@ -10,15 +10,15 @@ title: Validator FAQ
 
 ### What is a validator?
 
-The Terra Protocol is based on Tendermint, which relies on a set of validators to secure the network. The role of validators is to run a full-node and participate in consensus by broadcasting votes which contain cryptographic signatures signed by their private key. Validators commit new blocks in the blockchain and receive revenue in exchange for their work. They also participate in on-procotol treasury governance by voting on governance proposals. A validator's voting influence is weighted according to their total stake.
+Terra Core is powered by Tendermint consensus, which relies on a set of validators to secure the network. Validators run a full nodes and participate in consensus by broadcasting votes which contain cryptographic signatures signed by their private key. Validators commit new blocks in the blockchain and receive revenue in exchange for their work. They also participate in on-procotol treasury governance by voting on governance proposals. A validator's voting influence is weighted according to their total stake.
 
 ### What is "staking"?
 
-Columbus mainnet is a public Proof-Of-Stake (PoS) blockchain, meaning that validator's weight is determined by the amount of staking tokens (Luna) bonded as collateral. These Luna can be staked directly by the validator or delegated to them by Luna holders.
+The Columbus-3 Mainnet is a public Proof-Of-Stake (PoS) blockchain, meaning that validator's weight is determined by the amount of staking tokens (Luna) bonded as collateral. These Luna can be staked directly by the validator or delegated to them by Luna holders.
 
 Any user in the system can declare its intention to become a validator by sending a `create-validator` transaction. From there, they become validators.
 
-The weight (i.e. total stake) of a validator determines wether or not it is an active validator, and also how frequently this node will have to propose a block and how much revenue it will obtain. Initially, only the top 100 validators with the most weight will be active validators. If validators double sign, or are frequently offline, their staked Luna (including Luna of users that delegated to them) will be "slashed" to penalize misbehavior.
+The weight (i.e. total stake) of a validator determines wether or not it is an active validator, and also how frequently this node will have to propose a block and how much revenue it will obtain. Initially, only the top 100 validators with the most weight will be active validators. If validators double-sign, or are frequently offline, they risk their staked Luna (including Luna delegated by users) being "slashed" by the protocol to penalize negligence and misbehavior.
 
 ### What is a full node?
 
@@ -28,23 +28,23 @@ Of course, it is possible and encouraged for any user to run full nodes even if 
 
 ### What is a delegator?
 
-Delegators are Luna holders who cannot, or do not want to run validator operations themselves. Through Terra Station (check the Terra website to download), a user can delegate Luna to a validator and obtain a part of its revenue in exchange (for more detail on how revenue is distributed, see [What is the incentive to stake?](#what-is-the-incentive-to-stake) and [What is a validator's commission?](#what-is-a-validators-commission) sections below).
+Delegators are Luna holders who cannot, or do not want to run validator operations themselves. Through Terra Station (check the [Terra website](https://terra.money) to download), a user can delegate Luna to a validator and obtain a part of its revenue in exchange (for more detail on how revenue is distributed, see [What is the incentive to stake?](#what-is-the-incentive-to-stake) and [What is a validator's commission?](#what-is-a-validators-commission) sections below).
 
-Because they share revenue with their validators, delegators also share responsibility. Should a validator misbehave, each of its delegators will be partially slashed in proportion to their stake. This is why delegators should perform due diligence on validators before delegating, as well as spreading their stake over multiple validators.
+Because they share revenue with their validators, delegators also share responsibility. Should a validator misbehave, each of its delegators will be partially slashed in proportion to their stake. This is why delegators should perform due-diligence on validators before delegating, as well as diversifying by spreading their stake over multiple validators.
 
-Delegators play a critical role in the system, as they are responsible for choosing validators. Being a delegator is not a passive role: delegators should actively monitor the actions of their validators and be ready to switch should they fail to act responsibly.
+Delegators play a critical role in the system, as they are responsible for choosing validators. Be aware that being a delegator is not a passive role. Delegators are obligated to remain vigilant and actively monitor the actions of their validators, switching should they fail to act responsibly.
 
 ## Becoming a Validator
 
 ### How to become a validator?
 
-Any participant in the network can signal their intent to become a validator by sending a `create-validator` transaction, in which they must submit the following information.
+Any participant in the network can signal their intent to become a validator by creating a validator and registering its validator profile. To do so, the candidate broadcasts a `create-validator` transaction, in which they must submit the following information:
 
-* __Validator's PubKey__:  The private key associated with PubKey is used to sign _prevotes_ and _precommits_. This way, validators can have different accounts for validating and holding liquid funds.
+* __Validator's PubKey__:  Validator operators can have different accounts for validating and holding liquid funds. The PubKey submitted must be associated with the private key sign _prevotes_ and _precommits_.
 
-* __Validator's Address__: Application level address. This is the address used to identify your validator publicly. The private key associated with this address is used to bond, unbond, and claim rewards.
+* __Validator's Address__: `terravaloper-` address. This is the address used to identify your validator publicly. The private key associated with this address is used to bond, unbond, and claim rewards.
 
-* __Validator's name__ (also known as the moniker)
+* __Validator's name__ (also known as the __moniker__)
 
 * __Validator's website__ *(optional)*
 
@@ -52,17 +52,17 @@ Any participant in the network can signal their intent to become a validator by 
 
 * __Initial commission rate__: The commission rate on block provisions, block rewards and fees charged to delegators.
 
-* __Maximum commission__: The maximum commission rate which this validator can charge.
+* __Maximum commission__: The maximum commission rate which this validator will be allowed to charge.
 
 * __Commission change rate__: The maximum daily increase of the validator commission.
 
-* __Minimum self-bond amount__: Minimum amount of Luna the validator need to have bonded at all time. If the validator's self-bonded stake falls below this limit, its entire staking pool will be unbonded.
+* __Minimum self-bond amount__: Minimum amount of Luna the validator needs to have bonded at all times. If the validator's self-bonded stake falls below this limit, its entire staking pool will be unbonded.
 
 * __Initial self-bond amount__: Initial amount of Luna the validator wants to self-bond.
 
-Once a validator is created, Luna holders can delegate Luna to it, effectively adding stake to this pool. The total stake of an address is the combination of Luna bonded by delegators and Luna self-bonded by the entity which designated itself.
+Once a validator is created and registered, Luna holders can delegate Luna to it, effectively adding stake to its pool. The total stake of a validator is the sum of the Luna self-bonded by the validator's operator and the Luna bonded by external delegators.
 
-Out of all validators that signaled themselves, the 100 with the most stake are the ones who are designated as the active validators. They become **bonded validators**. If a validator's total stake falls below the top 100 then that validator loses its validator privileges, it enters **unbonding mode** and, eventually, becomes **unbonded**.
+**Only the top 100 validators with the most stake are considered the active validators**, becoming **bonded validators**. If ever a validator's total stake dips below the top 100, the validator loses its validator privileges and no longer serves as part of the active set, entering **unbonding mode** and eventually becomes **unbonded**.
 
 ## Validator keys and states
 
@@ -75,7 +75,7 @@ In short, there are two types of keys:
   * Get this value with `terrad tendermint show-validator`
     e.g. `terravalconspub1zcjduc3qcyj09qc03elte23zwshdx92jm6ce88fgc90rtqhjx8v0608qh5ssp0w94c`
 
-* **Application keys**: These keys are created from the application and used to sign transactions. As a validator, you will probably use one key to sign staking-related transactions, and another key to sign oracle-related transactions. Application keys are associated with a public key `terrapub` and an address `terra`. Both are derived from account keys generated by `terracli keys add`.
+* **Application keys**: These keys are created from the application and used to sign transactions. As a validator, you will probably use one key to sign staking-related transactions, and another key to sign oracle-related transactions. Application keys are associated with a public key `terrapub-` and an address `terra-`. Both are derived from account keys generated by `terracli keys add`.
 
 > A validator's operator key is directly tied to an application key, but uses reserved prefixes solely for this purpose: `terravaloper` and `terravaloperpub`
 {note}
@@ -181,7 +181,7 @@ Validators earn proportionally more revenue than their delegators because of com
 
 ### What is a validator's commission?
 
-Revenue received by a validator's pool is split between the validator and its delegators. The validator can apply a commission on the part of the revenue that goes to its delegators. This commission is set as a percentage. Each validator is free to set its initial commission, maximum daily commission change rate and maximum commission. Columbus mainnet enforces the parameter that each validator sets. These parameters can only be defined when initially declaring candidacy, and may only be constrained further after being declared.
+Revenue received by a validator's pool is split between the validator and its delegators. The validator can apply a commission on the part of the revenue that goes to its delegators. This commission is set as a percentage. Each validator is free to set its initial commission, maximum daily commission change rate and maximum commission. Columbus-3 Mainnet enforces the parameter that each validator sets. These parameters can only be defined when initially declaring candidacy, and may only be constrained further after being declared.
 
 ### How are block provisions distributed?
 
@@ -225,31 +225,31 @@ $$
 
 ### How does Luna supply behave over time?
 
-Luna is the mining token for the Terra chain, but it is also the stability collateral pair for the stablecoin Terra. Luna is minted to contract Terra supply \(see [this](../stability.md)\). In order to constrain inflation and return Luna supply to the target, the protocol burns a certain percentage of Terra seigniorage gains every month. The genesis Luna burn ratio is set to be 20%, and this changes over time depending on macroeconomic conditions.
+Luna is the native staking token for the Terra Proof-of-Stake chain, and represents mining power. However, it also serves the purpose to collateralize the Terra stablecoins. Luna is minted to contract Terra supply to counteract Terra price falling against its peg. In order to constrain Luna inflation, the protocol burns market swap spread fees and distributes a part of seigniorage to the exchange rate oracle ballot winners, which return Luna supply toward target.
 
 ### What are the slashing conditions?
 
 If a validator misbehaves, its bonded stake along with its delegators' stake and will be slashed. The severity of the punishment depends on the type of fault. There are 3 main faults that can result in slashing of funds for a validator and its delegators:
 
-* **Double signing:** If someone reports on chain A that a validator signed two blocks at the same height on chain A and chain B, and if chain A and chain B share a common ancestor, then this validator will get slashed on chain A
+* **Double signing:** If someone reports on chain A that a validator signed two blocks at the same height on chain A and chain B, and if chain A and chain B share a common ancestor, then this validator will get slashed on chain A.
 
-* **Unavailability:** If a validator's signature has not been included in the last X blocks, the validator will get slashed by a marginal amount proportional to X. If X is above a certain limit Y, then the validator will get unbonded
+* **Unavailability:** If a validator's signature has not been included in the last X blocks, the validator will get slashed by a marginal amount proportional to X. If X is above a certain limit Y, then the validator will get unbonded.
 
 * **Non-voting:** If a validator did not vote on a proposal, its stake will receive a minor slash.
 
-Note that even if a validator does not intentionally misbehave, it can still be slashed if its node crashes, looses connectivity, gets DDOSed, or if its private key is compromised.
+Note that even if a validator does not intentionally misbehave, it can still be slashed if its node crashes, looses connectivity, gets DDoSed, or if its private key is compromised.
 
 ### Do validators need to self-bond Luna?
 
 No, they do not. A validators total stake is equal to the sum of its own self-bonded stake and of its delegated stake. This means that a validator can compensate its low amount of self-bonded stake by attracting more delegators. This is why reputation is very important for validators.
 
-Even though there is no obligation for validators to self-bond Luna, delegators should want their validator to have self-bonded Luna in their staking pool. In other words, validators should have skin in the game.
+Even though there is no obligation for validators to self-bond Luna, delegators should want their validator to have self-bonded Luna in their staking pool. In other words, validators should have skin-in-the-game.
 
 In order for delegators to have some guarantee about how much skin-in-the-game their validator has, the latter can signal a minimum amount of self-bonded Luna. If a validator's self-bond goes below the limit that it predefined, this validator and all of its delegators will unbond.
 
 ### How to prevent concentration of stake in the hands of a few top validators?
 
-For now the community is expected to behave in a smart and self-preserving way. When a mining pool in Bitcoin gets too much mining power the community usually stops contributing to that pool. Columbus mainnet will rely on the same effect initially. In the future, other mechanisms will be deployed to smoothen this process as much as possible:
+For now the community is expected to behave in a smart and self-preserving way. When a mining pool in Bitcoin gets too much mining power the community usually stops contributing to that pool. Columbus-3 Mainnet will rely on the same effect initially. In the future, other mechanisms will be deployed to smoothen this process as much as possible:
 
 * **Penalty-free re-delegation:** This is to allow delegators to easily switch from one validator to another, in order to reduce validator stickiness.
 
@@ -267,15 +267,15 @@ We expect that a modest level of hardware specifications will be needed initiall
 
 ### What are software requirements?
 
-In addition to running a Terra Network node, validators should develop monitoring, alerting and management solutions.
+In addition to running a Terra Core node, validators should develop monitoring, alerting and management solutions.
 
 ### What are bandwidth requirements?
 
-Columbus mainnet has the capacity for very high throughput relative to chains like Ethereum or Bitcoin.
+Columbus-3 Mainnet has the capacity for very high throughput compared to chains like Ethereum or Bitcoin.
 
-We recommend that the data center nodes only connect to trusted full-nodes in the cloud or other validators that know each other socially. This relieves the data center node from the burden of mitigating denial-of-service attacks.
+As such, we recommend that the data center nodes only connect to trusted full nodes in the cloud or other validators that know each other socially. This relieves the data center node from the burden of mitigating denial-of-service attacks.
 
-Ultimately, as the network becomes more heavily used, multigigabyte per day bandwidth is very realistic.
+Ultimately, as the network becomes more used, one can realistically expect daily bandwidth on the order of several gigabytes.
 
 ### What does running a validator imply in terms of logistics?
 
@@ -300,7 +300,7 @@ Running effective operation is the key to avoiding unexpectedly unbonding or bei
 
 Validators should expect to perform regular software updates to accommodate upgrades and bug fixes. There will inevitably be issues with the network early in its bootstrapping phase that will require substantial vigilance.
 
-### How can validators protect themselves from denial-of-service attacks?
+### How can validators protect themselves from Denial-of-Service attacks?
 
 Denial-of-service attacks occur when an attacker sends a flood of internet traffic to an IP address to prevent the server at the IP address from connecting to the internet.
 

@@ -1,6 +1,6 @@
 ---
 id: dev-terracli
-title: terracli Reference Guide
+title: terracli Reference
 ---
 
 For more information on the command usage, refer to its help screen: `terracli config --help`.
