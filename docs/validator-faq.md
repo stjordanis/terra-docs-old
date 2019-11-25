@@ -12,7 +12,7 @@ title: Validator FAQ
 
 The Terra Protocol is based on Tendermint, which relies on a set of validators to secure the network. The role of validators is to run a full-node and participate in consensus by broadcasting votes which contain cryptographic signatures signed by their private key. Validators commit new blocks in the blockchain and receive revenue in exchange for their work. They also participate in on-procotol treasury governance by voting on governance proposals. A validator's voting influence is weighted according to their total stake.
 
-### What is 'staking'?
+### What is "staking"?
 
 Columbus mainnet is a public Proof-Of-Stake (PoS) blockchain, meaning that validator's weight is determined by the amount of staking tokens (Luna) bonded as collateral. These Luna can be staked directly by the validator or delegated to them by Luna holders.
 
@@ -95,7 +95,9 @@ Delegators have the same state as their validator.
 > Delegations are not necessarily bonded. Luna can be delegated and bonded, delegated and unbonding, delegated and unbonded, or liquid.
 {note}
 
-### What is 'self-bond'? How can I increase my 'self-bond'?
+### What is "self-bond"? How can I increase my "self-bond"?
+
+The validator operator's "self-bond" refers to the amount of Luna stake delegated to itself. You can increase your self-bond by delegating more Luna to your validator account.
 
 ### Is there a faucet?
 
@@ -151,7 +153,9 @@ Even though delegated funds cannot be stolen by their validators, delegators are
 
 ### How often will a validator be chosen to propose the next block? Does it go up with the quantity of Luna staked?
 
-The validator that is selected to propose the next block is called proposer. Each proposer is selected deterministically, and the frequency of being chosen is equal to the relative total stake (where total stake = self-bonded stake + delegators stake) of the validator. For example, if the total bonded stake across all validators is 100 Luna and a validator's total stake is 10 Luna, then this validator will be chosen 10% of the time as the next proposer.
+The validator that is selected to mine the next block is called the **proposer**, the "leader" in the consensus for the round. Each proposer is selected deterministically, and the frequency of being chosen is equal to the relative total stake (where total stake = self-bonded stake + delegators stake) of the validator. For example, if the total bonded stake across all validators is 100 Luna, and a validator's total stake is 10 Luna, then this validator will be chosen 10% of the time as the proposer.
+
+To understand more about the proposer selection process in Tendermint BFT consensus, read more [here](https://github.com/tendermint/tendermint/blob/master/docs/spec/reactors/consensus/proposer-selection.md).
 
 ## Incentives
 
@@ -161,15 +165,15 @@ Each member of a validator's staking pool earns different types of revenue:
 
 * **Compute fees**: To prevent spamming, validators may set minimum gas fees for transactions to be included in their mempool. At the end of every block, the compute fees are disbursed to the participating validators pro-rata to stake. 
 
-* **Swap fees**: A small spread is charged on atomic swap transactions between Luna and any Terra currency, which is burned and creates scarcity in Luna.
+* **Stability fees**: To stabilize the value of Luna, the protocol charges a small percentage transaction fee ranging from 0.1% to 1% on every Terra transaction, capped at 1 TerraSDR. This is paid in any Terra currency, and is disbursed pro-rata to stake at the end of every block in TerraSDR.
 
-* **Stability fees**: To stabilize the value of Luna, the protocol charges a small percentage transaction fee ranging from 0.1% to 1% on every Terra transaction, capped at 1 TerraSDR. This is paid in any Terra currency, and is disbursed pro-rata to stake at the end of every block in TerraSDR. 
+* **Seigniorage rewards**: Validators that participate in the Exchange Rate [`Oracle`](dev-spec-oracle.md) get a portion of seigniorage if they faithfully report and win the ballot (vote within the reward band around the weighted median).
 
 This total revenue is divided among validators' staking pools according to each validator's weight. Then, within each validator's staking pool the revenue is divided among delegators in proportion to each delegator's stake. Note that a commission on delegators' revenue is applied by the validator before it is distributed.
 
 Besides revenue, there are scarcity incentives:
 
-* **Seigniorage rewards**: To stabilize the value of Luna, the protocol commits to using some variable portion of Terra seigniorage \(see the market and treasury modules for how this functions\) to buy back and burn Luna tokens. This creates scarcity for Luna tokens and indirectly rewards validators. 
+* **Swap fees**: A small spread is charged on atomic swap transactions between Luna and any Terra currency, which is burned and creates scarcity in Luna and indirectly rewards validators.
 
 ### What is the incentive to run a validator ?
 
@@ -191,13 +195,13 @@ Let us take an example where we have 10 validators with equal staking power and 
 
 * All delegators get: $100 ~ * ~ 80\% ~ - ~ Commission$ = 79.2 SDT
 
-Then, each delegator can claim its part of the 79.2 SDT in proportion to their stake in the validator's staking pool. Note that the validator's commission is not applied on block provisions. Note that block rewards \(paid in SDT\) are distributed according to the same mechanism.
+Then, each delegator can claim its part of the 79.2 SDT in proportion to their stake in the validator's staking pool. Note that the validator's commission is not applied on block provisions. Note that block rewards (paid in SDT) are distributed according to the same mechanism.
 
 ### How are fees distributed?
 
 Fees are similarly distributed with the exception that the block proposer can get a bonus on the fees of the block it proposes if it includes more than the strict minimum of required precommits.
 
-When a validator is selected to propose the next block, it must include at least 2/3 precommits for the previous block in the form of validator signatures. However, there is an incentive to include more than 2/3 precommits in the form of a bonus. The bonus is linear: it ranges from 1% if the proposer includes 2/3rd precommits \(minimum for the block to be valid\) to 5% if the proposer includes 100% precommits. Of course the proposer should not wait too long or other validators may timeout and move on to the next proposer. As such, validators have to find a balance between wait-time to get the most signatures and risk of losing out on proposing the next block. This mechanism aims to incentivize non-empty block proposals, better networking between validators as well as to mitigate censorship.
+When a validator is selected to propose the next block, it must include at least 2/3 precommits for the previous block in the form of validator signatures. However, there is an incentive to include more than 2/3 precommits in the form of a bonus. The bonus is linear: it ranges from 1% if the proposer includes 2/3rd precommits (minimum for the block to be valid) to 5% if the proposer includes 100% precommits. Of course the proposer should not wait too long or other validators may timeout and move on to the next proposer. As such, validators have to find a balance between wait-time to get the most signatures and risk of losing out on proposing the next block. This mechanism aims to incentivize non-empty block proposals, better networking between validators as well as to mitigate censorship.
 
 Let's take a concrete example to illustrate the aforementioned concept. In this example, there are 10 validators with equal stake. Each of them applies a 1% commission and has 20% of self-bonded Luna. Now comes a successful block that collects a total of 1005 SDT in fees. Let's assume that the proposer included 100% of the signatures in its block. It thus obtains the full bonus of 5%.
 
