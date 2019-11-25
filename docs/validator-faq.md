@@ -18,6 +18,21 @@ The Columbus-3 Mainnet is a public Proof-Of-Stake (PoS) blockchain, meaning that
 
 Any user in the system can declare its intention to become a validator by sending a `create-validator` transaction. From there, they become validators.
 
+```bash
+terracli tx staking create-validator
+    --pubkey terravalconspub1zcjduepqs5s0vddx5m65h5ntjzwd0x8g3245rgrytpds4ds7vdtlwx06mcesmnkzly 
+    --amount "2uluna"
+    --from tmp
+    --commission-rate="0.20"
+    --commission-max-rate="1.00"
+    --commission-max-change-rate="0.01"
+    --min-self-delegation "1"
+    --moniker "gazua"
+    --chain-id "test-chain-uEe0bV"
+    --gas auto
+    --node tcp://127.0.0.1:26647
+```
+
 The weight (i.e. total stake) of a validator determines wether or not it is an active validator, and also how frequently this node will have to propose a block and how much revenue it will obtain. Initially, only the top 100 validators with the most weight will be active validators. If validators double-sign, or are frequently offline, they risk their staked Luna (including Luna delegated by users) being "slashed" by the protocol to penalize negligence and misbehavior.
 
 ### What is a full node?
@@ -40,7 +55,7 @@ Delegators play a critical role in the system, as they are responsible for choos
 
 Any participant in the network can signal their intent to become a validator by creating a validator and registering its validator profile. To do so, the candidate broadcasts a `create-validator` transaction, in which they must submit the following information:
 
-* __Validator's PubKey__:  Validator operators can have different accounts for validating and holding liquid funds. The PubKey submitted must be associated with the private key sign _prevotes_ and _precommits_.
+* __Validator's PubKey__:  Validator operators can have different accounts for validating and holding liquid funds. The PubKey submitted must be associated with the private key with which the validator intends to sign _prevotes_ and _precommits_.
 
 * __Validator's Address__: `terravaloper-` address. This is the address used to identify your validator publicly. The private key associated with this address is used to bond, unbond, and claim rewards.
 
@@ -201,7 +216,7 @@ Then, each delegator can claim its part of the 79.2 SDT in proportion to their s
 
 Fees are similarly distributed with the exception that the block proposer can get a bonus on the fees of the block it proposes if it includes more than the strict minimum of required precommits.
 
-When a validator is selected to propose the next block, it must include at least 2/3 precommits for the previous block in the form of validator signatures. However, there is an incentive to include more than 2/3 precommits in the form of a bonus. The bonus is linear: it ranges from 1% if the proposer includes 2/3rd precommits (minimum for the block to be valid) to 5% if the proposer includes 100% precommits. Of course the proposer should not wait too long or other validators may timeout and move on to the next proposer. As such, validators have to find a balance between wait-time to get the most signatures and risk of losing out on proposing the next block. This mechanism aims to incentivize non-empty block proposals, better networking between validators as well as to mitigate censorship.
+When a validator is selected to propose the next block, it must include at least ⅔ precommits for the previous block in the form of validator signatures. However, there is an incentive to include more than ⅔ precommits in the form of a bonus. The bonus is linear: it ranges from 1% if the proposer includes ⅔rd precommits (minimum for the block to be valid) to 5% if the proposer includes 100% precommits. Of course the proposer should not wait too long or other validators may timeout and move on to the next proposer. As such, validators have to find a balance between wait-time to get the most signatures and risk of losing out on proposing the next block. This mechanism aims to incentivize non-empty block proposals, better networking between validators as well as to mitigate censorship.
 
 Let's take a concrete example to illustrate the aforementioned concept. In this example, there are 10 validators with equal stake. Each of them applies a 1% commission and has 20% of self-bonded Luna. Now comes a successful block that collects a total of 1005 SDT in fees. Let's assume that the proposer included 100% of the signatures in its block. It thus obtains the full bonus of 5%.
 

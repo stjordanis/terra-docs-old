@@ -31,3 +31,6 @@ stability fee = min(1000 * tax_rate, tax_cap(usdr))
 For a `MsgMultiSend` transaction, a stability fee is charged from every outbound transaction.
 
 Unlike with the gas fee which needs to be specified by the sender, the stability fee is automatically deducted from the sender's `Account`.
+
+## Vesting Accounts
+

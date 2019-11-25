@@ -10,7 +10,7 @@ Terra Core is built using the [Cosmos SDK](https://cosmos.network/sdk), which pr
 The node software is organized into individual modules that implement different parts of the Terra protocol. Here are they, listed by the order of their genesis.
 
 1. `genaccounts` - import & export genesis account
-2. [`distribution`](dev-spec-distribution.md): forwards funds to modules
+2. [`distribution`](dev-spec-distribution.md): distribute rewards between validators and delegators
     - tax and reward distribution
     - community pool
 3. [`staking`](dev-spec-staking.md): validators and Luna
