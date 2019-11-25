@@ -6,22 +6,21 @@ title: Auth
 > Terra's Auth module inherits from Cosmos SDK's [`auth`](https://github.com/cosmos/cosmos-sdk/tree/v0.37.4/docs/spec/auth) module.
 {note}
 
-The Auth module is responsible for specifying the base transaction and account types. It contains the ante handler, where all basic transaction validity checks (signatures, nonces, auxiliary fields) are performed, and the Terra stability layer fee is applied.
+Terra's Auth module extends the functionality from Cosmos SDK's `auth` module with a modified ante handler which applies the stability layer fee alongside the all basic transaction validity checks (signatures, nonces, auxiliary fields). In addition, a special vesting account type is defined, which handles the logic for tokin vesting from the Luna presale.
 
 ## Fees
 
 The Auth module reads the current effective `TaxRate` and `TaxCap` parameters from the [`Treasury`](dev-spec-treasury.md) module to enforce a stability layer fee.
 
-### Gas fees
+### Gas Fee
 
-As with any other transaction, `MsgSend` and `MsgMultiSend` has to pay a gas fee the size of which depends on validator's preferences \(each validator sets his own min-gas-fees\) and the complexity of the transaction. [Notes on gas and fees](node-users.md#a-note-on-gas-and-fees) has a more detailed explanation of how gas is computed. Important detail to note here is that gas fees are specified by the sender when the transaction is outbound.
+As with any other transaction, `MsgSend` and `MsgMultiSend` pay a gas fee the size of which depends on validator's preferences (each validator sets his own min-gas-fees) and the complexity of the transaction. [Notes on gas and fees](node-users.md#a-note-on-gas-and-fees) has a more detailed explanation of how gas is computed. Important detail to note here is that gas fees are specified by the sender when the transaction is outbound.
 
-### Stability fees
+### Stability Fee
 
-Further to the gas fee, the pay module charges a stability fee that is a percentage of the transaction's value. It reads the `tax-rate` and `tax-cap` parameters from the treasury module to compute the amount of stability tax that needs to be charged.
+In addition to the gas fee, the pay module charges a stability fee that is a percentage of the transaction's value. It reads the Tax Rate and Tax Cap parameters from the [`Treasury`](dev-spec-treasury.md) module to compute the amount of stability tax that needs to be charged.
 
-* `tax-rate`: an sdk.Dec object specifying what % of send transactions must be paid in stability fees
-* `tax-cap`: a cap unique to each currency specifying the absolute cap that can be charged in stability fees from a given transaction. 
+The __Tax Rate__ is a parameter agreed upon by the network that specifies the percentage of payment transactions that will be collected as Tax Proceeds in the block reward, which will be distributed among the validators. The distribution model is a bit complicated and explained in detail [here](validator-faq.md#incentives). The taxes collected per transaction cannot exceed the specific __Tax Cap__ defined for that transaction's denomination. Every epoch, the Tax Rate and Tax Caps are recalibrated automatically by the network; see [here](dev-spec-treasury.md#monetary-policy-levers) for more details.
 
 For an example `MsgSend` transaction of 1000 usdr tokens,
 

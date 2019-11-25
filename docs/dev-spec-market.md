@@ -198,7 +198,7 @@ type Params struct {
 Number of blocks it takes for the Terra & Luna pools to naturally "reset" toward equilibrium  ($\delta \to 0$) through automated pool replenishing.
 
 - type: `int64`
-- default value: `14400` (`core.BlocksPerDay`)
+- default value: `core.BlocksPerDay` (1 day)
 
 ### `BasePool`
 
@@ -228,9 +228,9 @@ A fee added on for swap between Terra currencies (spot-trading).
 
 Called when a price for the asset is not registered with the oracle.
 
-### `ErrInsufficientSwapCoins`
+### `ErrInvalidOfferCoin`
 
-Called when not enough coins are being requested for a swap.
+Called when insufficient or too large of quantity of coins are being requested for a swap
 
 ### `ErrRecursiveSwap`
 

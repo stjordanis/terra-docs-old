@@ -7,7 +7,7 @@ The Oracle module provides the Terra blockchain with an up-to-date and accurate 
 
 As price information is extrinsic to the blockchain, the Terra network relies on validators to periodically  vote on the current Luna exchange rate, with the protocol tallying up the results once per `VotePeriod` and updating the on-chain exchange rate as the weighted median of the ballot.
 
-> Since the Oracle service is powered by validators, you may find it interesting to look at the [Staking](#dev-spec-staking) module, which covers the logic for staking and validators.
+> Since the Oracle service is powered by validators, you may find it interesting to look at the [Staking](dev-spec-staking.md) module, which covers the logic for staking and validators.
 {note}
 
 ## Voting Procedure
@@ -24,21 +24,14 @@ Let $P_t$ be the current time interval of duration defined by [`VotePeriod`](#vo
 
   * A [`MsgExchangeRateVote`](#msgexchangeratevote), containing the salt used to create the hash for the prevote submitted in the previous interval $P_{t-1}$.
 
-```text
-Period  |  P1 |  P2 |  P3 |  ...    |
-Prevote |  O  |  O  |  O  |  ...    |
-        |-----\-----\-----\-----    |
-Vote    |     |  O  |  O  |  ...    |
-```
+> A validator that decides to participate in the oracle process **must submit a vote for the Luna exchange rate against every denomination specified in [`Whitelist`](#whitelist) during every `VotePeriod`**. For every `VotePeriod` during which they fail to do so, it is considered a "miss."
+>
+> Participating validators must maintain a valid vote rate of at least [`MinValidPerWindow`](#minvalidperwindow), lest they get their stake slashed (currently set to [0.01%](#slashfraction)) and temporarily jailed.
+{important}
 
 #### Abstaining from Voting
 
 A validator may abstain from voting by submitting a non-positive integer for the `ExchangeRate` field in [`MsgExchangeRateVote`](#msgexchangeratevote). Doing so will absolve them of any penalties for missing `VotePeriod`s, but also disqualify them from receiving Oracle seigniorage rewards for faithful reporting.
-
-> A validator that decides to participate in the oracle process **must submit a vote for the Luna exchange rate against every denomination specified in [`Whitelist`](#whitelist) during every `VotePeriod`**. For every `VotePeriod` during which they fail to do so, it is considered a "miss."
->
-> Participating validators must maintain a valid vote rate of at least [`MinValidPerWindow`](#minvalidperwindow), lest they get their stake slashed (currently set to [0.01%](#slashfraction)) and temporarily jailed.
-{warning}
 
 ### Vote Tally
 
@@ -86,9 +79,9 @@ type MsgExchangeRatePrevote struct {
 
 The exchange rate used in the hash must be the open market exchange rate of Luna, with respect to the denomination matching `Denom`. For example, if `Denom` is `uusd` and the going exchange rate for Luna is 1 USD, then "1" must be used as the exchange rate, as `1 uluna` = `1 uusd`. 
 
-`Feeder` is used if the validator wishes to delegate oracle vote signing to a separate key (who "feeds" the price in lieu of the operator) to de-risk exposing their validator signing key.
+`Feeder` (`terra-` address) is used if the validator wishes to delegate oracle vote signing to a separate key (who "feeds" the price in lieu of the operator) to de-risk exposing their validator signing key.
 
-`Validator` is the validator address of the original validator.
+`Validator` is the validator address (`terravaloper-`) of the original validator.
 
 ### `MsgExchangeRateVote`
 
@@ -279,7 +272,7 @@ The minimum percentage of votes that must be received for a ballot to pass.
 The tolerated error from the final weighted mean exchange rate that can receive rewards.
 
 - type: `sdk.Dec`
-- default value: `sdk.NewDecWithPrec(1, 2)` (1%)
+- default value: `sdk.NewDecWithPrec(5, 2)` (5%)
 
 ### `RewardDistributionWindow`
 

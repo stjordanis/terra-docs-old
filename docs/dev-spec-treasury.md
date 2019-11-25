@@ -5,7 +5,7 @@ title: Treasury
 
 The Treasury module acts as the "central bank" of the Terra economy, measuring macroeconomic activity by [observing indicators](#observed-indicators) and adjusting [monetary policy levers](#monetary-policy-levers) to modulate miner incentives toward stable, long-term growth.
 
-> While the Treasury stabilizes miner demand, the [`Market`](dev-spec-market.md) is responsible for Terra price-stability.
+> While the Treasury stabilizes miner demand through adjusting rewards, the [`Market`](dev-spec-market.md) is responsible for Terra price-stability through arbitrage and market maker.
 {note}
 
 ## Observed Indicators
@@ -27,17 +27,19 @@ The protocol can compute and compare the short-term ([`WindowShort`](#windowshor
 
 - __Tax Rate__ $r$ adjusts the amount of income coming from Terra transactions, limited by [_tax cap_](#tax-caps).
 
-	In order to make sure that unit mining rewards do not stay stagnant, the treasury adds a [`MiningIncrement`](#miningincrement) so mining rewards increase steadily over time, described [here](#kupdatetaxpolicy).
-
 - __Reward Weight__ $w$ which is the portion of seigniorage allocated for the reward pool for the ballot winners for correctly voting within the reward band of the weighted median of exchange rate in the [`Oracle`](dev-spec-oracle.md) module.
 
-	The Treasury observes the portion of burden seigniorage needed to bear the overall reward profile, [`SeigniorageBurdenTarget`](#seigniorageburdentarget), and hikes up rates accordingly, described [here](#kupdaterewardpolicy). 
+### Updating Policies
 
-After `WindowLong` epochs, the Treasury re-calibrates each lever to stabilize unit returns for Luna, thereby ensuring predictable mining rewards from staking. Both [Tax Rate](#tax-rate) and [Reward Weight](#reward-weight) are stored as values in the `KVStore`, and can have their values updated either through passed governance proposals.
+Both [Tax Rate](#tax-rate) and [Reward Weight](#reward-weight) are stored as values in the `KVStore`, and can have their values updated through [governance proposals](#proposal-types) once passed. The Treasury will also re-calibrate each lever once per epoch to stabilize unit returns for Luna, thereby ensuring predictable mining rewards from staking:
+
+- For Tax Rate, in order to make sure that unit mining rewards do not stay stagnant, the treasury adds a [`MiningIncrement`](#miningincrement) so mining rewards increase steadily over time, described [here](#kupdatetaxpolicy).
+
+- For Reward Weight, The Treasury observes the portion of burden seigniorage needed to bear the overall reward profile, [`SeigniorageBurdenTarget`](#seigniorageburdentarget), and hikes up rates accordingly, described [here](#kupdaterewardpolicy).
 
 ### Policy Constraints 
 
-Updates are constrained by the [`TaxPolicy`](#taxpolicy) and [`RewardPolicy`](#rewardpolicy) parameters, respectively. The type `PolicyConstraints` specifies the floor, ceiling, and the max periodic changes for each variable. 
+Policy updates from both governance proposals and automatic calibration are constrained by the [`TaxPolicy`](#taxpolicy) and [`RewardPolicy`](#rewardpolicy) parameters, respectively. The type `PolicyConstraints` specifies the floor, ceiling, and the max periodic changes for each variable. 
 
 ```go
 // PolicyConstraints defines constraints around updating a key Treasury variable

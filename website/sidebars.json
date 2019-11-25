@@ -53,7 +53,7 @@
         ]
       }
     ],
-    "Node Software": [
+    "User Guide": [
       "dev-installation",
       "dev-users",
       "dev-light-client",
@@ -77,21 +77,21 @@
     ],
     "Developer Guide": [
       "dev-getting-started",
-      "dev-client-libraries",
-      "dev-codebase",
+      "dev-architecture",
+      "dev-block-lifecycle",
       {
         "type": "subcategory",
         "label": "CORE MODULES",
         "ids": [
-          "dev-spec-distribution",
-          "dev-spec-staking",
           "dev-spec-auth",
           "dev-spec-bank",
           "dev-spec-supply",
+          "dev-spec-distribution",
+          "dev-spec-staking",
           "dev-spec-oracle",
+          "dev-spec-market",
           "dev-spec-treasury",
-          "dev-spec-governance",
-          "dev-spec-market"
+          "dev-spec-governance"
         ]
       }
     ],
