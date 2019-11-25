@@ -1,6 +1,6 @@
 ---
 id: dev-join-network
-title: Join a network
+title: Join a Network
 ---
 
 > See the [testnet repo](https://github.com/terra-project/networks) for information on the latest testnet, including the correct version of the Terra Core to use and details about the genesis file.

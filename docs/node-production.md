@@ -1,6 +1,6 @@
 ---
 id: dev-production
-title: Run a node for production
+title: Production Settings
 ---
 In this section, we will talk about how to run a node for production. At the moment we will focus on Linux (RPM based) only.
 
