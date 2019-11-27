@@ -168,20 +168,6 @@ $$ \delta_{t+1} = \delta_{t} - (\delta_{t}/{pr}) $$
 
 This allows the network to sharply increase spread fees in during acute price fluctuations, and automatically return the spread to normal after some time when the price change is long term.
 
-## Events
-
-The Market module emits the following events
-
-### `swap`
-
-| Key | Value |
-| :-- | :-- |
-| `"offer"` | offered coins |
-| `"trader"` | trader's address |
-| `"swap_coin"` | swapped coins |
-| `"swap_fee"` | spread fee |
-
-
 ## Parameters
 
 ```go
@@ -220,6 +206,19 @@ A fee added on for swap between Terra currencies (spot-trading).
 
 - type: `sdk.Dec`
 - default value: `sdk.NewDecWithPrec(25, 4)` (0.25%)
+
+## Events
+
+The Market module emits the following events
+
+### `swap`
+
+| Key | Value |
+| :-- | :-- |
+| `"offer"` | offered coins |
+| `"trader"` | trader's address |
+| `"swap_coin"` | swapped coins |
+| `"swap_fee"` | spread fee |
 
 
 ## Errors

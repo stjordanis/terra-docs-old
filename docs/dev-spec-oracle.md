@@ -16,10 +16,6 @@ During each [`VotePeriod`](#voteperiod), the Oracle module obtains consensus on 
 
 Validators must first pre-commit to a exchange rate, then in the subsequent `VotePeriod` submit and reveal their exchange rate alongside a proof that they had pre-commited at that price. This scheme forces the voter to commit to a submission before knowing the votes of others and thereby reduces centralization and free-rider risk in the Oracle.
 
-#### Abstaining from Voting
-
-A validator may abstain from voting by submitting a non-positive integer for the `ExchangeRate` field in [`MsgExchangeRateVote`](#msgexchangeratevote). Doing so will absolve them of any penalties for missing `VotePeriod`s, but also disqualify them from receiving Oracle seigniorage rewards for faithful reporting.
-
 ### Prevote and Vote
 
 Let $P_t$ be the current time interval of duration defined by [`VotePeriod`](#voteperiod)(currently set to 30 seconds) during which validators must submit two messages: 
@@ -40,7 +36,7 @@ Denominations receiving fewer than [`VoteThreshold`](#votethreshold) total votin
 
 ### Ballot Rewards
 
-After the votes are tallied, the winners of the ballots are determined (see [`tally()`](#tally)).
+After the votes are tallied, the winners of the ballots are determined with [`tally()`](#tally).
 
 Voters that have managed to vote within a narrow band around the weighted median, are rewarded with a portion of the collected seigniorage. See [`k.RewardBallotWinners()`](#krewardballotwinners) for more details.
 
@@ -54,11 +50,15 @@ Voters that have managed to vote within a narrow band around the weighted median
 
 A `VotePeriod` during which either of the following events occur is considered a "miss":
 
-- The validator fails to submits a vote for Luna exchange rate against **every** denomination specified in[`Whitelist`](#whitelist)
+- The validator fails to submits a vote for Luna exchange rate against **each and every** denomination specified in[`Whitelist`](#whitelist).
 
-- The validator fails to vote within the reward band around the weighted median for one or more denominations
+- The validator fails to vote within the reward band around the weighted median for one or more denominations.
 
 During every [`SlashWindow`](#slashwindow), participating validators must maintain a valid vote rate of at least [`MinValidPerWindow`](#minvalidperwindow) (5%), lest they get their stake slashed (currently set to [0.01%](#slashfraction)). The slashed validator is automatically temporarily "jailed" by the protocol (to protect the funds of delegators), and the operator is expected to fix the discrepancy promptly to resume validator participation.
+
+#### Abstaining from Voting
+
+A validator may abstain from voting by submitting a non-positive integer for the `ExchangeRate` field in [`MsgExchangeRateVote`](#msgexchangeratevote). Doing so will absolve them of any penalties for missing `VotePeriod`s, but also disqualify them from receiving Oracle seigniorage rewards for faithful reporting.
 
 
 ## Message Types
@@ -238,7 +238,7 @@ At the end of every block, the Oracle module checks whether it's the last block 
     - Set the Luna exchange rate on the blockchain for that Luna<>`denom` with `k.SetLunaExchangeRate()`
     - Emit a [`exchange_rate_update`](#exchange_rate_update) event
 
-5. Count up the validators who missed the Oracle vote and increase the appropriate miss counters
+5. Count up the validators who [missed](#slashing) the Oracle vote and increase the appropriate miss counters
 
 6. If at the end of a [`SlashWindow`](#slashwindow), penalize validators who have missed more than the penalty threshold (submitted fewer valid votes than [`MinValidPerWindow`](#minvalidperwindow))
 

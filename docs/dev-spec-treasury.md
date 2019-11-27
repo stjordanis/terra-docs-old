@@ -271,18 +271,6 @@ If the blockchain is at the final block of the epoch, the following procedure is
 
 6. Finally, record the Luna issuance with [`k.RecordEpochInitialIssuance()`](#epoch-initial-issuance). This will be used in calculating the seigniorage for the next epoch.
 
-## Events
-
-The Treasury module emits the following events:
-
-### `policy_update`
-
-| Key | Value |
-| :-- | :-- |
-| `"tax_rate"` | tax rate |
-| `"reward_weight"` | reward weight |
-| `"tax_cap"` | tax cap |
-
 ## Parameters
 
 ```go
@@ -363,6 +351,18 @@ A number of epochs that specifies a time interval for calculating long-term movi
 - default value: `12` (3 months = 12 weeks)
 
 A number of epochs that specifies a time interval for the probationary period.
+
+## Events
+
+The Treasury module emits the following events:
+
+### `policy_update`
+
+| Key | Value |
+| :-- | :-- |
+| `"tax_rate"` | tax rate |
+| `"reward_weight"` | reward weight |
+| `"tax_cap"` | tax cap |
 
 ## Errors
 
