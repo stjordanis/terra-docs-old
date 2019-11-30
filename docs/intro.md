@@ -4,21 +4,27 @@ title: Terra Documentation
 sidebar_label: Introduction
 ---
 
-Welcome to the official Terra documentation.
+Welcome to the official Terra documentation. Terra is currently running [**Columbus-3 Mainnet**](columbus3.md), the latest iteration of the network which brings many new features and breaking changes, requiring a hard fork. Please read up there to keep up-to-date.
 
 ## What is Terra?
 
 Put simply, Terra is a new cryptocurrency that is:
 
-* **price-stable** through an an algorithmically-enforced elastic monetary policy
+* **price-stable** through an algorithmically-enforced elastic monetary policy that pivots miner incentives toward stable, consistent growth.
 
 * **decentralized** meaning it isn't tied to one government's currency like Tether or TrueUSD, and retains all of the censorship resistance of Bitcoin
 
 * **focused on user-adoption and growth**, and is already being used by thousands of retail consumers throughout Korea and Southeast Asia.
 
-## Documentation Overview
+## Official Networks
 
-- [**Columbus-3 Mainnet**](columbus3.md) is the latest iteration of the Terra blockchain network and brings many new features and breaking changes, requiring a hard fork. Learn what's new and how to upgrade there.
+| Network | Type | Faucet | Description |
+| :-- | :-- | :-- | :-- |
+| `columbus-3` | Mainnet | n/a | Public mainnet for production |
+| `soju-0012` | Testnet | [here](https://soju-faucet.terra.money/) | Columbus-3 Testnet |
+| `vodka` | Testnet | [here](https://faucet.terra.money/) | Columbus-2 Testnet with Fast Tally on [SNA](https://forum.cosmos.network/t/sentry-node-architecture-overview/454) |
+
+## Documentation Overview
 
 - [**Terra Protocol**]() presents a high-level overview of how the Terra decentralized stablecoin works, and mechanisms. Start here if you are new to Terra.
 

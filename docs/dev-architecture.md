@@ -37,3 +37,37 @@ The node software is organized into individual modules that implement different 
 12. `crisis` - reports consensus failure state with proof to halt the chain
 13. `genutil` - handles `gentx` commands
     - filter and handle `MsgCreateValidator` messages
+
+## Process Flows
+
+### Block Lifecycle
+
+The following processes get executed during each block transition:
+
+#### Begin Block
+
+- Distribution
+
+- Slashing
+
+#### Process Messages
+
+#### End Block
+
+- Crisis
+
+- Oracle
+    - If at the end of `VotePeriod`, run [Voting Procedure](dev-spec-oracle.md#voting-procedure) and **update Luna Exchange Rate**.
+    - If at the end of `SlashWindow`, **penalize validators** who [missed](dev-spec-oracle.md#slashing) more `VotePeriod`s than permitted.
+
+- Governance
+
+
+- Market
+    - [Replenish](dev-spec-market.md#end-block) liquidity pools, **allowing spread fees to decrease**.
+
+- Treasury 
+    - If at the end of `epoch`, update indicators, mint seigniorage, and recalibrate monetary policy levers (tax-rate, reward-weight) for the next epoch.
+
+- Staking
+

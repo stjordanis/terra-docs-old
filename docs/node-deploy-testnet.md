@@ -1,6 +1,6 @@
 ---
 id: dev-deploy-testnet
-title: Deploy a testnet
+title: Deploy a Testnet
 ---
 
 This document describes 3 ways to setup a network of `terrad` nodes, each serving a different usecase:

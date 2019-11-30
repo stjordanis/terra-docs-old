@@ -81,7 +81,7 @@ The following steps need to be performed on an un-initialized ledger device:
 
 Your ledger is now correctly set up with your fundraiser mnemonic! Do not lose this mnemonic! If your ledger is compromised, you can always restore a new device again using the same mnemonic.
 
-Next, click [here](users.md#using-a-ledger-device) to learn how to generate an account.
+Next, click [here](#using-a-ledger-device) to learn how to generate an account.
 
 #### On a computer
 
@@ -184,13 +184,13 @@ In order to query the state and send transactions, you need a way to access the 
 
 This is the most secure option, but comes with relatively high resource requirements. In order to run your own full-node, you need good bandwidth and at least 1TB of disk space.
 
-You will find the tutorial on how to install `terrad` [here](installation.md), and the guide to run a full-node [here](join-network.md).
+You will find the tutorial on how to install `terrad` [here](node-installation.md), and the guide to run a full-node [here](node-join-network.md).
 
 ### Connecting to a remote full-node
 
 If you do not want or cannot run your own node, you can connect to someone else's full-node. You should pick an operator you trust, because a malicious operator could return incorrect query results or censor your transactions. However, they will never be able to steal your funds, as your private keys are stored locally on your computer or ledger device. Possible options of full-node operators include validators, wallet providers or exchanges.
 
-In order to connect to the full-node, you will need an address of the following form: `https://77.87.106.33:26657` \(_Note: This is a placeholder_\). This address has to be communicated by the full-node operator you choose to trust. You will use this address in the [following section](users.md#setting-up-terracli).
+In order to connect to the full-node, you will need an address of the following form: `https://77.87.106.33:26657` \(_Note: This is a placeholder_\). This address has to be communicated by the full-node operator you choose to trust. You will use this address in the [following section](#setting-up-terracli).
 
 ## Setting up `terracli`
 
@@ -233,7 +233,7 @@ terracli config chain-id gos-6
 
 ## Querying the state
 
-> Before you can bond luna and withdraw rewards, you need to [set up](users.md#setting-up-terracli) `terracli`.
+> Before you can bond luna and withdraw rewards, you need to [set up](#setting-up-terracli) `terracli`.
 {important}
 
 `terracli` lets you query all relevant information from the blockchain, like account balances, amount of bonded tokens, outstanding rewards, and more. Next is a list of the most useful commands for delegator.

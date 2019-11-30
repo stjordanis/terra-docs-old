@@ -78,7 +78,7 @@
         "ids": [
           "validator-getting-started",
           "validator-security",
-          "validator-troubleshooting"
+          "validator-oracle"
         ]
       }
     ],
@@ -90,7 +90,6 @@
         "ids": [
           "dev-architecture",
           "dev-conventions",
-          "dev-process-flows"
         ]
       },
       {

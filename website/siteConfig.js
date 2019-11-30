@@ -57,8 +57,8 @@ const siteConfig = {
     'https://buttons.github.io/buttons.js',
     'https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js',
     '/js/code-block-buttons.js',
-    '/js/viz.js',
-    '/js/render-graphs.js'
+  //  '/js/viz.js',
+  //  '/js/render-graphs.js'
   ],
 
   stylesheets: [

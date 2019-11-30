@@ -20,6 +20,7 @@ const plantuml = (md) => {
 };
 
 
+/*
 function replaceGraphvizSnippets(token) {
     if (token.type === 'fence' && token.params === 'graphviz') {
         token.type = 'htmlblock';
@@ -28,6 +29,7 @@ function replaceGraphvizSnippets(token) {
     }
 }
 
+
 const graphviz = (md) => {
     md.core.ruler.after('block', 'graphviz', (state) => {
         state.tokens.forEach((token) => {
@@ -35,6 +37,7 @@ const graphviz = (md) => {
         });
     });
 }
+*/
 
 const classy = require("remarkable-classy");
 
@@ -42,6 +45,6 @@ module.exports = [
     katex,
     template,
     plantuml,
-    graphviz,
+   // graphviz,
     classy
 ];
