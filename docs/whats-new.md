@@ -1,9 +1,9 @@
 ---
 id: whats-new
-title: What's New?
+title: Columbus-3 Mainnet
 ---
 
-The latest iteration of the Terra protocol is the Columbus-3 Mainnet, released on __. It brings several new features and breaking changes.
+The latest iteration of the Terra protocol is the Columbus-3 Mainnet, released on __. It required a hard-fork from Columbus-2, and upgrades the network with several new features and breaking changes.
 
 ## Increased Utility For Luna
 

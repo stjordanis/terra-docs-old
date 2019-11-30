@@ -184,9 +184,9 @@ func (k Keeper) UpdateIndicators(ctx sdk.Context)
 
 This function gets run at the end of an epoch $t$ and records the current values of tax rewards $T$, seigniorage rewards $S$, and total staked Luna $\lambda$ as the historic indicators for epoch $t$ before moving to the next epoch $t+1$.
 
-- $T_t$ is the current value in `TaxProceeds
+- $T_t$ is the current value in [`TaxProceeds`](#tax-proceeds)
 - $S_t = \Sigma * w$, with epoch seigniorage $\Sigma$ and reward weight $w$.
-- $\lambda$ is simply the result of `staking.TotalBondedTokens()`
+- $\lambda_t$ is simply the result of `staking.TotalBondedTokens()`
 
 ### `k.UpdateTaxPolicy()`
 
