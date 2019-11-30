@@ -3,7 +3,7 @@ id: dev-spec-supply
 title: Supply
 ---
 
-> Terra's Supply module inherits from Cosmos SDK's [`supply`](https://github.com/cosmos/cosmos-sdk/tree/v0.37.4/docs/spec/supply) module.
+> Terra's Supply module inherits from Cosmos SDK's [`supply`](https://github.com/cosmos/cosmos-sdk/tree/v0.37.4/docs/spec/supply) module. This document is a stub, and covers mainly important Terra-specific notes about how it is used.
 {note}
 
 ## Overview

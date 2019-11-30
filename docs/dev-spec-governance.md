@@ -3,7 +3,7 @@ id: dev-spec-governance
 title: Governance
 ---
 
-> Terra's Governance module inherits from Cosmos SDK's [`gov`](https://github.com/cosmos/cosmos-sdk/tree/v0.37.4/docs/spec/governance) module.
+> Terra's Governance module inherits from Cosmos SDK's [`gov`](https://github.com/cosmos/cosmos-sdk/tree/v0.37.4/docs/spec/governance) module. This document is a stub, and covers mainly important Terra-specific notes about how it is used.
 {note}
 
 The Budget module governs how a portion of Terra seigniorage can be deployed via a distributed governance of Terra validators to drive Terra's adoption.

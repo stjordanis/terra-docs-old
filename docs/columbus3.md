@@ -3,11 +3,19 @@ id: columbus3
 title: Columbus-3 Mainnet
 ---
 
-The latest iteration of the Terra protocol is the Columbus-3 Mainnet, released on __. It required a hard-fork from Columbus-2, and upgrades the network with several new features and breaking changes.
+The latest iteration of the Terra protocol is the Columbus-3 Mainnet, released on Dec 1, 2019. It required a hard-fork from Columbus-2, and upgrades the network with several new features and breaking changes.
 
 ## Upgrading from Columbus-2
 
+Instructions for upgrading from core@v0.2.6 can be found [here](https://github.com/terra-project/launch/wiki/Columbus-3-Upgrade-Instructions).
 
+### Recovering `old-hd-path` wallets
+
+From the initial Columbus launch, we had used the same `CoinType` as ATOM (118). However, with this release, Terra now uses the `CoinType` Luna (330). Users will not be able to recover `118` CoinType keys using the Columbus-3 `terracli`, and will have to perform the following steps:
+
+1. Download core@v0.2.1,  recover keys, and upgrade core to latest
+
+2. Export keystore with latest core's `terracli` and import keystore in a new location
 
 ## What's New?
 

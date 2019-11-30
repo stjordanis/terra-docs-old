@@ -281,7 +281,7 @@ The minimum percentage of votes that must be received for a ballot to pass.
 The tolerated error from the final weighted mean exchange rate that can receive rewards.
 
 - type: `sdk.Dec`
-- default value: `sdk.NewDecWithPrec(5, 2)` (5%)
+- default value: `sdk.NewDecWithPrec(7, 2)` (7%)
 
 ### `RewardDistributionWindow`
 

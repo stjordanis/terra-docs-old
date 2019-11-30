@@ -3,7 +3,7 @@ id: dev-spec-bank
 title: Bank
 ---
 
-> Terra's Bank module inherits from Cosmos SDK's [`bank`](https://github.com/cosmos/cosmos-sdk/tree/v0.37.4/docs/spec/bank) module.
+> Terra's Bank module inherits from Cosmos SDK's [`bank`](https://github.com/cosmos/cosmos-sdk/tree/v0.37.4/docs/spec/bank) module. This document is a stub, and covers mainly important Terra-specific notes about how it is used.
 {note}
 
 The Bank module is the base transactional layer of the Terra blockchain: it allows assets to be sent from one `Account` to another.
