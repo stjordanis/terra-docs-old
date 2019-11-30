@@ -3,18 +3,18 @@ id: dev-deploy-testnet
 title: Deploy a Testnet
 ---
 
-This document describes 3 ways to setup a network of `terrad` nodes, each serving a different usecase:
+This document describes 3 different ways of setting up a testnet of `terrad` nodes, each with a different usecase:
 
-1. Single-node, local, manual testnet
-2. Multi-node, local, automated testnet
-3. Multi-node, remote, automated testnet
+1. Single node, local, manual testnet
+2. Multiple nodes, local, automated testnet
+3. Multiple nodes, remote, automated testnet
 
 Supporting code can be found in the [networks directory](https://github.com/terra-project/core/tree/develop/networks) and additionally the `local` or `remote` sub-directories.
 
 > The `remote` network bootstrapping may be out of sync with the latest releases and is not to be relied upon.
 {note}
 
-## Single-node, local, manual testnet
+## Single node, local, manual testnet
 
 This guide helps you create a single validator node that runs a network locally for testing and other development related uses.
 
@@ -52,7 +52,7 @@ terrad start
 
 This setup puts all the data for `terrad` in `~/.terrad`. You can examine the genesis file you created at `~/.terrad/config/genesis.json`. With this configuration `terracli` is also ready to use and has an account with tokens \(both staking and custom\).
 
-## Multi-node, local, automated testnet
+## Multiple nodes, local, automated testnet
 
 From the [networks/local directory](https://github.com/terra-project/core/tree/develop/networks/local):
 
@@ -167,14 +167,14 @@ Now that accounts exists, you may create new accounts and send those accounts fu
 
 ### Special binaries
 
-If you have multiple binaries with different names, you can specify which one to run with the BINARY environment variable. The path of the binary is relative to the attached volume. For example:
+If you have multiple binaries with different names, you can specify which one to run with the `BINARY` environment variable. The path of the binary is relative to the attached volume. For example:
 
 ```text
 # Run with custom binary
 BINARY=terrafoo make localnet-start
 ```
 
-## Multi-node, remote, automated testnet
+## Multiple nodes, remote, automated testnet
 
 The following should be run from the [networks directory](https://github.com/terra-project/core/tree/develop/networks).
 
@@ -205,7 +205,7 @@ These will be used by both `terraform` and `ansible`.
 SERVERS=1 REGION_LIMIT=1 make validators-start
 ```
 
-The testnet name is what's going to be used in --chain-id, while the cluster name is the administrative tag in AWS for the servers. The code will create SERVERS amount of servers in each availability zone up to the number of REGION\_LIMITs, starting at us-east-2. \(us-east-1 is excluded.\) The below BaSH script does the same, but sometimes it's more comfortable for input.
+The testnet name is what's going to be used in `--chain-id`, while the cluster name is the administrative tag in AWS for the servers. The code will create `SERVERS` amount of servers in each availability zone up to the number of `REGION_LIMIT`s, starting at `us-east-2`. (`us-east-1` is excluded.) The below BaSH script does the same, but sometimes it's more comfortable for input.
 
 ```text
 ./new-testnet.sh "$TESTNET_NAME" "$CLUSTER_NAME" 1 1
@@ -225,7 +225,7 @@ make validators-stop
 
 ### Logging
 
-You can ship logs to Logz.io, an Elastic stack \(Elastic search, Logstash and Kibana\) service provider. You can set up your nodes to log there automatically. Create an account and get your API key from the notes on [this page](https://app.logz.io/#/dashboard/data-sources/Filebeat), then:
+You can ship logs to Logz.io, an Elastic Stack \(Elasticsearch, Logstash and Kibana\) service provider. You can set up your nodes to log there automatically. Create an account and get your API key from the notes on [this page](https://app.logz.io/#/dashboard/data-sources/Filebeat), then:
 
 ```text
 yum install systemd-devel || echo "This will only work on RHEL-based systems."

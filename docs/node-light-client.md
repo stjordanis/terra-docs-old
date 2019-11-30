@@ -4,16 +4,16 @@ title: Light Client Daemon (LCD REST Server)
 sidebar_label: Light Client Daemon
 ---
 
-The Light Client Daemon (LCD), also known as "Terra-Lite", is a REST server that enables other applications and services to interact with your local running `terrad` instance and interact the Terra network through HTTP. To start LCD, we need to specify the following parameters:
+The Light Client Daemon (LCD), also known as "Terra-Lite", is a REST server that enables other applications and services to communicate with your local running `terrad` instance and interact the Terra network through HTTP. To start the LCD, you'll need to specify the following parameters:
 
 
 | Parameter   | Type      | Default                 | Required | Description                                          |
 | ----------- | --------- | ----------------------- | -------- | ---------------------------------------------------- |
-| chain-id    | string    | null                    | true     | chain id of the full node to connect                 |
-| node        | URL       | "tcp://localhost:46657" | true     | address of the full node to connect                  |
-| laddr       | URL       | "tcp://localhost:1317"  | true     | address to run the rest server on                    |
-| trust-node  | bool      | "false"                 | true     | Whether this LCD is connected to a trusted full node |
-| trust-store | DIRECTORY | "$HOME/.lcd"            | false    | directory for save checkpoints and validator sets    |
+| `chain-id`    | string    | `""`                    | true     | chain id of the full node to connect                 |
+| `node`        | URL       | `tcp://localhost:46657` | true     | address of the full node to connect                  |
+| `laddr`       | URL       | `tcp://localhost:1317`  | true     | address for the REST server to listen to requests    |
+| `trust-node`  | bool      | `false`                 | true     | whether this LCD is connected to a trusted full node |
+| `trust-store` | path      | `$HOME/.lcd`            | false    | directory for save checkpoints and validator sets    |
 
 For example:
 

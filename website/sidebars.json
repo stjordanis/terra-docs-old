@@ -5,51 +5,29 @@
       "columbus3"
     ],
     "Terra Protocol": [
-      "dev-what-is-terra",
       "dev-how-terra-works",
+      "dev-devguide",
       {
         "type": "subcategory",
-        "label": "BASICS",
+        "label": "CODEBASE",
         "ids": [
-          "dev-accounts-wallets",
-          "dev-transaction"
+          "dev-architecture",
+          "dev-conventions"
         ]
       },
       {
         "type": "subcategory",
-        "label": "MINING & CONSENSUS",
+        "label": "MODULE SPECS",
         "ids": [
-          "dev-dpos",
-          "dev-luna-staking",
-          "dev-validators",
-          "dev-price-oracle"
-        ]
-      },
-      {
-        "type": "subcategory",
-        "label": "STABILITY",
-        "ids": [
-          "dev-monetary-policy",
-          "dev-subcurrencies",
-          "dev-stabilization",
-          "dev-miner-incentives"
-        ]
-      },
-      {
-        "type": "subcategory",
-        "label": "ADOPTION",
-        "ids": [
-          "dev-fiscal-policy",
-          "dev-treasury",
-          "dev-governance",
-          "dev-dapp-platform"
-        ]
-      },
-      {
-        "type": "subcategory",
-        "label": "TERRA VS. ...",
-        "ids": [
-          "dev-comparison"
+          "dev-spec-auth",
+          "dev-spec-bank",
+          "dev-spec-supply",
+          "dev-spec-distribution",
+          "dev-spec-staking",
+          "dev-spec-oracle",
+          "dev-spec-market",
+          "dev-spec-treasury",
+          "dev-spec-governance"
         ]
       }
     ],
@@ -79,32 +57,6 @@
           "validator-getting-started",
           "validator-security",
           "validator-oracle"
-        ]
-      }
-    ],
-    "Developer Guide": [
-      "dev-getting-started",
-      {
-        "type": "subcategory",
-        "label": "CODEBASE",
-        "ids": [
-          "dev-architecture",
-          "dev-conventions"
-        ]
-      },
-      {
-        "type": "subcategory",
-        "label": "MODULE SPECS",
-        "ids": [
-          "dev-spec-auth",
-          "dev-spec-bank",
-          "dev-spec-supply",
-          "dev-spec-distribution",
-          "dev-spec-staking",
-          "dev-spec-oracle",
-          "dev-spec-market",
-          "dev-spec-treasury",
-          "dev-spec-governance"
         ]
       }
     ],
