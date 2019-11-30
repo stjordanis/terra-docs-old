@@ -6,6 +6,8 @@ sidebar_label: Introduction
 
 Welcome to the official Terra documentation.
 
+- [**Columbus-3 Mainnet**]() is the latest iteration of the Terra blockchain network and brings many new features and breaking changes, requiring a hard fork. Learn what's new and how to upgrade there.
+
 - [**Terra Protocol**]() presents a high-level overview of how the Terra decentralized stablecoin works, and mechanisms. Start here if you are new to Terra.
 
 - [**User Manual**]() covers how to interact with the Terra blockchain and participate in the network either as simply a user or a validator by running Terra Core, the official node software.
