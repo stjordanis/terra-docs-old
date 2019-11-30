@@ -5,6 +5,10 @@ title: Columbus-3 Mainnet
 
 The latest iteration of the Terra protocol is the Columbus-3 Mainnet, released on __. It required a hard-fork from Columbus-2, and upgrades the network with several new features and breaking changes.
 
+## Upgrading from Columbus-2
+
+
+
 ## What's New?
 
 See the upgraded genesis parameters [here](https://github.com/terra-project/launch/tree/master/columbus-3).

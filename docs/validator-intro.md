@@ -1,6 +1,6 @@
 ---
 id: validator-intro
-title: Validator Guide
+title: Validator Handbook
 sidebar_label: Introduction
 ---
 
