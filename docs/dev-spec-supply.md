@@ -6,52 +6,66 @@ title: Supply
 > Terra's Supply module inherits from Cosmos SDK's [`supply`](https://github.com/cosmos/cosmos-sdk/tree/v0.37.4/docs/spec/supply) module. This document is a stub, and covers mainly important Terra-specific notes about how it is used.
 {note}
 
-## Overview
+The Supply module passively tracks the total supply of all coins Terra and Luna within the blockchain, provides a way for modules to hold and interact with a balance of Coins, and introduces an invariant check to verify the Terra protocol's total supply.
 
-### Mint
+> This was taken from the official Cosmos SDK docs, and placed here for your convenience to understand the Supply module.
+
+## Total Supply
+
+The total `Supply` of the network is equal to the sum of all coins from the
+account. The total supply is updated every time a `Coin` is minted (eg: as part
+of the inflation mechanism) or burned (eg: due to slashing or if a governance
+proposal is vetoed).
+
+## Module Accounts
+
+The supply module introduces a new type of `auth.Account` which can be used by
+modules to allocate tokens and in special cases mint or burn tokens.  At a base
+level these module accounts are capable of sending/receiving tokens to and from
+`auth.Account`s and other module accounts.  This design replaces previous
+alternative designs where, to hold tokens, modules would burn the incoming
+tokens from the sender account, and then track those tokens internally. Later,
+in order to send tokens, the module would need to effectively mint tokens
+within a destination account. The new design removes duplicate logic between
+modules to perform this accounting.
+
+The `ModuleAccount` interface is defined as follows:
 
 ```go
-// Mint credits {coin} to the {recipient} account, and reflects the increase in issuance
-func (k Keeper) Mint(ctx sdk.Context, recipient sdk.AccAddress, coin sdk.Coin) (err sdk.Error) {
-
-    _, _, err = k.bk.AddCoins(ctx, recipient, sdk.Coins{coin})
-    if err != nil {
-        return err
-    }
-
-    ...
-
-    return k.ChangeIssuance(ctx, coin.Denom, coin.Amount)
+type ModuleAccount interface {
+  auth.Account               // same methods as the Account interface
+  GetName() string           // name of the module; used to obtain the address
+  GetPermissions() []string  // permissions of module account
+  HasPermission(string) bool
 }
 ```
 
-Every time Mint is called, the issuance of the coin is incremented in the state.
+> Any module or message handler that allows either direct or indirect sending of funds must explicitly guarantee those funds cannot be sent to module accounts (unless allowed).
+{warning}
 
-### Burn
+The supply `Keeper` also introduces new wrapper functions for the auth `Keeper`
+and the bank `Keeper` that are related to `ModuleAccount`s in order to be able
+to:
 
-```go
-// Burn deducts {coin} from the {payer} account, and reflects the decrease in issuance
-func (k Keeper) Burn(ctx sdk.Context, payer sdk.AccAddress, coin sdk.Coin) (err sdk.Error) {
-    _, _, err = k.bk.SubtractCoins(ctx, payer, sdk.Coins{coin})
-    if err != nil {
-        return err
-    }
+- Get and set `ModuleAccount`s by providing the `Name`.
+- Send coins from and to other `ModuleAccount`s or standard `Account`s
+  (`BaseAccount` or `VestingAccount`) by passing only the `Name`.
+- `Mint` or `Burn` coins for a `ModuleAccount` (restricted to its permissions).
 
-    ...
+## Permissions
 
-    return k.ChangeIssuance(ctx, coin.Denom, coin.Amount.Neg())
-}
-```
+Each `ModuleAccount` has a different set of permissions that provide different
+object capabilities to perform certain actions. Permissions need to be
+registered upon the creation of the supply `Keeper` so that every time a
+`ModuleAccount` calls the allowed functions, the `Keeper` can lookup the
+permissions to that specific account and perform or not the action.
 
-Every time Burn is called, the issuance of the coin is decremented in the state.
+The available permissions are:
 
-### GetIssuance
+- `Minter`: allows for a module to mint a specific amount of coins.
+- `Burner`: allows for a module to burn a specific amount of coins.
+- `Staking`: allows for a module to delegate and undelegate a specific amount of coins.
 
-```go
-func (k Keeper) GetIssuance(ctx sdk.Context, denom string, day sdk.Int) (issuance sdk.Int)
-```
+## Parameters
 
-GetIssuance fetches the total issuance count of the coin matching `denom` for the `day`. If the `day` applies to a previous period, fetches the last stored snapshot issuance of the coin. For virgin calls, iterates through the accountkeeper and computes the genesis issuance.
-
-For day 0, seigniorage is not recorded as mint mint starts its issuance memory from day 0.
-
+The Supply module has no parameters.

@@ -248,6 +248,8 @@ At the end of every block, the Oracle module checks whether it's the last block 
 
 ## Parameters
 
+The subspace for the Oracle module is `oracle`.
+
 ```go
 // Params oracle parameters
 type Params struct {

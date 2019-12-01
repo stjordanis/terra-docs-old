@@ -273,6 +273,8 @@ If the blockchain is at the final block of the epoch, the following procedure is
 
 ## Parameters
 
+The subspace for the Treasury module is `treasury`.
+
 ```go
 type Params struct {
 	TaxPolicy               PolicyConstraints `json:"tax_policy" yaml:"tax_policy"`

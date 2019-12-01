@@ -8,15 +8,16 @@ title: Distribution
 
 The `Distribution` module describes a mechanism that keeps track of collected fees and *passively* distributes them to validators and delegators. In addition, the Distribution module also defines the [Community Pool](#community-pool), which are funds under the control of on-chain Governance.
 
-## Validator and Delegator Rewards
+## Validator & Delegator Rewards
 
 > Passive distribution means that validators and delegators will have to manually collect their fee rewards by submitting withdrawal transactions. Read up on how to do so with `terracli` [here](node-terracli.md#distribution).
+{important}
 
 Collected rewards are pooled globally and divided out passively to validators and delegators. Each validator has the opportunity to charge commission to the delegators on the rewards collected on behalf of the delegators. Fees are collected directly into a global reward pool and validator proposer-reward pool. Due to the nature of passive accounting, whenever changes to parameters which affect the rate of reward distribution occurs, withdrawal of rewards must also occur.
 
 ## Community Pool
 
-The Community Pool is a reserve of tokens that is designated for funding projects that promote further adoption and stimulate growth for the Terra economy. The portion of seigniorage that is designated for ballot winners of the Exchange Rate Oracle is called the Reward Weight, a value governed by the [Treasury](dev-spec-treasury.md#reward-weight). The rest of that seigniorage is all dedicated to the Community Pool.
+The Community Pool is a reserve of tokens that is designated for funding projects that promote further adoption and stimulate growth for the Terra economy. The portion of seigniorage that is designated for ballot winners of the Exchange Rate Oracle is called the [Reward Weight](dev-spec-treasury.md#reward-weight), a value governed by the Treasury. The rest of that seigniorage is all dedicated to the Community Pool.
 
 ## Governance Proposals
 
@@ -32,3 +33,142 @@ type CommunityPoolSpendProposal struct {
 	Amount      sdk.Coins      `json:"amount" yaml:"amount"`
 }
 ```
+
+## State
+
+> This section was taken from the official Cosmos SDK docs, and placed here for your convenience to understand the Distribution module's parameters and genesis variables.
+
+### FeePool
+
+All globally tracked parameters for distribution are stored within
+`FeePool`. Rewards are collected and added to the reward pool and
+distributed to validators/delegators from here.
+
+Note that the reward pool holds decimal coins (`DecCoins`) to allow
+for fractions of coins to be received from operations like inflation.
+When coins are distributed from the pool they are truncated back to
+`sdk.Coins` which are non-decimal.
+
+- FeePool:  `0x00 -> amino(FeePool)`
+
+```golang
+// coins with decimal
+type DecCoins []DecCoin
+
+type DecCoin struct {
+    Amount sdk.Dec
+    Denom  string
+}
+
+type FeePool struct {
+    TotalValAccumUpdateHeight  int64    // last height which the total validator accum was updated
+    TotalValAccum              sdk.Dec  // total valdator accum held by validators
+    Pool                       DecCoins // funds for all validators which have yet to be withdrawn
+    CommunityPool              DecCoins // pool for community funds yet to be spent
+}
+```
+
+### Validator Distribution
+
+Validator distribution information for the relevant validator is updated each time:
+
+ 1. delegation amount to a validator is updated,
+ 2. a validator successfully proposes a block and receives a reward,
+ 3. any delegator withdraws from a validator, or
+ 4. the validator withdraws it's commission.
+
+- ValidatorDistInfo:  `0x02 | ValOperatorAddr -> amino(validatorDistribution)`
+
+```golang
+type ValidatorDistInfo struct {
+    FeePoolWithdrawalHeight     int64    // last height this validator withdrew from the global fee pool
+    Pool                       DecCoins // rewards owed to delegators, commission has already been charged (includes proposer reward)
+    PoolCommission             DecCoins // commission collected by this validator (pending withdrawal) 
+
+    TotalDelAccumUpdateHeight  int64    // last height which the total delegator accum was updated
+    TotalDelAccum              sdk.Dec  // total proposer pool accumulation factor held by delegators
+}
+```
+
+### Delegation Distribution
+
+Each delegation distribution only needs to record the height at which it last
+withdrew fees. Because a delegation must withdraw fees each time it's
+properties change (aka bonded tokens etc.) its properties will remain constant
+and the delegator's _accumulation_ factor can be calculated passively knowing
+only the height of the last withdrawal and its current properties.
+
+- DelegationDistInfo: `0x02 | DelegatorAddr | ValOperatorAddr -> amino(delegatorDist)`
+
+```golang
+type DelegationDistInfo struct {
+    WithdrawalHeight int64    // last time this delegation withdrew rewards
+}
+```
+
+## Transitions
+
+### Begin Block
+
+> This section was taken from the official Cosmos SDK docs, and placed here for your convenience to understand the Distribution module's parameters.
+
+At the beginning of the block, the Distribution module will set the proposer for determining distribution during endblock and distribute rewards for the previous block.
+
+The fees received are transferred to the Distribution `ModuleAccount`, as it's the account the one who keeps track of the flow of coins in (as in this case) and out the module. The fees are also allocated to the proposer, community fund and global pool. When the validator is the proposer of the round, that validator (and their delegators) receives between 1% and 5% of fee rewards, the reserve community tax is then charged, then the remainder is distributed proportionally by voting power to all bonded validators independent of whether they voted (social distribution). Note the social distribution is applied to proposer validator in addition to the proposer reward.
+
+The amount of proposer reward is calculated from pre-commits Tendermint messages in order to incentivize validators to wait and include additional pre-commits in the block. All provision rewards are added to a provision reward pool which validator holds individually (`ValidatorDistribution.ProvisionsRewardPool`).
+
+```go
+func AllocateTokens(feesCollected sdk.Coins, feePool FeePool, proposer ValidatorDistribution, 
+              sumPowerPrecommitValidators, totalBondedTokens, communityTax, 
+              proposerCommissionRate sdk.Dec)
+
+     SendCoins(FeeCollectorAddr, DistributionModuleAccAddr, feesCollected)
+     feesCollectedDec = MakeDecCoins(feesCollected)
+     proposerReward = feesCollectedDec * (0.01 + 0.04 
+                       * sumPowerPrecommitValidators / totalBondedTokens)
+
+     commission = proposerReward * proposerCommissionRate
+     proposer.PoolCommission += commission
+     proposer.Pool += proposerReward - commission
+
+     communityFunding = feesCollectedDec * communityTax
+     feePool.CommunityFund += communityFunding
+
+     poolReceived = feesCollectedDec - proposerReward - communityFunding
+     feePool.Pool += poolReceived
+
+     SetValidatorDistribution(proposer)
+     SetFeePool(feePool)
+```
+
+## Parameters
+
+The subspace for the Distribution module is `distribution`.
+
+```go
+type GenesisState struct {
+	...
+	CommunityTax        sdk.Dec `json:"community_tax" yaml:"community_tax"`
+	BaseProposerReward	sdk.Dec `json:"base_proposer_reward" yaml:"base_proposer_reward"`
+	BonusProposerReward	sdk.Dec	`json:"bonus_proposer_reward" yaml:"bonus_proposer_reward"`
+	WithdrawAddrEnabled bool 	`json:"withdraw_addr_enabled"`
+	...
+}
+```
+
+### `CommunityTax`
+
+- type: `sdk.Dec`
+
+### `BaseProposerReward`
+
+- type: `sdk.Dec`
+
+### `BonusProposerReward`
+
+- type: `sdk.Dec`
+
+### `WithdrawAddrEnabled`
+
+- type: `bool`

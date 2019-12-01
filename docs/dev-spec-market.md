@@ -170,6 +170,8 @@ This allows the network to sharply increase spread fees in during acute price fl
 
 ## Parameters
 
+The subspace for the Market module is `market`.
+
 ```go
 type Params struct {
 	PoolRecoveryPeriod int64   `json:"pool_recovery_period" yaml:"pool_recovery_period"`

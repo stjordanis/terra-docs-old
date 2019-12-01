@@ -31,7 +31,7 @@ The node software is organized into individual modules that implement different 
     - vesting accounts
     - stability layer fee
 5. [`bank`](dev-spec-bank.md) - sending funds from account to account
-6. `slashing` - low-level Tendermint slashing (double-signing, etc)
+6. [`slashing`](dev-spec-slashing.md) - low-level Tendermint slashing (double-signing, etc)
 7. [`supply`](dev-spec-supply.md) - Terra / Luna supplies
 8. [`oracle`](dev-spec-oracle.md) - exchange rate feed oracle
     - vote tallying weighted median
@@ -61,30 +61,36 @@ The following processes get executed during each block transition:
 
 ### Begin Block
 
-- Distribution
+1. Distribution
+    - Distribute rewards for the previous block
 
-- Slashing
+2. Slashing
+    - Checking of infraction evidence or downtime of validators, as well as double-signing and other low-level consensus penalties.
 
 ### Process Messages
 
+3. Messages are routed to the modules that are responsible for working them and then procesed by the appropriate Message Handlers.
+
 ### End Block
 
-- Crisis
+4. Crisis
+    - Check all registered invariants and assert they remain true
 
-- Oracle
+5. Oracle
     - If at the end of `VotePeriod`, run [Voting Procedure](dev-spec-oracle.md#voting-procedure) and **update Luna Exchange Rate**.
     - If at the end of `SlashWindow`, **penalize validators** who [missed](dev-spec-oracle.md#slashing) more `VotePeriod`s than permitted.
 
-- Governance
+6. Governance
+    - Get rid of inactive proposals and check active proposals whose voting periods have ended for passes.
 
-
-- Market
+7. Market
     - [Replenish](dev-spec-market.md#end-block) liquidity pools, **allowing spread fees to decrease**.
 
-- Treasury 
+8. Treasury 
     - If at the end of `epoch`, update indicators, mint seigniorage, and recalibrate monetary policy levers (tax-rate, reward-weight) for the next epoch.
 
-- Staking
+9. Staking
+    - The new set of active validators is determined from the top 100 Luna stakers, and validators that lose their spot within the set are start to unbond.
 
 ## Conventions
 

@@ -10,18 +10,64 @@ Governance is the process through which participants within the Terra network ca
 
 ## Proposals
 
-A Proposal is a data structure representing a petition for a change that is submitted by to the blockchain alongside a deposit. Once its deposit reaches a certain value ([`MinDeposit`](#mindeposit)), the proposal is confirmed and voting opens. Bonded Luna hoolders can then send [`TxGovVote`]() transactions to vote on the proposal.
+```go
+type Proposal struct {
+	Content `json:"content" yaml:"content"` // Proposal content interface
 
-### Parameter Change Proposals
+	ProposalID       uint64         `json:"id" yaml:"id"`                                 //  ID of the proposal
+	Status           ProposalStatus `json:"proposal_status" yaml:"proposal_status"`       // Status of the Proposal {Pending, Active, Passed, Rejected}
+	FinalTallyResult TallyResult    `json:"final_tally_result" yaml:"final_tally_result"` // Result of Tallys
+
+	SubmitTime     time.Time `json:"submit_time" yaml:"submit_time"`           // Time of the block where TxGovSubmitProposal was included
+	DepositEndTime time.Time `json:"deposit_end_time" yaml:"deposit_end_time"` // Time that the Proposal would expire if deposit amount isn't met
+	TotalDeposit   sdk.Coins `json:"total_deposit" yaml:"total_deposit"`       // Current deposit on this proposal. Initial value is set at InitialDeposit
+
+	VotingStartTime time.Time `json:"voting_start_time" yaml:"voting_start_time"` // Time of the block where MinDeposit was reached. -1 if MinDeposit is not reached
+	VotingEndTime   time.Time `json:"voting_end_time" yaml:"voting_end_time"`     // Time that the VotingPeriod for this proposal will end and votes will be tallied
+}
+```
+
+A Proposal is a data structure representing a petition for a change that is submitted by to the blockchain alongside a deposit. Once its deposit reaches a certain value ([`MinDeposit`](#mindeposit)), the proposal is confirmed and voting opens. Bonded Luna hoolders can then send [`TxGovVote`]() transactions to vote on the proposal. Terra currently follows a simple voting scheme of 1 Bonded Luna = 1 Vote.
 
 ### Text Proposals
 
-### Custom Proposals
+```go
+type TextProposal struct {
+	Title       string `json:"title" yaml:"title"`
+	Description string `json:"description" yaml:"description"`
+}
+```
+
+### Parameter Change Proposals
+
+```go
+type ParameterChangeProposal struct {
+	Title       string        `json:"title" yaml:"title"`
+	Description string        `json:"description" yaml:"description"`
+	Changes     []ParamChange `json:"changes" yaml:"changes"`
+}
+
+type ParamChange struct {
+	Subspace string `json:"subspace" yaml:"subspace"`
+	Key      string `json:"key" yaml:"key"`
+	Subkey   string `json:"subkey,omitempty" yaml:"subkey,omitempty"`
+	Value    string `json:"value" yaml:"value"`
+}
+```
+
+> Parameter Change Proposals are actually located in the Params module, an internal module. It is shown here for your convenience.
+{note}
+
+Parameter Change Proposals are a special type of proposal which, once passed, will automaticaly go in effect by directly altering the network's parameter specified. For each module, you can find the parameters associated with it by browsing to the **Parameters** section of the module specification.
+
+### Software Upgrade Proposals
 
 > Software Upgrade Proposals also exist due to inheritance from Cosmos SDK but are for the moment considered unavailable, as they have not yet been implemented. They thus share the same semantics as a simple Text Proposal. It is strongly advised to not submit these types of proposals at the risk of losing your Luna deposit.
 {warning}
 
 ## Parameters
+
+The subspace for the Governance module is `gov`.
 
 ```go
 type DepositParams struct {

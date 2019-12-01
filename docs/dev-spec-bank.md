@@ -43,9 +43,17 @@ If any of the `Accounts` fails, then taxes and fees already paid through the tra
 
 ## Parameters
 
-### `sendenabled`
+The subspace for the Bank module is `bank`.
 
-Governs whether sends (`MsgSend` or `MsgMultiSend` transactions) are abled to be performed.
+```go
+type GenesisState struct {
+	SendEnabled bool `json:"send_enabled" yaml:"send_enabled"`
+}
+```
+
+### `SendEnabled`
+
+Governs whether sends (`MsgSend` or `MsgMultiSend` transactions) are able to be performed.
 
 - type: `bool`
 - default value: `true`

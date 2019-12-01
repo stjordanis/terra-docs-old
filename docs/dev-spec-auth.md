@@ -34,27 +34,49 @@ Unlike with the gas fee which needs to be specified by the sender, the stability
 
 ## Parameters
 
+The subspace for the Auth module is `auth`.
+
+```go
+type Params struct {
+	MaxMemoCharacters      uint64 `json:"max_memo_characters" yaml:"max_memo_characters"`
+	TxSigLimit             uint64 `json:"tx_sig_limit" yaml:"tx_sig_limit"`
+	TxSizeCostPerByte      uint64 `json:"tx_size_cost_per_byte" yaml:"tx_size_cost_per_byte"`
+	SigVerifyCostED25519   uint64 `json:"sig_verify_cost_ed25519" yaml:"sig_verify_cost_ed25519"`
+	SigVerifyCostSecp256k1 uint64 `json:"sig_verify_cost_secp256k1" yaml:"sig_verify_cost_secp256k1"`
+}
+```
+
 ### `MaxMemoCharacters`
 
-- type: `string (uint64)`
+Maximum permitted number of characters in the memo of a transaction.
+
+- type: `uint64`
 - default value: `256`
 
 ### `TxSigLimit`
 
-- type: `string (uint64)`
-- default value: `7`
+The maximum number of singers in a transaction. A single transaction can have multiple messages and multiple signers. The sig verification cost is much higher than other operations, so we limit this to 100.
+
+- type: `uint64`
+- default value: `100`
 
 ### `TxSizeCostPerByte`
 
-- type: `string (uint64)`
+Used to compute gas consumption of the transaction, `TxSizeCostPerByte * txsize`.
+
+- type: `uint64`
 - default value: `10`
 
 ### `SigVerifyCostED25519`
 
-- type: `string (uint64)`
+The gas cost for verifying ED25519 signatures.
+
+- type: `uint64`
 - default value: `590`
 
 ### `SigVerifyCostSecp256k1`
 
-- type: `string (uint64)`
+The gas cost for verifying Secp256k1 signatures.
+
+- type: `uint64`
 - default value: `1000`
