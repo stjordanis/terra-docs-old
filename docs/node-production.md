@@ -1,5 +1,5 @@
 ---
-id: dev-production
+id: node-production
 title: Production Settings
 ---
 

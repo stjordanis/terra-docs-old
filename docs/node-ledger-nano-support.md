@@ -1,5 +1,5 @@
 ---
-id: dev-ledger-nano-support
+id: node-ledger-nano-support
 title: Ledger Nano S Support for Terra
 sidebar_label: Ledger Nano Support
 ---

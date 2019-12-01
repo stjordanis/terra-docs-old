@@ -1,5 +1,5 @@
 ---
-id: dev-light-client
+id: node-light-client
 title: Light Client Daemon (LCD REST Server)
 sidebar_label: Light Client Daemon
 ---

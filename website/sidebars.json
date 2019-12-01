@@ -29,14 +29,14 @@
         "type": "subcategory",
         "label": "NODE SOFTWARE",
         "ids": [
-          "dev-installation",
-          "dev-users",
-          "dev-light-client",
-          "dev-terracli",
-          "dev-ledger-nano-support",
-          "dev-production",
-          "dev-join-network",
-          "dev-deploy-testnet"
+          "node-installation",
+          "node-users",
+          "node-light-client",
+          "node-terracli",
+          "node-ledger-nano-support",
+          "node-production",
+          "node-join-network",
+          "node-deploy-testnet"
         ]
       }
     ],

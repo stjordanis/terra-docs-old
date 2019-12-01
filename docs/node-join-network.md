@@ -1,5 +1,5 @@
 ---
-id: dev-join-network
+id: node-join-network
 title: Join a Network
 ---
 

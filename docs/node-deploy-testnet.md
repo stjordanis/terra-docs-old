@@ -1,5 +1,5 @@
 ---
-id: dev-deploy-testnet
+id: node-deploy-testnet
 title: Deploy a Testnet
 ---
 
