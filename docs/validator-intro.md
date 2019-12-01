@@ -1,6 +1,6 @@
 ---
 id: validator-intro
-title: Validator Guide
+title: Validator Handbook
 sidebar_label: Introduction
 ---
 
@@ -12,11 +12,13 @@ Validators and their delegators will earn the following fees:
 
 * **Compute fees**: To prevent spamming, validators may set minimum gas fees for transactions to be included in their mempool. At the end of every block, the compute fees are disbursed to the participating validators pro-rata to stake. 
 
-* **Swap fees**: A small spread is charged on atomic swap transactions between Luna and any Terra currency. The gains from the spread are disbursed every 1 minute to validators that have submitted honest and correct votes for the oracle.
+* **Stability fees**: To stabilize the value of Luna, the protocol charges a small percentage transaction fee ranging from 0.1% to 1% on every Terra transaction, capped at 1 TerraSDR. This is paid in any Terra currency, and is disbursed pro-rata to stake at the end of every block in TerraSDR.
 
-* **Stability fees**: To stabilize the value of Luna, the protocol charges a small percentage transaction fee ranging from 0.1% to 1% on every Terra transaction, capped at 1 TerraSDR. This is paid in any Terra currency, and is disbursed pro-rata to stake at the end of every block. 
+* **Seigniorage rewards**: Validators that participate in the Exchange Rate [`Oracle`](dev-spec-oracle.md) get a portion of seigniorage if they faithfully report and win the ballot (vote within the reward band around the weighted median).
 
-* **Seigniorage rewards**: To stabilize the value of Luna, the protocol commits to using some variable portion of Terra seigniorage \(see the market and treasury modules for how this functions\) to buy back and burn Luna tokens. This creates scarcity for Luna tokens and indirectly rewards validators. 
+Besides revenue, there are scarcity incentives:
+
+* **Swap fees**: A small spread is charged on atomic swap transactions between Luna and any Terra currency, which is burned and creates scarcity in Luna and indirectly rewards validators.
 
 Note that validators can set commission on the fees their delegators receive as additional incentive.
 

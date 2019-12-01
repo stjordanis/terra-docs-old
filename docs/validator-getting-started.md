@@ -3,23 +3,22 @@ id: validator-getting-started
 title: Getting Started
 ---
 
-Information on how to join the current testnet (`genesis.json` file and seeds) is held in our "networks" [repo](https://github.com/terra-project/networks).
-Please check there if you are looking to join our latest testnet.
-
-> This documentation is only intended for validators of the **Soju public testnet** and the **Columbus public mainnet**.
+> This documentation is only intended for validators of the **Soju-0012 public testnet** and the **Columbus-3 public mainnet**.
 {important}
 
-Before setting up your validator node, make sure you've already gone through the [Full Node Setup](dev-join-network.md) guide.
+Information on how to join the current testnet (`genesis.json` file and seeds) is held in our "networks" [repo](https://github.com/terra-project/networks). Please check there if you are looking to join our latest testnet.
+
+Before setting up your validator node, make sure you've already gone through the [Full Node Setup](node-join-network.md) guide.
 
 ## What is a Validator?
 
-[Validators](../features/overview/) are responsible for committing new blocks to the blockchain through voting. To make sure validators remain loyal to the network, the Terra Protocol requires a "security deposit" of Luna tokens to be staked while the validators are active. A validator's stake is slashed if they become unavailable or sign multiple blocks at the same height.
+Validators are responsible for committing new blocks to the blockchain through voting. To make sure validators remain loyal to the network, the Terra Protocol requires a "security deposit" of Luna tokens to be staked while the validators are active. A validator's stake is slashed if they become unavailable or sign multiple blocks at the same height.
 
-Users looking to operate a Terra validator, or are simply looking to learn more should study up on the correct [security model](../features/overview/security.md), study [robust network topologies](../features/overview/validator-faq.md#how-can-validators-protect-themselves-from-denial-of-service-attacks), and familiarize themselves with Tendermint and [general information](../features/overview/).
+Users looking to operate a Terra validator, or are simply looking to learn more should study up on the correct [security model](validator-security.md), study [robust network topologies](validator-faq.md#how-can-validators-protect-themselves-from-denial-of-service-attacks), and familiarize themselves with the [Tendermint](https://tendermint.com/) Consensus Protocol.
 
 ## Create Your Validator
 
-Your `terravalconspub` can be used to create a new validator by staking Luna tokens. You can find your validator pubkey by running:
+Your `terravalconspub` can be used to create a new validator by staking Luna tokens. You can find your validator PubKey by running:
 
 ```bash
 terrad tendermint show-validator
@@ -52,7 +51,7 @@ terracli tx staking create-validator \
 
 **Note**: This section only concerns validators that want to be in the genesis file. If the chain you want to validate is already live, skip this section.
 
-**Note**: The currently running Soju testnet will not use this process. They will be bootsrapped using Tendermint seed validators. You will just need to use the [create-validator](validators.md#create-your-validator) command in order to join as a validator for these networks.
+**Note**: The currently running Soju testnet will not use this process. They will be bootsrapped using Tendermint seed validators. You will just need to use the [create-validator](#create-your-validator) command in order to join as a validator for these networks.
 
 If you want to participate in genesis as a validator, you need to justify that you \(or a delegator\) have some stake at genesis, create one \(or multiple\) transaction to bond this stake to your validator address, and include this transaction in the genesis file.
 

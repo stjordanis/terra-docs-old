@@ -7,7 +7,7 @@ The Oracle module provides the Terra blockchain with an up-to-date and accurate 
 
 As price information is extrinsic to the blockchain, the Terra network relies on validators to periodically  vote on the current Luna exchange rate, with the protocol tallying up the results once per `VotePeriod` and updating the on-chain exchange rate as the weighted median of the ballot.
 
-> Since the Oracle service is powered by validators, you may find it interesting to look at the [Staking](#dev-spec-staking) module, which covers the logic for staking and validators.
+> Since the Oracle service is powered by validators, you may find it interesting to look at the [Staking](dev-spec-staking.md) module, which covers the logic for staking and validators.
 {note}
 
 ## Voting Procedure
@@ -24,22 +24,6 @@ Let $P_t$ be the current time interval of duration defined by [`VotePeriod`](#vo
 
   * A [`MsgExchangeRateVote`](#msgexchangeratevote), containing the salt used to create the hash for the prevote submitted in the previous interval $P_{t-1}$.
 
-```text
-Period  |  P1 |  P2 |  P3 |  ...    |
-Prevote |  O  |  O  |  O  |  ...    |
-        |-----\-----\-----\-----    |
-Vote    |     |  O  |  O  |  ...    |
-```
-
-#### Abstaining from Voting
-
-A validator may abstain from voting by submitting a non-positive integer for the `ExchangeRate` field in [`MsgExchangeRateVote`](#msgexchangeratevote). Doing so will absolve them of any penalties for missing `VotePeriod`s, but also disqualify them from receiving Oracle seigniorage rewards for faithful reporting.
-
-> A validator that decides to participate in the oracle process **must submit a vote for the Luna exchange rate against every denomination specified in [`Whitelist`](#whitelist) during every `VotePeriod`**. For every `VotePeriod` during which they fail to do so, it is considered a "miss."
->
-> Participating validators must maintain a valid vote rate of at least [`MinValidPerWindow`](#minvalidperwindow), lest they get their stake slashed (currently set to [0.01%](#slashfraction)) and temporarily jailed.
-{warning}
-
 ### Vote Tally
 
 At the end of $P_t$, the submitted votes are tallied. 
@@ -52,12 +36,30 @@ Denominations receiving fewer than [`VoteThreshold`](#votethreshold) total votin
 
 ### Ballot Rewards
 
-After the votes are tallied, the winners of the ballots are determined.
+After the votes are tallied, the winners of the ballots are determined with [`tally()`](#tally).
 
 Voters that have managed to vote within a narrow band around the weighted median, are rewarded with a portion of the collected seigniorage. See [`k.RewardBallotWinners()`](#krewardballotwinners) for more details.
 
 > Starting from Columbus-3, fees from [Market](dev-spec-market.md) swaps are no longer are included in the oracle reward pool, and are immediately burned during the swap operation.
 {note}
+
+### Slashing
+
+> Be sure to read this section carefully as it concerns potential loss of funds.
+{important}
+
+A `VotePeriod` during which either of the following events occur is considered a "miss":
+
+- The validator fails to submits a vote for Luna exchange rate against **each and every** denomination specified in[`Whitelist`](#whitelist).
+
+- The validator fails to vote within the reward band around the weighted median for one or more denominations.
+
+During every [`SlashWindow`](#slashwindow), participating validators must maintain a valid vote rate of at least [`MinValidPerWindow`](#minvalidperwindow) (5%), lest they get their stake slashed (currently set to [0.01%](#slashfraction)). The slashed validator is automatically temporarily "jailed" by the protocol (to protect the funds of delegators), and the operator is expected to fix the discrepancy promptly to resume validator participation.
+
+#### Abstaining from Voting
+
+A validator may abstain from voting by submitting a non-positive integer for the `ExchangeRate` field in [`MsgExchangeRateVote`](#msgexchangeratevote). Doing so will absolve them of any penalties for missing `VotePeriod`s, but also disqualify them from receiving Oracle seigniorage rewards for faithful reporting.
+
 
 ## Message Types
 
@@ -86,9 +88,9 @@ type MsgExchangeRatePrevote struct {
 
 The exchange rate used in the hash must be the open market exchange rate of Luna, with respect to the denomination matching `Denom`. For example, if `Denom` is `uusd` and the going exchange rate for Luna is 1 USD, then "1" must be used as the exchange rate, as `1 uluna` = `1 uusd`. 
 
-`Feeder` is used if the validator wishes to delegate oracle vote signing to a separate key (who "feeds" the price in lieu of the operator) to de-risk exposing their validator signing key.
+`Feeder` (`terra-` address) is used if the validator wishes to delegate oracle vote signing to a separate key (who "feeds" the price in lieu of the operator) to de-risk exposing their validator signing key.
 
-`Validator` is the validator address of the original validator.
+`Validator` is the validator address (`terravaloper-`) of the original validator.
 
 ### `MsgExchangeRateVote`
 
@@ -236,7 +238,7 @@ At the end of every block, the Oracle module checks whether it's the last block 
     - Set the Luna exchange rate on the blockchain for that Luna<>`denom` with `k.SetLunaExchangeRate()`
     - Emit a [`exchange_rate_update`](#exchange_rate_update) event
 
-5. Count up the validators who missed the Oracle vote and increase the appropriate miss counters
+5. Count up the validators who [missed](#slashing) the Oracle vote and increase the appropriate miss counters
 
 6. If at the end of a [`SlashWindow`](#slashwindow), penalize validators who have missed more than the penalty threshold (submitted fewer valid votes than [`MinValidPerWindow`](#minvalidperwindow))
 
@@ -245,6 +247,8 @@ At the end of every block, the Oracle module checks whether it's the last block 
 8. Clear all prevotes (except ones for the next `VotePeriod`) and votes from the store
 
 ## Parameters
+
+The subspace for the Oracle module is `oracle`.
 
 ```go
 // Params oracle parameters
@@ -279,7 +283,7 @@ The minimum percentage of votes that must be received for a ballot to pass.
 The tolerated error from the final weighted mean exchange rate that can receive rewards.
 
 - type: `sdk.Dec`
-- default value: `sdk.NewDecWithPrec(1, 2)` (1%)
+- default value: `sdk.NewDecWithPrec(7, 2)` (7%)
 
 ### `RewardDistributionWindow`
 

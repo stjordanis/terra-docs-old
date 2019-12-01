@@ -1,5 +1,5 @@
 ---
-id: dev-installation
+id: node-installation
 title: Installation
 ---
 

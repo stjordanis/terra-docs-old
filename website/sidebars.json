@@ -1,97 +1,55 @@
 {
   "docs": {
     "Overview": [
-      "dev-intro",
-      "dev-faq"
+      "index",
+      "columbus3"
     ],
     "Terra Protocol": [
-      "dev-what-is-terra",
       "dev-how-terra-works",
+      "dev-devguide",
       {
         "type": "subcategory",
-        "label": "BASICS",
+        "label": "MODULE SPECS",
         "ids": [
-          "dev-accounts-wallets",
-          "dev-transaction"
-        ]
-      },
-      {
-        "type": "subcategory",
-        "label": "MINING & CONSENSUS",
-        "ids": [
-          "dev-dpos",
-          "dev-luna-staking",
-          "dev-validators",
-          "dev-price-oracle"
-        ]
-      },
-      {
-        "type": "subcategory",
-        "label": "STABILITY",
-        "ids": [
-          "dev-monetary-policy",
-          "dev-subcurrencies",
-          "dev-stabilization",
-          "dev-miner-incentives"
-        ]
-      },
-      {
-        "type": "subcategory",
-        "label": "ADOPTION",
-        "ids": [
-          "dev-fiscal-policy",
-          "dev-treasury",
-          "dev-governance",
-          "dev-dapp-platform"
-        ]
-      },
-      {
-        "type": "subcategory",
-        "label": "TERRA VS. ...",
-        "ids": [
-          "dev-comparison"
+          "dev-spec-auth",
+          "dev-spec-bank",
+          "dev-spec-supply",
+          "dev-spec-distribution",
+          "dev-spec-staking",
+          "dev-spec-slashing",
+          "dev-spec-oracle",
+          "dev-spec-market",
+          "dev-spec-treasury",
+          "dev-spec-governance"
         ]
       }
     ],
-    "Node Software": [
-      "dev-installation",
-      "dev-users",
-      "dev-light-client",
+    "User Manual": [
+      {
+        "type": "subcategory",
+        "label": "NODE SOFTWARE",
+        "ids": [
+          "node-installation",
+          "node-users",
+          "node-light-client",
+          "node-terracli",
+          "node-ledger-nano-support",
+          "node-production",
+          "node-join-network",
+          "node-deploy-testnet"
+        ]
+      }
+    ],
+    "Validator Handbook": [
+      "validator-intro",
+      "validator-faq",
       {
         "type": "subcategory",
         "label": "GUIDES",
         "ids": [
-          "dev-terracli",
-          "dev-ledger-nano-support",
-          "dev-production",
-          "dev-join-network",
-          "dev-deploy-testnet"
-        ]
-      }
-    ],
-    "Validator Guide": [
-      "validator-intro",
-      "validator-getting-started",
-      "validator-security",
-      "validator-faq"
-    ],
-    "Developer Guide": [
-      "dev-getting-started",
-      "dev-client-libraries",
-      "dev-codebase",
-      {
-        "type": "subcategory",
-        "label": "CORE MODULES",
-        "ids": [
-          "dev-spec-distribution",
-          "dev-spec-staking",
-          "dev-spec-auth",
-          "dev-spec-bank",
-          "dev-spec-supply",
-          "dev-spec-oracle",
-          "dev-spec-treasury",
-          "dev-spec-governance",
-          "dev-spec-market"
+          "validator-getting-started",
+          "validator-security",
+          "validator-oracle"
         ]
       }
     ],

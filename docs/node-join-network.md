@@ -1,19 +1,19 @@
 ---
-id: dev-join-network
-title: Join a network
+id: node-join-network
+title: Join a Network
 ---
 
 > See the [testnet repo](https://github.com/terra-project/networks) for information on the latest testnet, including the correct version of the Terra Core to use and details about the genesis file.
 {info}
 
 
-> You need to [install terra](installation.md) before going further.
+> You need to [install terra](node-installation.md) before going further.
 {note}
 
 ## Setting Up a New Node
 
 
-> If you ran a full node on a previous testnet, please skip to [Upgrading From Previous Testnet](join-network.md#upgrading-from-previous-testnet).
+> If you ran a full node on a previous testnet, please skip to [Upgrading From Previous Testnet](#upgrading-from-previous-testnet).
 {info}
 
 These instructions are for setting up a brand new full node from scratch.
@@ -47,7 +47,7 @@ You can edit the `~/.terrad/config/terrad.toml` file in order to enable the anti
 minimum_fees = ""
 ```
 
-Your full node has been initialized! Please skip to [Genesis & Seeds](join-network.md#genesis-and-seeds).
+Your full node has been initialized! Please skip to [Genesis & Seeds](#genesis-and-seeds).
 
 ## Upgrading From Previous Testnet
 
@@ -154,4 +154,4 @@ terrad export --height [height] --for-zero-height > [filename].json
 
 ## Upgrade to Validator Node
 
-You now have an active full node. What's the next step? You can upgrade your full node to become a Terra Validator. The top 100 validators have the ability to propose new blocks to the Terra network. Continue onto [the Validator Setup](validators.md).
+You now have an active full node. What's the next step? You can upgrade your full node to become a Terra Validator. The top 100 validators have the ability to propose new blocks to the Terra network. Continue onto [the Validator Setup](validator-getting-started.md).

@@ -1,5 +1,5 @@
 ---
-id: dev-ledger-nano-support
+id: node-ledger-nano-support
 title: Ledger Nano S Support for Terra
 sidebar_label: Ledger Nano Support
 ---
@@ -36,10 +36,10 @@ A Ledger Nano S is a hardware wallet. Hardware wallets are considered very secur
 
 Before we can configure the Ledger Nano S to interact with the Terra blockchain, we need the following: 
 
-- [Generating new keys or recovering fundraiser keys from a ledger device](./users.md#on-a-ledger-device)
-- [Creating an account using a ledger device](./users.md#using-a-ledger-device)
-- [A running `terrad` instance connected to the network you wish to use.](./users.md#accessing-the-terra-network)
-- [A `terracli` instance configured to connect to your chosen `terrad` instance.](./users.md#setting-up-terracli)
+- [Generating new keys or recovering fundraiser keys from a ledger device](node-users.md#on-a-ledger-device)
+- [Creating an account using a ledger device](node-users.md#using-a-ledger-device)
+- [A running `terrad` instance connected to the network you wish to use.](node-users.md#accessing-the-terra-network)
+- [A `terracli` instance configured to connect to your chosen `terrad` instance.](node-users.md#setting-up-terracli)
 
 Now, you are all set to start sending and receiving transactions on the network.
 
@@ -50,7 +50,7 @@ Now, you are all set to start sending and receiving transactions on the network.
 
 ### How to view account balance
 
-You can [use `terracli` to view the account balance](./terracli.md####Query-Account-balance), using the key created in the above step. 
+You can [use `terracli` to view the account balance](node-terracli.md#query-account-balance), using the key created in the above step. 
 
 ### How to receive tokens
 
@@ -58,7 +58,7 @@ Run `terracli keys show <yourAccountName> -d` to see the account address at whic
 
 ### How to send tokens
 
-1. You can [use `terracli` to send tokens](./terracli.md###Send-Tokens), using the key created in the above step. 
+1. You can [use `terracli` to send tokens](node-terracli.md#send-tokens), using the key created in the above step. 
 2. You will be asked to confirm the details of the transaction. Before confirming, check that the destination address on the Ledger display matches your intended destination address. 
 
 ## Support

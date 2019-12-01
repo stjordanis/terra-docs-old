@@ -8,7 +8,8 @@
     "build": "docusaurus-build",
     "publish-gh-pages": "docusaurus-publish",
     "version": "docusaurus-version",
-    "rename-version": "docusaurus-rename-version"
+    "rename-version": "docusaurus-rename-version",
+    "make-glossary": "node scripts/makeGlossary.js"
   },
   "devDependencies": {},
   "dependencies": {
