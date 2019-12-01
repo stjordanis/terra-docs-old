@@ -16,22 +16,7 @@ Terra Core is powered by Tendermint consensus, which relies on a set of validato
 
 The Columbus-3 Mainnet is a public Proof-Of-Stake (PoS) blockchain, meaning that validator's weight is determined by the amount of staking tokens (Luna) bonded as collateral. These Luna can be staked directly by the validator or delegated to them by Luna holders.
 
-Any user in the system can declare its intention to become a validator by sending a `create-validator` transaction. From there, they become validators.
-
-```bash
-terracli tx staking create-validator
-    --pubkey terravalconspub1zcjduepqs5s0vddx5m65h5ntjzwd0x8g3245rgrytpds4ds7vdtlwx06mcesmnkzly 
-    --amount "2uluna"
-    --from tmp
-    --commission-rate="0.20"
-    --commission-max-rate="1.00"
-    --commission-max-change-rate="0.01"
-    --min-self-delegation "1"
-    --moniker "gazua"
-    --chain-id "test-chain-uEe0bV"
-    --gas auto
-    --node tcp://127.0.0.1:26647
-```
+Any user in the system can declare its intention to become a validator by sending a [`create-validator`](#how-to-become-a-validator) transaction. From there, they become validators.
 
 The weight (i.e. total stake) of a validator determines wether or not it is an active validator, and also how frequently this node will have to propose a block and how much revenue it will obtain. Initially, only the top 100 validators with the most weight will be active validators. If validators double-sign, or are frequently offline, they risk their staked Luna (including Luna delegated by users) being "slashed" by the protocol to penalize negligence and misbehavior.
 
@@ -74,6 +59,21 @@ Any participant in the network can signal their intent to become a validator by 
 * __Minimum self-bond amount__: Minimum amount of Luna the validator needs to have bonded at all times. If the validator's self-bonded stake falls below this limit, its entire staking pool will be unbonded.
 
 * __Initial self-bond amount__: Initial amount of Luna the validator wants to self-bond.
+
+```bash
+terracli tx staking create-validator
+    --pubkey terravalconspub1zcjduepqs5s0vddx5m65h5ntjzwd0x8g3245rgrytpds4ds7vdtlwx06mcesmnkzly 
+    --amount "2uluna"
+    --from tmp
+    --commission-rate="0.20"
+    --commission-max-rate="1.00"
+    --commission-max-change-rate="0.01"
+    --min-self-delegation "1"
+    --moniker "gazua"
+    --chain-id "test-chain-uEe0bV"
+    --gas auto
+    --node tcp://127.0.0.1:26647
+```
 
 Once a validator is created and registered, Luna holders can delegate Luna to it, effectively adding stake to its pool. The total stake of a validator is the sum of the Luna self-bonded by the validator's operator and the Luna bonded by external delegators.
 

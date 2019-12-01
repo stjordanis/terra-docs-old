@@ -71,9 +71,9 @@ Providing a faithful price feed to the onchain oracle is one of the principle re
 
 #### Tobin Tax for Terra/Terra Swaps
 
-In Columbus-2, Terra <> Terra swaps were made available without a spread fee. That lead to front-running arbitrage attacks, exploiting the delays in the on-chain oracle. Read more about that here.
+In Columbus-2, Terra<>Terra swaps were made available without a spread fee. That lead to front-running arbitrage attacks, exploiting the delays in the on-chain oracle. Read more about that here.
 
-Terra <> Terra swaps now charge a tobin tax of 0.25% to prevent front-running arbitrage attacks.
+Terra<>Terra swaps now charge a tobin tax of 0.25% to prevent front-running arbitrage attacks.
 
 #### Uniswap Revamp for Terra/Luna Swaps
 

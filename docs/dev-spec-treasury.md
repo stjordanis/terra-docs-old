@@ -31,7 +31,7 @@ The protocol can compute and compare the short-term ([`WindowShort`](#windowshor
 
 ### Updating Policies
 
-Both [Tax Rate](#tax-rate) and [Reward Weight](#reward-weight) are stored as values in the `KVStore`, and can have their values updated through [governance proposals](#proposal-types) once passed. The Treasury will also re-calibrate each lever once per epoch to stabilize unit returns for Luna, thereby ensuring predictable mining rewards from staking:
+Both [Tax Rate](#tax-rate) and [Reward Weight](#reward-weight) are stored as values in the `KVStore`, and can have their values updated through [governance proposals](#governance-proposals) once passed. The Treasury will also re-calibrate each lever once per epoch to stabilize unit returns for Luna, thereby ensuring predictable mining rewards from staking:
 
 - For Tax Rate, in order to make sure that unit mining rewards do not stay stagnant, the treasury adds a [`MiningIncrement`](#miningincrement) so mining rewards increase steadily over time, described [here](#kupdatetaxpolicy).
 
@@ -80,9 +80,9 @@ func (pc PolicyConstraints) Clamp(prevRate sdk.Dec, newRate sdk.Dec) (clampedRat
 
 A probationary period specified by the [`WindowProbation`](#windowprobation) will prevent the network from performing updates for Tax Rate and Reward Weight during the first epochs after genesis to allow the blockchain to first obtain a critical mass of transactions and a mature and reliable history of indicators.
 
-## Proposal Types
+## Governance Proposals
 
-Instead of handling `Msg`s like [`Oracle`](dev-spec-oracle.md) and [`Market`](dev-spec-market.md), the Treasury module responds to [`Governance`](dev-spec-governance.md) proposals.
+The Treasury module defines special proposals which allow the [Tax Rate](#tax-rate) and [Reward Weight](#reward-weight) values in the `KVStore` to be voted on and changed accordingly, subject to the [policy constraints](#policy-constraints) imposed by `pc.Clamp()`.
 
 ### `TaxRateUpdateProposal`
 

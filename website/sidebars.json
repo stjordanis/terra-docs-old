@@ -9,14 +9,6 @@
       "dev-devguide",
       {
         "type": "subcategory",
-        "label": "CODEBASE",
-        "ids": [
-          "dev-architecture",
-          "dev-conventions"
-        ]
-      },
-      {
-        "type": "subcategory",
         "label": "MODULE SPECS",
         "ids": [
           "dev-spec-auth",

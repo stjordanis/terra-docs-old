@@ -734,7 +734,7 @@ terracli query gov param tallying
 terracli query gov param deposit
 ```
 
-## Fee Distribution
+## Distribution
 
 ### Query Distribution Parameters
 
@@ -744,9 +744,9 @@ To check the current distribution parameters, run:
 terracli query distribution params
 ```
 
-### Query Distribution Community Pool
+### Query Community Pool Coins
 
-To query all coins in the community pool which is under Governance control:
+To query all coins in the Community Pool, which is under Governance control:
 
 ```bash
 terracli query distribution community-pool
@@ -754,7 +754,7 @@ terracli query distribution community-pool
 
 ### Query Outstanding Rewards
 
-To check the current outstanding \(un-withdrawn\) rewards, run:
+To check the current outstanding (un-withdrawn) rewards, run:
 
 ```bash
 terracli query distribution outstanding-rewards
@@ -778,7 +778,7 @@ terracli query distribution slashes <validator_address> <start_height> <end_heig
 
 ### Query Delegator Rewards
 
-To check current rewards for a delegation \(were they to be withdrawn\), run:
+To check current rewards for a delegator (if they were to be withdrawn), run:
 
 ```bash
 terracli query distribution rewards <delegator_address> <validator_address>
@@ -786,7 +786,7 @@ terracli query distribution rewards <delegator_address> <validator_address>
 
 ### Query All Delegator Rewards
 
-To check all current rewards for a delegation \(were they to be withdrawn\), run:
+To check all current rewards for a delegator (if they were to be withdrawn), run:
 
 ```bash
 terracli query distribution rewards <delegator_address>
@@ -875,9 +875,9 @@ terracli tx broadcast signedTx.json \
   --chain-id=<chain_id>
 ```
 
-## Shell Auto-complete Scripts
+## Shell Auto-completion Scripts
 
-Auto-complete scripts for popular UNIX shell interpreters such as `bash` and `zsh` can be generated through the `completion` command, which is available for both `terrad` and `terracli`. This allows for a more convenient way to interact with the Terra Core endpoints through the command-line.
+Auto-completion scripts for popular UNIX shell interpreters such as `bash` and `zsh` can be generated through the `completion` command, which is available for both `terrad` and `terracli`. This allows for a more convenient way to interact with the Terra Core endpoints when using the command-line.
 
 If you want to generate `bash` completion scripts run the following command:
 
@@ -907,7 +907,7 @@ terracli completion --zsh > terracli_completion
 
 ### Submit an Exchange Rate Vote
 
-Validators must submit two price vote transactions to participate in the oracle; a `prevote` containing the hash of the actual vote in the first vote period, and a `vote` containing the salt of the hash submitted in the prevote phase to prove honestly. The hash is the leading 20 bytes of the SHA256 hexa string run over the string of the format `salt:price:denom:validator-address`.
+Validators must submit two exchange rate vote transactions to participate in the oracle; a `prevote` containing the hash of the actual vote in the first vote period, and a `vote` containing the salt of the hash submitted in the prevote phase to prove honestly. The hash is the leading 20 bytes of the SHA256 hexa string run over the string of the format `salt:price:denom:validator-address`.
 
 To submit a prevote, run:
 
@@ -1031,6 +1031,6 @@ With the above command you will get the values for:
 * Reward Weight update policy
 * Seigniorage Burden Target
 * Mining Increment
-* WindowShort \(update parameter\)
-* WindowLong \(update parameter\)
-* WindowProbation \(update parameter\)
+* `WindowShort` \(update parameter\)
+* `WindowLong` \(update parameter\)
+* `WindowProbation` \(update parameter\)

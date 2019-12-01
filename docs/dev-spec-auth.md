@@ -32,6 +32,29 @@ For a `MsgMultiSend` transaction, a stability fee is charged from every outbound
 
 Unlike with the gas fee which needs to be specified by the sender, the stability fee is automatically deducted from the sender's `Account`.
 
-## Vesting Accounts
+## Parameters
 
- 
+### `MaxMemoCharacters`
+
+- type: `string (uint64)`
+- default value: `256`
+
+### `TxSigLimit`
+
+- type: `string (uint64)`
+- default value: `7`
+
+### `TxSizeCostPerByte`
+
+- type: `string (uint64)`
+- default value: `10`
+
+### `SigVerifyCostED25519`
+
+- type: `string (uint64)`
+- default value: `590`
+
+### `SigVerifyCostSecp256k1`
+
+- type: `string (uint64)`
+- default value: `1000`
