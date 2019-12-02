@@ -10,7 +10,7 @@ The Staking module enables Terra's Proof-of-Stake functionality by requiring val
 
 ## Transitions
 
-### End Block
+### End-Block
 
 > This section was taken from the official Cosmos SDK docs, and placed here for your convenience to understand the Staking module's parameters.
 

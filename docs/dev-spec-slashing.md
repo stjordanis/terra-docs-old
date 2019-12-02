@@ -10,7 +10,7 @@ The Slashing module enables Terra to disincentivize any attributable action by a
 
 ## Transitions
 
-### Begin Block
+### Begin-Block
 
 > This section was taken from the official Cosmos SDK docs, and placed here for your convenience to understand the Slashing module's parameters.
 

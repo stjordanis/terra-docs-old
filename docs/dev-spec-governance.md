@@ -90,7 +90,7 @@ Defined and handled in the [`Treasury` module](dev-spec-treasury.md#governance-p
 
 ## Transitions
 
-### End Block
+### End-Block
 
 > This section was taken from the official Cosmos SDK docs, and placed here for your convenience to understand the Governance process.
 

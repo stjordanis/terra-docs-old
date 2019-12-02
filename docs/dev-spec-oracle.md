@@ -222,7 +222,7 @@ After checking all validators, all miss counters are reset back to zero for the 
 
 ### End-Block
 
-At the end of every block, the Oracle module checks whether it's the last block of the `VotePeriod`. If it is, it implements the [Voting Procedure](#voting-procedure):
+At the end of every block, the Oracle module checks whether it's the last block of the `VotePeriod`. If it is, it runs the [Voting Procedure](#voting-procedure):
 
 1. All current active Luna exchange rates are purged from the store
 

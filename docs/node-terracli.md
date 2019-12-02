@@ -547,9 +547,9 @@ Where `proposal.json` is a file with the following schema:
 > regardless. 
 {warning}
 
-#### Community-Pool Spend Proposal
+#### Community Pool Spend Proposal
 
-To submit a community-pool spend proposal, it is highly recommended to pass in the proposal as a JSON file as its
+To submit a community pool spend proposal, it is highly recommended to pass in the proposal as a JSON file as its
 contents are less friendly to command-line input.
 
 ```bash
@@ -582,7 +582,7 @@ Where `proposal.json` contains the following:
 
 #### Tax-Rate and Reward-Weight Update Proposals
 
-Tax Rate and Reward Weight are important monetary policy levers handled by the [`Treasury`](dev-spec-treasury.md) module to modulate miner incentives toward stable demand and steady growth. Usually, they are automatically calibrated once per epoch by the protocol. However, they can be changed at any moment if enough an update proposal gets passed with enough supporters.
+Tax Rate and Reward Weight are important monetary policy levers handled by the [`Treasury`](dev-spec-treasury.md) module to modulate miner incentives toward stable demand and steady growth. Usually, they are automatically calibrated once per epoch by the protocol. However, they can be changed at any moment if an update proposal gets passed with enough supporters.
 
 To submit Tax Rate or Reward Weight update proposal, you must provide a proposal file as its contents are less friendly to CLI input:
 
@@ -633,6 +633,8 @@ Where `proposal.json` contains the following:
   ]
 }
 ```
+
+Note that Tax Reward and Reward Weight updates through pased Governance proposals are subject to [Policy Constraints](dev-spec-treasury.md#policy-constraints).
 
 #### Software Upgrade Proposals
 

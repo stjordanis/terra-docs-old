@@ -26,10 +26,10 @@ Put simply, Terra is a new cryptocurrency that is:
 
 ## Documentation Overview
 
-- [**Terra Protocol**]() presents a technical specifcation of the Terra decentralized stablecoin system, explaining the mechanisms behind its core features through its reference implementation written in Golang, Terra Core.
+- [**Terra Protocol**](dev-how-terra-works.md) presents a technical specifcation of the Terra decentralized stablecoin system, explaining the mechanisms behind its core features through its reference implementation written in Golang, Terra Core.
 
-- [**User Manual**]() covers how to interact with the Terra blockchain and participate in the network either as simply a user or a validator by running Terra Core, the official node software.
+- [**User Manual**](node-installation.md) covers how to interact with the Terra blockchain and participate in the network either as simply a user or a validator by running Terra Core, the official node software.
 
-- [**Validator Handbook**]() is a collection of helpful information, troubleshooting recipes, and best practices we've compiled for validators.
+- [**Validator Handbook**](validator-intro.md) is a collection of helpful information, troubleshooting recipes, and best practices we've compiled for validators.
 
-- [**Contribute**]() outlines the community effort for improving Terra, including guidelines for contributing to Terra Core and for submitting Terra Improvement Proposals (TIPs).
+- [**Contribute**](contribute-contributing.md) outlines the community effort for improving Terra, including guidelines for contributing to Terra Core and for submitting Terra Improvement Proposals (TIPs).

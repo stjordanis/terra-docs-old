@@ -16,7 +16,7 @@ Terra is a distributed ledger of account balances maintained by validators. Thes
 
 ## Stabilization Mechanisms
 
-### Price Stability
+### Price Stabilization
 
 Terra achieves price-stability by algorithmically adjusting its supply according to fluctuations in demand. For instance, an increase in demand in Terra manifests in an increase in the volume of Terra transactions and as well as a surge in the price of Terra. As a result, Terra must apply some balancing, reactionary force to ensure that its price does not deviate from its peg. In this scenario, the supply of Terra must increase to compensate for the extra demand. This is known as expansion. The protocol needs to mint and sell Terra to introduce it into the market. Terra achieves this by natural efficient market forces, through the opportunism of individual arbitrageurs who can extract risk-free profit by purchasing 1 newly minted TerraSDR (worth more than its peg) for 1 SDR of Luna, banking on the difference. In essence, the value associated with the increased demand in one unit of Terra is spread out across newly minted Terra, collateralized by the Luna used to purchase it. This recaptured value in Luna, now owned by the system, is called seigniorage and represents the profit gained from minting Terra (and it costs next to nothing to mint!). 
 
