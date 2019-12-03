@@ -7,7 +7,7 @@ This repository hosts the Markdown articles and static site generation scripts f
 ### Clone this resposistory
 
 ```bash
-git clone https://github.com/ouiliame/terra-docs
+git clone https://github.com/terra-project/docs
 ```
 
 ### How to run this repo (dev server + livereload)
