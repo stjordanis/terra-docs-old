@@ -60,7 +60,7 @@ While the network was still in its early stages, the slashing terms had been int
 
 #### Increased Slashing Penalties
 
-Downtime slashing will be increased from 0.01% to 1%, and double sign slashing will be increased from 1% to 5%.
+Double sign slashing will be increased from 1% to 5%.
 
 #### Slashing for Oracle Negligence
 
