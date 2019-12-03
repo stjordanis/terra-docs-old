@@ -66,7 +66,7 @@ Double sign slashing will be increased from 1% to 5%.
 
 Providing a faithful price feed to the onchain oracle is one of the principle responsibilities of a Terra Validator. Validators that fail to submit over a threshold of valid oracle votes over a time window (oracle negligence) will be slashed 1% of their stake.
 
-### Increased Robustnes of Oracles & Swaps
+### Increased Robustness of Oracles & Swaps
 
 #### Tobin Tax for Terra/Terra Swaps
 
