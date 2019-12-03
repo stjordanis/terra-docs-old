@@ -4,7 +4,7 @@ title: Terra Documentation
 sidebar_label: Introduction
 ---
 
-Welcome to the official Terra documentation. Terra is currently running [**Columbus-3 Mainnet**](columbus3.md), the latest iteration of the network which brings many new features and breaking changes, requiring a hard fork. Please read up there to keep up-to-date.
+Welcome to the official Terra documentation. Terra is currently running [**Columbus-3 Testnet**](columbus3.md), the latest iteration of the network which brings many new features and breaking changes, requiring a hard fork. Please read up there to keep up-to-date.
 
 ## What is Terra?
 
