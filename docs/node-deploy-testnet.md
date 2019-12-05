@@ -38,10 +38,10 @@ terracli keys add validator
 # Add that key into the genesis.app_state.accounts array in the genesis file
 # NOTE: this command lets you set the number of coins. Make sure this account has some coins
 # with the genesis.app_state.staking.params.bond_denom denom, the default is staking
-terrad add-genesis-account $(terracli keys show validator -a) 1000uluna,1000usdr
+terrad add-genesis-account $(terracli keys show validator -a) 100000000uluna,1000usdr
 
 # Generate the transaction that creates your validator
-terrad gentx --name validator --amount 100uluna
+terrad gentx --name validator --amount 10000000uluna
 
 # Add the generated bonding transaction to the genesis file
 terrad collect-gentxs

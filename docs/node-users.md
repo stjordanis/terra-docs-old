@@ -210,7 +210,7 @@ It allows you to set a default value for each given flag.
 First, set up the address of the full-node you want to connect to:
 
 ```bash
-terracli config node <host>:<port
+terracli config node <host>:<port>
 
 // example: terracli config node https://77.87.106.33:26657
 ```
@@ -228,7 +228,7 @@ terracli config trust-node false
 Finally, let us set the `chain-id` of the blockchain we want to interact with:
 
 ```bash
-terracli config chain-id gos-6
+terracli config chain-id soju-0013
 ```
 
 ## Querying the state

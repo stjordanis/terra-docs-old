@@ -46,6 +46,7 @@ Use `git` to retrieve Terra Core from the [official repo](https://github.com/ter
 
 ```bash
 git clone https://github.com/terra-project/core/
+cd core
 git checkout master
 make
 ```

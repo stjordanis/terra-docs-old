@@ -971,20 +971,12 @@ Where `offer_coin` is the coin looking to be traded and `ask_denom` the denomina
 
 ## Treasury
 
-### Query Current Epoch
-
-Treasury macroeconomic parameters are updated on a periodic basis each Epoch (currently around 1 week). To check the current epoch number (starting from 0):
-
-```bash
-terracli query treasury current-epoch
-```
-
 ### Query Tax Rate
 
-Terra transactions charge a % fee on each outbound transaction from the sender's wallet. To get the effective stability fee rate for a given epoch, run:
+Terra transactions charge a % fee on each outbound transaction from the sender's wallet. To get the effective stability fee rate, run:
 
 ```bash
-terracli query treasury tax-rate <epoch_number>
+terracli query treasury tax-rate
 ```
 
 ### Query Tax Cap
@@ -997,26 +989,26 @@ terracli query treasury tax-cap <denom>
 
 ### Query Tax Proceeds
 
-To query the cumulative tax proceeds of a given epoch, run:
+To query the cumulative tax proceeds, run:
 
 ```bash
-terracli query treasury tax-proceeds <epoch_number>
+terracli query treasury tax-proceeds
 ```
 
 ### Query Reward Weight
 
-The Reward Weight is the portion of seigniorage that is designated as ballot rewards for the winners of exchange rate oracle. To query the Reward Weight of a given epoch, run:
+The Reward Weight is the portion of seigniorage that is designated as ballot rewards for the winners of exchange rate oracle. To query the Reward Weight, run:
 
 ```bash
-terracli query treasury reward-weight <epoch_number>
+terracli query treasury reward-weight
 ```
 
 ### Query Seigniorage Proceeds
 
-The treasury measures the amount of Terra seigniorage accumulated over epochs, denominated in units of `uluna`. To query the seigniorage proceeds of a given epoch, run:
+The treasury measures the amount of Terra seigniorage accumulated over epochs, denominated in units of `uluna`. To query the seigniorage proceeds, run:
 
 ```bash
-terracli query treasury seigniorage-proceeds <epoch_number>
+terracli query treasury seigniorage-proceeds
 ```
 
 ### Query Parameters

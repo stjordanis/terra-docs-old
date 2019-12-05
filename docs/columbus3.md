@@ -38,7 +38,7 @@ These changes will significantly increase rewards from staking Luna. On top of t
 
 #### Governance Rights for Luna
 
-We introduce on-chain governance with Columbus-3. Going forward, this effectively allows Luna holders to govern the blockchain. Luna holders can submit proposals and signal their approval or disapproval by voting on proposals submitted by others. A supermajority of supporting votes will ratify proposals; anything short will table them. The governance mechanism will support three types of proposals:
+We introduce on-chain governance with Columbus-3. Going forward, this effectively allows Luna holders to govern the blockchain. Luna holders can submit proposals and signal their approval or disapproval by voting on proposals submitted by others. A supermajority of supporting votes will ratify proposals; anything short will table them. The governance mechanism will support four types of proposals:
 
 - **Parameter changes**: Any parameter on the Terra blockchain (as stored in the `ParamKeeper`) can be voted on and changed on runtime.
 

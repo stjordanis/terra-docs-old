@@ -35,7 +35,7 @@ You can edit this `moniker` later, in the `~/.terrad/config/config.toml` file:
 moniker = "<your_custom_moniker>"
 ```
 
-You can edit the `~/.terrad/config/terrad.toml` file in order to enable the anti spam mechanism and reject incoming transactions with less than a minimum fee:
+You can edit the `~/.terrad/config/app.toml` file in order to enable the anti spam mechanism and reject incoming transactions with less than a minimum fee:
 
 ```text
 # This is a TOML config file.

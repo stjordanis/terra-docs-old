@@ -196,17 +196,17 @@ func (k Keeper) UpdateTaxPolicy(ctx sdk.Context) (newTaxRate sdk.Dec)
 
 This function gets called at the end of an epoch to calculate the next value of the Tax Rate monetary lever.
 
-Consider $ r_t $ to be the current tax rate, and $ n $ to be the [`MiningIncrement`](#miningincrement) parameter.
+Consider $ r_t $ to be the current Tax Rate, and $ n $ to be the [`MiningIncrement`](#miningincrement) parameter.
 
 1. Calculate the rolling average $\tau_y$ of Tax Rewards per unit Luna over the last year `WindowLong`.
 
 2. Calculate the rolling average $\tau_m$ of Tax Rewards per unit Luna over the last month `WindowShort`.
 
-3. If $\tau_m = 0$, there was no tax revenue in the last month. The tax rate should thus be set to the maximum permitted by the Tax Policy.
+3. If $\tau_m = 0$, there was no tax revenue in the last month. The Tax Rate should thus be set to the maximum permitted by the Tax Policy, subject to the rules of `pc.Clamp()` (see [constraints](#policy-constraints)).
 
-4. Otherwise, the new tax rate is $r_{t+1} = (n r_t \tau_y)/\tau_m$, subject to the rules of `pc.Clamp()` (see [constraints](#policy-constraints)).
+4. Otherwise, the new Tax Rate is $r_{t+1} = (n r_t \tau_y)/\tau_m$, subject to the rules of `pc.Clamp()` (see [constraints](#policy-constraints)).
 
-As such, the Treasury hikes up tax rates when tax revenues in a shorter time window is performing poorly in comparison to the longer term tax revenue average. It lowers tax rates when short term tax revenues are outperforming the longer term index. 
+As such, the Treasury hikes up Tax Rate when tax revenues in a shorter time window is performing poorly in comparison to the longer term tax revenue average. It lowers Tax Rate when short term tax revenues are outperforming the longer term index. 
 
 ### `k.UpdateRewardPolicy()`
 
@@ -222,7 +222,7 @@ Consider $ w_t $ to be the current reward weight, and $ b $ to be the [`Seignior
 
 2. Calculate the sum of $R_m$ of total mining rewards over the last month `WindowLong`.
 
-3. If either $R_m = 0$ or $S_m = 0$ there was no mining and seigniorage rewards in the last month. The Rewards Weight should thus be set to the maximum permitted by the Reward Policy.
+3. If either $R_m = 0$ or $S_m = 0$ there was no mining and seigniorage rewards in the last month. The Rewards Weight should thus be set to the maximum permitted by the Reward Policy, subject to the rules of `pc.Clamp()` (see [constraints](#policy-constraints)).
 
 4. Otherwise, the new Reward Weight is $ w_{t+1} = b w_t S_m / R_m $, subject to the rules of `pc.Clamp()` (see [constraints](#policy-constraints)).
 

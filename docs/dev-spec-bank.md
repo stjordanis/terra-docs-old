@@ -23,7 +23,7 @@ type MsgSend struct {
 }
 ```
 
-The Bank module can be used to send coins from one `Account` (`terra-` prefixed account) to another. A `MsgSend` is constructed to facilitate the transfer. If the balance of coins in the `Account` is insufficient or the recipient `Account` does not exist, the transaction fails.
+The Bank module can be used to send coins from one `Account` (`terra-` prefixed account) to another. A `MsgSend` is constructed to facilitate the transfer. If the balance of coins in the `Account` is insufficient or the recipient `Account` is not allowed to receive the funds via Bank module, the transaction fails.
 
 ### `MsgMultiSend`
 

@@ -390,4 +390,4 @@ Called when the feeder submits exchage-rate reveal vote during the wrong period.
 
 ### `ErrInvalidSaltLength`
 
-Called when the salt length is not equal to `1`
+Called when the salt length is not in `1~4`

@@ -65,7 +65,7 @@ The following processes get executed during each block transition:
     - Distribute rewards for the previous block
 
 2. Slashing
-    - Checking of infraction evidence or downtime of validators, as well as double-signing and other low-level consensus penalties.
+    - Checking of infraction evidence or downtime of validators for  double-signing and downtime penalites.
 
 ### Process Messages
 
@@ -81,7 +81,7 @@ The following processes get executed during each block transition:
     - If at the end of `SlashWindow`, **penalize validators** who [missed](dev-spec-oracle.md#slashing) more `VotePeriod`s than permitted.
 
 6. Governance
-    - Get rid of inactive proposals and check active proposals whose voting periods have ended for passes.
+    - Get rid of inactive proposals, check active proposals whose voting periods have ended for passes, and run registered proposal handler of the passed proposal.
 
 7. Market
     - [Replenish](dev-spec-market.md#end-block) liquidity pools, **allowing spread fees to decrease**.
