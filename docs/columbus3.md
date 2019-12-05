@@ -11,7 +11,7 @@ Instructions for upgrading from core@v0.2.6 can be found [here](https://github.c
 
 ### Recovering `old-hd-path` wallets
 
-From the initial Columbus launch, we had used the same `CoinType` as ATOM (118). However, with this release, Terra now uses the `CoinType` Luna (330). Users will not be able to recover `118` CoinType keys using the Columbus-3 `terracli`, and will have to perform the following steps:
+From the initial Columbus launch, we had used the same `CoinType` as ATOM (118). However, with this release, Terra now uses the `CoinType` Luna (330). Users will not be able to recover `118` CoinType keys using the Columbus-3 `terracli`, and will have to perform one of the following steps:
 
 1. Download core@v0.2.1,  recover keys, and upgrade core to latest
 
