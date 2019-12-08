@@ -15,7 +15,8 @@ The Terra Core team has provided a reference implementation of a program that pu
 
 In addition, several validators have created alternate feeder implementations:
 
-- bharvest's 
+- [bharvest's] (https://github.com/b-harvest/terra_oracle_voter)
+- [stake-with-us's](https://github.com/stakewithus/oracle-voter)
 
 ### Guidelines for writing your own feeder
 
