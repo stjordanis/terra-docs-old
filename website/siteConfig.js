@@ -17,7 +17,7 @@ const siteConfig = {
 
   website: 'https://terra.money',
 
-  url: 'https://terra-project.github.io', // Your docs website URL
+  url: 'https://docs.terra.money', // Your docs website URL
   baseUrl: '/', // Base URL for your poject */
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',
