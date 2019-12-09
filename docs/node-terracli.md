@@ -127,7 +127,7 @@ terracli tx send ... --gas-prices=0.000001usdr
 ### Fees & Taxes (From Columbus-3)
 The tax has been changed to be included in the fees rather than automatically charged from the sender account. Users can make transaction with existing method without fees flag but with gas prices flag. It will automatically calculate tax and return fees in addition to the existing gas fees.
 
-Wallet providers can estimate fees and gas to be incurred by a transaction by querying the endpoint `/txs/esitimate_fee` with `gas = auto`.
+Wallet providers can estimate fees and gas to be incurred by a transaction by querying the endpoint `/txs/estimate_fee` with `gas = "0"`.
 
 e.g.
 
@@ -138,7 +138,7 @@ terracli tx send ... --gas-prices=0.000001usdr --gas=auto --gas-adjustment=1.4
 or
 
 ```bash
-terracli tx estimate-fee ... --gas-prices=0.000001usdr --gas=auto --gas-adjustment=1.4
+terracli tx estimate-fee ... --gas-prices=0.000001usdr --gas-adjustment=1.4
 ```
 
 ## Account
