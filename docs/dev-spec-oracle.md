@@ -43,6 +43,10 @@ Voters that have managed to vote within a narrow band around the weighted median
 > Starting from Columbus-3, fees from [Market](dev-spec-market.md) swaps are no longer are included in the oracle reward pool, and are immediately burned during the swap operation.
 {note}
 
+#### Reward Band
+
+Let $ M $ be the weighted median, $ \sigma $ be the standard deviation of the votes in the ballot, and $ R $ be the [`RewardBand`](#rewardband) parameter. The band around the median is set to be $ \varepsilon = \max(\sigma, R/2) $. All valid (i.e. bonded and non-jailed) validators that submitted an exchange rate vote in the interval $ \left[ M - \varepsilon, M + \varepsilon \right] $ should be included in the set of winners, weighted by their relative vote power.
+
 ### Slashing
 
 > Be sure to read this section carefully as it concerns potential loss of funds.
@@ -52,7 +56,7 @@ A `VotePeriod` during which either of the following events occur is considered a
 
 - The validator fails to submits a vote for Luna exchange rate against **each and every** denomination specified in[`Whitelist`](#whitelist).
 
-- The validator fails to vote within the reward band around the weighted median for one or more denominations.
+- The validator fails to vote within the [reward band](#reward-band) around the weighted median for one or more denominations.
 
 During every [`SlashWindow`](#slashwindow), participating validators must maintain a valid vote rate of at least [`MinValidPerWindow`](#minvalidperwindow) (5%), lest they get their stake slashed (currently set to [0.01%](#slashfraction)). The slashed validator is automatically temporarily "jailed" by the protocol (to protect the funds of delegators), and the operator is expected to fix the discrepancy promptly to resume validator participation.
 
@@ -119,16 +123,16 @@ The `MsgExchangeRateVote` contains the actual exchange rate vote. The `Salt` par
 // MsgDelegateFeedConsent - struct for delegating oracle voting rights to another address.
 type MsgDelegateFeedConsent struct {
 	Operator  sdk.ValAddress `json:"operator" yaml:"operator"`
-	Delegatee sdk.AccAddress `json:"delegatee" yaml:"delegatee"`
+	Delegate sdk.AccAddress `json:"delegate" yaml:"delegate"`
 }
 ```
 
-Validators may also elect to delegate voting rights to another key to prevent the block signing key from being kept online. To do so, they must submit a `MsgDelegateFeedConsent`, delegating their oracle voting rights to a `Delegatee` that sign `MsgExchangeRatePrevote` and `MsgExchangeRateVote` on behalf of the validator. 
+Validators may also elect to delegate voting rights to another key to prevent the block signing key from being kept online. To do so, they must submit a `MsgDelegateFeedConsent`, delegating their oracle voting rights to a `Delegate` that sign `MsgExchangeRatePrevote` and `MsgExchangeRateVote` on behalf of the validator. 
 
 > Delegate validators will likely require you to deposit some funds (in Terra or Luna) which they can use to pay fees, sent in a separate `MsgSend`. This agreement is made off-chain and not enforced by the Terra protocol. 
 {important}
 
-The `Operator` field contains the operator address of the validator (prefixed `terravaloper-`). The `Delegatee` field is the account address (prefixed `terra-`) of the delegatee account that will be submitting exchange rate related votes and prevotes on behalf of the `Operator`. 
+The `Operator` field contains the operator address of the validator (prefixed `terravaloper-`). The `Delegate` field is the account address (prefixed `terra-`) of the delegate account that will be submitting exchange rate related votes and prevotes on behalf of the `Operator`. 
 
 ## State
 
@@ -191,8 +195,6 @@ func tally(ctx sdk.Context, pb types.ExchangeRateBallot, rewardBand sdk.Dec) (we
 ```
 
 This function contains the logic for tallying up the votes for a specific ballot of a denomination, and determines the weighted median $ M $ as well as the winners of the ballot.
-
-Let $ \sigma $ be the standard deviation of the votes in the ballot, and $ R $ be the [`RewardBand`](#rewardband) parameter. The band around the median is set to be $ \varepsilon = \max(\sigma, R/2) $. All valid (i.e. bonded and non-jailed) validators that submitted an exchange rate vote in the interval $ \left[ M - \varepsilon, M + \varepsilon \right] $ should be included in the set of winners, weighted by their relative vote power.
 
 ### `k.RewardBallotWinners()`
 
