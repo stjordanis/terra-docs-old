@@ -19,7 +19,9 @@ To defend against this, the Market module enforces the following swap fees
 
 - a __Tobin Tax__ (set at [0.25%](#tobintax)) for spot-converting Terra<>Terra swaps
 
-	To illustrate, assume that oracle reports that the Luna<>SDT exchange rate is 10, and for Luna<>KRT, 10,000. Sending in 1 SDT will get you 0.1 Luna, which is 1000 KRT. After applying the Tobin Tax, you'll end up with 975 KRT (0.25% of 1000 is 25), a better rate than could get in any forex market.
+	To illustrate, assume that oracle reports that the Luna<>SDT exchange rate is 10, and for Luna<>KRT, 10,000. Sending in 1 SDT will get you 0.1 Luna, which is 1000 KRT. After applying the Tobin Tax, you'll end up with 975 KRT (0.25% of 1000 is 25), a better rate than any retail currency exchange and remittance[^1].
+
+[^1]: Though contrary to our initial policy for zero-fee swaps, we have decided to implement the Tobin tax as a necessity to prevent attackers from exploiting the exchange rate latency and profiting at the cost of ordinary users. The rationale behind setting a Tobin tax at this rate is described in depth in this [post](https://medium.com/terra-money/on-swap-fees-the-greedy-and-the-wise-b967f0c8914e).
 
 - a __minimum spread__ (set at [2%](#minspread)) for Terra<>Luna swaps
 
@@ -27,7 +29,9 @@ To defend against this, the Market module enforces the following swap fees
 
 ## Constant Product Market-Maker
 
-Starting with Columbus-3 (Vodka testnet), Terra now uses a Constant Product market-making algorithm to ensure liquidity for Terra<>Luna swaps.
+Starting with Columbus-3 (Vodka testnet), Terra now uses a Constant Product market-making algorithm to ensure liquidity for Terra<>Luna swaps. [^2]
+
+[^2]: For a more in-depth treatment of our updated market-making algorithm, check Nick Platias's SFBW 2019 presentation [here](https://agora.terra.money/t/terra-stability-swap-mechanism-deep-dive-at-sfbw/135).
 
 Before, Terra had enforced a daily Luna supply change cap such that Luna could inflate or deflate only up to the cap in any given 24 hour period, after which further swaps would fail. This was to prevent excessive volatility in Luna supply which could lead to divesting attacks \(a large increase in Terra supply putting the peg at risk\) or consensus attacks \(a large increase in Luna supply being staked can lead to a consensus attack on the blockchain\).
 
@@ -37,11 +41,11 @@ Now, with Constant Product, we define a value $CP$ set to the size of the Terra 
 {note}
 
 $$
-CP = Pool_{Terra} * Fiat_{Luna}
+CP = Pool_{Terra} * Pool_{Luna} * (Price_{Luna}/Price_{SDR})
 $$
 
 
-For example, we'll start with equal pools of Terra and Luna, both worth 1000 SDR total. The size of the Terra pool is 1000 UST, and assuming the price of Luna<>SDR is 0.5, the size of the Luna pool is 2000 Luna. A swap of 100 SDT for Luna would return around 90.91 SDR worth of Luna (≈ 181.82 Luna). The offer of 100 SDT is added to the Terra pool, and the 90.91 SDT worth of Luna are taken out of the Luna pool. 
+For example, we'll start with equal pools of Terra and Luna, both worth 1000 SDR total. The size of the Terra pool is 1000 SDT, and assuming the price of Luna<>SDR is 0.5, the size of the Luna pool is 2000 Luna. A swap of 100 SDT for Luna would return around 90.91 SDR worth of Luna (≈ 181.82 Luna). The offer of 100 SDT is added to the Terra pool, and the 90.91 SDT worth of Luna are taken out of the Luna pool. 
 
 ```text
 CP = 1000000 SDR
@@ -49,11 +53,13 @@ CP = 1000000 SDR
 (1100 SDT) * (909.0909... SDR of Luna) = 1000000 SDR
 ```
 
-This algorithm ensures that the Terra protocol remains liquid for Terra<>Luna swaps. Of course, this specific example was meant to be more illustrative than realistic -- with much larger liquidity pools used in production, the magnitude of the spread is diminished. 
+Of course, this specific example was meant to be more illustrative than realistic -- with much larger liquidity pools used in production, the magnitude of the spread is diminished. 
+
+The primary advantage of Constant-Product over Columbus-2 is that it offers “unbounded” liquidity, in the sense that swaps of arbitrary size can be serviced (albeit at prices that become increasingly unfavorable as trade size increases).
 
 ### Virtual Liquidity Pools
 
-The market starts out with two liquidity pools of equal sizes, one representing Terra (all denominations) and another representing Luna, initialiazed by the parameter `BasePool`.
+The market starts out with two liquidity pools of equal sizes, one representing Terra (all denominations) and another representing Luna, initialiazed by the parameter [`BasePool`](#basepool), which defines the initial size, $Pool_{Base}$, of the Terra and Luna liquidity pools.
 
 In practice, rather than keeping track of the sizes of the two pools, the information is encoded in a number $\delta$, which the blockchain stores as `TerraPoolDelta`, representing the deviation of the Terra pool from its base size in units µSDR.
 
@@ -64,9 +70,10 @@ Pool_{Terra} &= Pool_{Base} + \delta \\ \\
 Pool_{Luna} &= ({Pool_{Base}})^2 / Pool_{Terra}
 \end{aligned} $$
 
-At the [end of each block](#end-block), the market module will attempt to "replenish" the pools by decreasing the magnitude of $\delta$ between the Terra and Luna pools. The rate at which the pools will be replenished toward equilibrium is set by the parameter `PoolRecoveryPeriod`, with lower periods meaning faster recovery times, denoting more sensitivity to changing prices.
+At the [end of each block](#end-block), the market module will attempt to "replenish" the pools by decreasing the magnitude of $\delta$ between the Terra and Luna pools. The rate at which the pools will be replenished toward equilibrium is set by the parameter [`PoolRecoveryPeriod`](#poolrecoveryperiod), with lower periods meaning lower sensitivity to trades, meaning previous trades are more quickly forgotten and the market is able to offer more liquidity.
 
-This mechanism ensures liquidity and acts as a sort of low-pass filter, allowing for the spread fee (which is a function of `TerraPoolDelta`) to drop back down when changes in price are interpreted by the network as a lasting, rising trend in the true price of the peg rather than noisy spikes from temporary trading activity.
+This mechanism ensures liquidity and acts as a sort of low-pass filter, allowing for the spread fee (which is a function of `TerraPoolDelta`) to drop back down when there is a change in demand, hence necessary change in supply which needs to be absorbed.
+
 
 ## Swap Procedure
 

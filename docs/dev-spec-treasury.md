@@ -329,7 +329,7 @@ Multiplier specifying portion of burden seigniorage needed to bear the overall r
 ### `MiningIncrement`
 
 - type: `sdk.Dec`
-- default value: `sdk.NewDecWithPrec(107, 2)` (107%; exponential growth)
+- default value: `sdk.NewDecWithPrec(107, 2)` (1.07 growth rate, 15% CAGR of $\tau$)
 
 Multiplier determining an annual growth rate for Tax Rate policy updates during epoch transition.
 
