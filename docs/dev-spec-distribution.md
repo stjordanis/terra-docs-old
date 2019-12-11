@@ -23,7 +23,7 @@ The Community Pool is a reserve of tokens that is designated for funding project
 
 The Distribution module defines a special proposal that upon being passed, will disburse the coins specified in `Amount` to the `Recipient` account using funds from the Community Pool.
 
-### `CommunitySpendProposal`
+### `CommunityPoolSpendProposal`
 
 ```go
 type CommunityPoolSpendProposal struct {
