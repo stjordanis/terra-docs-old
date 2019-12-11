@@ -13,11 +13,11 @@ With the Columbus-3 release, every active validator must participate in the Exch
 
 The Terra Core team has provided a reference implementation of a program that pulls the exchange rate of Luna from exchanges and periodically submits it in prevotes and votes following the [Voting Procedure](dev-spec-oracle.md#voting-procedure). In addition, several validators have also created alternate feeder implementations.
 
-| Software | Creator | Runtime | Notes |
+| Software | Developer | Runtime | Notes |
 | :-- | :-- | :-- | :-- |
-| [`oracle-feeder`](https://github.com/terra-project/oracle-feeder/tree/columbus-3) | Terra | Node.js / Python | Official reference implementation |
-| [`terra_oracle_voter`](https://github.com/b-harvest/terra_oracle_voter) | bharvest | Python | |
-| [`oracle-voter`](https://github.com/stakewithus/oracle-voter) | StakeWith.Us | Python | |
+| [`oracle-feeder`](https://github.com/terra-project/oracle-feeder/tree/columbus-3) | **Terra** | Node.js, Python | Official reference implementation |
+| [`terra_oracle_voter`](https://github.com/b-harvest/terra_oracle_voter) | [B-Harvest](https://bharvest.io/) | Python | |
+| [`oracle-voter`](https://github.com/stakewithus/oracle-voter) | [StakeWith.Us](https://github.com/terra-project/research) | Python | |
 
 ### Guidelines for writing your own feeder
 
