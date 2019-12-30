@@ -18,7 +18,7 @@ As with any other transaction, [`MsgSend`](dev-spec-bank.md#msgsend) and [`MsgMu
 
 ### Stability Fee
 
-In addition to the gas fee, the pay module charges a stability fee that is a percentage of the transaction's value. It reads the Tax Rate and Tax Cap parameters from the [`Treasury`](dev-spec-treasury.md) module to compute the amount of stability tax that needs to be charged.
+In addition to the gas fee, the ante handler charges a stability fee that is a percentage of the transaction's value only for the **Stable Coins** except **LUNA**. It reads the Tax Rate and Tax Cap parameters from the [`Treasury`](dev-spec-treasury.md) module to compute the amount of stability tax that needs to be charged.
 
 The __Tax Rate__ is a parameter agreed upon by the network that specifies the percentage of payment transactions that will be collected as Tax Proceeds in the block reward, which will be distributed among the validators. The distribution model is a bit complicated and explained in detail [here](validator-faq.md#how-are-block-provisions-distributed). The taxes collected per transaction cannot exceed the specific __Tax Cap__ defined for that transaction's denomination. Every epoch, the Tax Rate and Tax Caps are recalibrated automatically by the network; see [here](dev-spec-treasury.md#monetary-policy-levers) for more details.
 
