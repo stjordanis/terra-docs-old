@@ -4,7 +4,7 @@ title: Slashing
 ---
 
 > Terra's Slashing module inherits from Cosmos SDK's [`slashing`](https://github.com/cosmos/cosmos-sdk/tree/v0.37.4/docs/spec/slashing) module. This document is a stub, and covers mainly important Terra-specific notes about how it is used.
-{note}
+> {note}
 
 The Slashing module enables Terra to disincentivize any attributable action by a protocol-recognized actor with value at stake by penalizing them ("slashing"). Terra mainly uses the [`Staking`](dev-spec-staking.md) module to slash when violating validator responsibilities (such as missing too many `VotePeriod`s in the exchange rate oracle). This module deals with lower-level penalties at the Tendermint consensus level, such as double-signing.
 
@@ -116,7 +116,7 @@ greater than `minHeight` and the validator's `MissedBlocksCounter` is greater th
 for `DowntimeJailDuration`, and have the following values reset:
 `MissedBlocksBitArray`, `MissedBlocksCounter`, and `IndexOffset`.
 
-__Note__: Liveness slashes do **NOT** lead to a tombstombing.
+**Note**: Liveness slashes do **NOT** lead to a tombstombing.
 
 ```go
 height := block.Height
@@ -233,4 +233,4 @@ type Params struct {
 ### `SlashFractionDowntime`
 
 - type: `sdk.Dec`
-- default value: `sdk.NewDec(1).Quo(sdk.NewDec(100))` (1/100)
+- default value: `sdk.NewDec(1).Quo(sdk.NewDec(10000))` (1/10000)
