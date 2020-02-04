@@ -112,7 +112,7 @@ Your node needs to know how to find peers. You'll need to add healthy seed nodes
 
 If those seeds aren't working, you can find more seeds and persistent peers on the [Terra Station](https://station.terra.money). Open the the `Full Nodes` pane and select nodes that do not have private \(`10.x.x.x`\) or [local IP addresses](https://en.wikipedia.org/wiki/Private_network). The `Persistent Peer` field contains the connection string. For best results use 4-6.
 
-For more information on seeds and peers, you can [read this](https://github.com/tendermint/tendermint/blob/develop/docs/tendermint-core/using-tendermint.md#peers).
+For more information on seeds and peers, you can [read this](https://github.com/tendermint/tendermint/blob/master/docs/tendermint-core/using-tendermint.md#peers).
 
 ## Run a Full Node
 
