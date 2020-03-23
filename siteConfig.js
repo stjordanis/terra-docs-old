@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
+const path = require('path');
 const headerLinks = require('./headerLinks.js');
 const markdownPlugins = require('./markdownPlugins.js');
 
@@ -12,6 +12,7 @@ const markdownPlugins = require('./markdownPlugins.js');
 // site configuration options.
 
 const siteConfig = {
+  customDocsPath: path.basename(__dirname) + '/docs',
   title: 'Terra Documentation', // Title for your website.
   tagline: 'Columbus 3',
 

@@ -11,13 +11,14 @@
     "rename-version": "docusaurus-rename-version",
     "make-glossary": "node scripts/makeGlossary.js"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "docusaurus": "file:./terra-docusaurus"
+  },
   "dependencies": {
     "ejs": "^2.7.1",
     "katex": "^0.11.1",
     "remarkable-classy": "^0.0.1",
     "remarkable-katex": "^1.0.1",
-    "remarkable-plantuml": "^1.1.0",
-    "terra-docusaurus": "file:./terra-docusaurus"
+    "remarkable-plantuml": "^1.1.0"
   }
 }
