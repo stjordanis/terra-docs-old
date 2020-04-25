@@ -3,7 +3,7 @@ id: validator-getting-started
 title: Getting Started
 ---
 
-> This documentation is only intended for validators of the **Soju-0013 public testnet** and the **Columbus-3 public mainnet**.
+> This documentation is only intended for validators of the **Soju-0014 public testnet** and the **Columbus-3 public mainnet**.
 {important}
 
 Information on how to join the current testnet (`genesis.json` file and seeds) is held in our "networks" [repo](https://github.com/terra-project/networks). Please check there if you are looking to join our latest testnet.

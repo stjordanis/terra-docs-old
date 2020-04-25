@@ -21,7 +21,7 @@ Put simply, Terra is a new cryptocurrency that is:
 | Network | Type | Faucet | Description |
 | :-- | :-- | :-- | :-- |
 | `columbus-3` | Mainnet | n/a | Public mainnet for production |
-| `soju-0013` | Testnet | [here](https://soju-faucet.terra.money/) | Columbus-3 Testnet |
+| `soju-0014` | Testnet | [here](https://soju-faucet.terra.money/) | Columbus-3 Testnet |
 | `vodka-0001` | Testnet | [here](https://faucet.terra.money/) | Columbus-3 Testnet with Fast Tally and Short Period |
 
 ## Documentation Overview
