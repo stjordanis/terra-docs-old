@@ -10,6 +10,10 @@ Information on how to join the current testnet (`genesis.json` file and seeds) i
 
 Before setting up your validator node, make sure you've already gone through the [Full Node Setup](node-join-network.md) guide.
 
+> For a detailed step-by-step tutorial on how to set up a validator, check out [Block42's excellent guide](https://medium.com/block42-blockchain-company/how-to-setup-a-terra-luna-validator-node-860d8ea7aea2).
+{note}
+
+
 ## What is a Validator?
 
 Validators are responsible for committing new blocks to the blockchain through voting. To make sure validators remain loyal to the network, the Terra Protocol requires a "security deposit" of Luna tokens to be staked while the validators are active. A validator's stake is slashed if they become unavailable or sign multiple blocks at the same height.
